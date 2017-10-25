@@ -1,0 +1,69 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<include file="Public:new" />
+<load href='__TMPL__Common/js/jquery.bgiframe.js' />
+<load href='__TMPL__Common/js/jquery.weebox.js' />
+<load href='__TMPL__Common/js/user.js' />
+<load href='__TMPL__Common/js/deal.js' />
+<load href='__TMPL__Common/style/weebox.css' />
+<script type="text/javascript" src="__TMPL__Common/js/calendar/calendar.php?lang=zh-cn" ></script>
+<load href='__TMPL__Common/js/calendar/calendar.css' />
+<load href='__TMPL__Common/js/calendar/calendar.js' />
+<php>
+function get_coins($id,$user_id){
+    return "<a href=\"javascript:detail(".$id.",".$user_id.")\">明细</a>";
+}
+</php>
+<script type="text/javascript">
+    function detail(id,user_id)
+    {
+        location.href = ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=detail&id="+id+"&user_id="+user_id;
+    }
+</script>
+<div class="main">
+    <div class="main_title_list"><div class="list-line-ico"></div>游戏收益分析</div>
+    <div class="search_row">
+        <form name="search" action="__APP__" method="get" class="clearfix">
+            <div>年:
+                <select name="year">
+                    <?php foreach ($years as $value): ?>
+                        <option value="{$value}"<?php if ($value==$year): ?> selected="selected"<?php endif ?>>{$value}</option>
+                    <?php endforeach ?>
+                </select>
+            </div>
+            <div>月:
+                <select name="month">
+                    <?php foreach ($months as $value): ?>
+                        <option value="{$value}"<?php if ($value==$month): ?> selected="selected"<?php endif ?>>{$value}</option>
+                    <?php endforeach ?>
+                </select>
+            </div>
+            <div>推广会员名称:<input type="text" class="textbox" name="nick_name" value="{:trim($_REQUEST['nick_name'])}" style="width:100px;" /></div>
+            <div>上线推广商:<input type="text" class="textbox" name="name" value="{:trim($_REQUEST['name'])}" style="width:100px;" /></div>
+            <div>上线推广中心:<input type="text" class="textbox" name="p_name" value="{:trim($_REQUEST['p_name'])}" style="width:100px;" /></div>
+            <div>上级会员ID：<input type="text" style="width:60px;" class="textbox" name="bm_pid" value="{:trim($_REQUEST['bm_pid'])}" /></div>
+            <input type="hidden" value="BmPromoterGame" name="m" />
+            <input type="hidden" value="index" name="a" />
+            <input type="submit" class="button" value="{%SEARCH}" />
+        </form>
+    </div>
+    平台总收入：{$sum.platform_gain}
+<html:list
+    id="dataTable"
+    style="dataTable"
+    name="user"
+    action="true"
+    datasource="list"
+    show="nick_name:推广会员名称
+    ,name:上线推广商
+    ,p_name:上线推广中心
+    ,sum_bet:下注总额
+    ,sum_win:推广会员收支
+    ,platform_gain:平台收入
+    ,promoter_gain:推广中心流水收入
+    ,gain:推广商收支"
+    actionlist="id|get_coins=$user['user_id']" />
+<div class="page">{$page}</div>
+</div>
+<include file="Public:footer" />

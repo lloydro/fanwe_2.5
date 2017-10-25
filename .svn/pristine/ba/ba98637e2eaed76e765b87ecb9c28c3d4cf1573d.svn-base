@@ -1,0 +1,91 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<style>
+    .line {
+        min-height: 20px;
+        font-size: 13px;
+        border-bottom: 1px solid silver;
+        padding: 5px 0px;
+    }
+    .delete {
+        cursor: pointer;
+        padding: 0px 5px;
+        text-decoration: underline;
+        color: red;
+    }
+</style>
+
+<div class="main">
+    <div class="main_title">{%ADD} <a href="{:u("ChildRoom/index")}" class="back_list">{%BACK_LIST}</a>
+    </div>
+    <div class="blank5"></div>
+    <form id="video_form" name="add" action="__APP__" method="post" enctype="multipart/form-data">
+        <table class="form" cellpadding=0 cellspacing=0>
+            <tr>
+                <td colspan=2 class="topTd"></td>
+            </tr>
+            <tr>
+                <td class="item_title">话题:</td>
+                <td class="item_input"><input type="text" class="textbox require" name="title" /></td>
+            </tr>
+            <tr>
+                <td class="item_title">用户ID:</td>
+                <td class="item_input"><input type="text" class="textbox require" name="user_id"/></td>
+            </tr>
+            <tr>
+                <td class="item_title">直播间标题:</td>
+                <td class="item_input"><input type="text" class="textbox require" name="room_title"/></td>
+            </tr>
+            <tr>
+                <td class="item_title">直播封面:</td>
+                <td class="item_input">
+                    <html:imgUpload name="live_image" id="live_image" value="" />
+                </td>
+            </tr>
+            <tr>
+                <td class="item_title">主房间选择:</td>
+                <td class="item_input">
+                    <select name="parent_id">
+                        <option value="0">请选择主房间</option>
+                        <foreach name="parent_room_list" item="parent" key="kk">
+                            <option value="{$parent.id}" <if condition="$vo['parent_id'] eq $parent['id']">selected="selected"</if>>房间号：{$parent.id} 主播：{$parent.nick_name}</option>
+                        </foreach>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="item_title"></td>
+                <td class="item_input">
+                    <input type="hidden" id="a"  name="a" value="insert_child_room"/>
+                    <input type="hidden" id="m"  name="m" value="ChildRoom"/>
+                    <input type="button" id="video_submit" class="button" value="{%ADD}" onclick="insert_child_room();" />
+                    <input type="reset" class="button" value="{%RESET}" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan=2 class="bottomTd"></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<script>
+    function insert_child_room(){
+        var form_data = $("#video_form").serialize();
+        $.ajax({
+            url:ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=insert_child_room",
+            data:form_data,
+            dataType:"json",
+            type:"post",
+            success:function(result){
+                if (result.status == '1') {
+                    alert(result.error);
+                    location.href = ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=index";
+                }else{
+                    alert(result.error);
+                }
+            }
+        });
+    }
+</script>
+<include file="Public:footer" />

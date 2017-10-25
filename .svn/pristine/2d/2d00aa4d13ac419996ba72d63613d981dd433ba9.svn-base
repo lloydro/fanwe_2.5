@@ -1,0 +1,92 @@
+<div class="user-r-title clearfix">
+    <div class="common-title f-l">
+        <span class="field">成员管理</span>
+    </div>
+</div>
+<div class="user-r-content clearfix j-ajax-page">
+    <div class="search clearfix">
+    <form name="search" action="index.php?ctl=society&act=user_manage" method="post">    
+        <div class="row">
+          <div class="col-md-3">
+                <input type="number" name="user_id" id="user_id" class="anchor-id form-control" placeholder="请输入主播ID" value="{$data.user_id}">
+          </div>
+          <div class="col-md-3">
+                <select name="status_id" id="status_id" class="form-control" >
+                    <option value="0"{if $data.status_id ==0} selected = "selected"{/if}>状态：所有</option>
+                    <option value="1"{if $data.status_id ==1} selected = "selected"{/if}>状态：加入申请待审核</option>
+                    <option value="2"{if $data.status_id ==2} selected = "selected"{/if}>状态：加入申请通过</option>
+                    <option value="3"{if $data.status_id ==3} selected = "selected"{/if}>状态：申请退出待审核</option>
+                </select>
+          </div>
+          <div class="col-md-6">
+            <input type="submit" class="btn btn-primary" value="搜索" />
+          </div>
+        </div>
+    </form>  
+    </div>
+    <div class="ajax-block">
+        <table  class="table table-striped">
+            <thead>
+                <tr class="form-head">
+                    <th>主播ID</th>
+                    <th>主播昵称</th>
+                    <th>主播头像</th>
+                    <th>申请时间</th>
+                    <th>是否认证</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            {if $data.list}
+            <tbody>
+                {foreach from=$data.list item=item key=key name=list}
+                <tr class="form-body">
+                    <td class="content-font">{$item.user_id}</td>
+                    <td class="content-font">{$item.nick_name}</td>
+                    <td>
+                        <img style="width:50px;height:50px;" src="{$item.head_image}" alt="" class="img-circle">
+                    </td>
+                    <td class="content-font">{$item.create_time}</td>
+                    {if $item.is_authentication == 2}
+                    <td class="content-font">已认证</td>
+                    {else}
+                    <td class="content-font">未认证</td>
+                    {/if}
+                    <td class="content-font">{$item.status}</td>
+                    {if $item.status == "加入申请通过"}
+                    <td>
+						<a href="javascript:void(0)" onclick="out_user({$item.user_id},{$item.society_id})" class="btn btn-primary">踢出</a>	
+					</td>
+                    {elseif $item.status == "会长" }
+                    <td class="content-font"></td>
+                    {elseif $item.status == "加入申请待审核"}
+                    <td>
+                    	<a href="javascript:void(0)" onclick="agree({$item.user_id},{$item.society_id},'join_check',1)" class="btn btn-primary">同意</a>	
+                    	<a href="javascript:void(0)" onclick="agree({$item.user_id},{$item.society_id},'join_check',0)" class="btn btn-primary">拒绝</a>
+                    </td>
+                    {elseif $item.status == "申请退出待审核"}
+                    <td class="content-font">
+                    	<a href="javascript:void(0)" onclick="agree({$item.user_id},{$item.society_id},'out_check',1)" class="btn btn-primary">同意</a>
+                    	<a href="javascript:void(0)" onclick="agree({$item.user_id},{$item.society_id},'out_check',0)" class="btn btn-primary">拒绝</a>
+                    </td>
+                    {/if}
+                </tr>
+                {/foreach}
+            </tbody>
+            {else}
+            <tbody>
+                <tr>
+                    <td colspan="6">
+                        <p class="null-data">暂无数据</p>
+                    </td>
+                </tr>
+            </tbody>
+            {/if}
+        </table>
+        <div class="m-page clearfix">
+            <div class="m-page-con">
+                {$data.page}
+            </div>
+        </div>
+    </div>
+</div>

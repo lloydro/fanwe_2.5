@@ -1,0 +1,102 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<PHP>
+    function image($image){
+    if($image==''){
+    return "<a style='height:35px;width:35px;'/>图片未上传</a>";
+    }else{
+    return "<img src='".$image."' style='height:35px;width:35px;'/>";
+    }
+    }
+
+</PHP>
+<script>
+    function del_tree_info(id)
+    {
+        if(!id)
+        {
+            idBox = $(".key:checked");
+            if(idBox.length == 0)
+            {
+                alert(LANG['DELETE_EMPTY_WARNING']);
+                return;
+            }
+            idArray = new Array();
+            $.each( idBox, function(i, n){
+                idArray.push($(n).val());
+            });
+            id = idArray.join(",");
+        }
+        if(confirm(LANG['CONFIRM_DELETE']))
+            $.ajax({
+                url: ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=del_tree_info&id="+id,
+                data: "ajax=1",
+                dataType: "json",
+                success: function(obj){
+                    alert(obj.info);
+                    func();
+                    function func(){
+                        if(obj.status==1){
+                            location.href=location.href;
+                        }
+                    }
+                }
+            });
+    }
+
+    function refresh(){
+        $(document).ready(function(){
+            window.location.reload();
+        });
+    }
+    //添加树苗
+    function add_tree_info(order_id){
+        location.href = ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=add_tree_info&order_id="+order_id;
+    }
+    //编辑树苗
+    function edit_tree_info(id){
+        location.href = ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=edit_tree_info&id="+id;
+    }
+</script>
+
+<load href='__TMPL__Common/js/jquery.bgiframe.js' />
+<load href='__TMPL__Common/js/jquery.weebox.js' />
+<load href='__TMPL__Common/js/deal.js' />
+<load href='__TMPL__Common/js/user.js' />
+<load href='__TMPL__Common/style/weebox.css' />
+<script type="text/javascript" src="__TMPL__Common/js/calendar/calendar.php?lang=zh-cn" ></script>
+<load href='__TMPL__Common/js/calendar/calendar.css' />
+<load href='__TMPL__Common/js/calendar/calendar.js' />
+<div class="main">
+    <div class="main_title_list"><div class="list-line-ico"></div>成长信息列表<a href="/{$url_name}?m=QkTree&a=tree_manage_list&order_id={$order_id}">刷新</a></div>
+    <div class="main_title">订单号：{$order_id}—用户ID：{$user_id}</div>
+    <div class="search_row">
+        <form name="search" action="__APP__" method="get" class="clearfix">
+            <div><input type="hidden" name="order_id" value="{$order_id}"></div>
+            <div>创建时间：<span><input type="text" class="textbox" name="create_time_1" id="create_time_1" value="{$_REQUEST['create_time_1']}" onfocus="this.blur(); return showCalendar('create_time_1', '%Y-%m-%d', false, false, 'btn_create_time_1');" /><input type="button" class="button" id="btn_create_time_1" value="{%SELECT_TIME}" onclick="return showCalendar('create_time_1', '%Y-%m-%d', false, false, 'btn_create_time_1');" /></span> - <span><input type="text" class="textbox" name="create_time_2" id="create_time_2" value="{$_REQUEST['create_time_2']}" onfocus="this.blur(); return showCalendar('create_time_2', '%Y-%m-%d', false, false, 'btn_create_time_2');" /><input type="button" class="button" id="btn_create_time_2" value="{%SELECT_TIME}" onclick="return showCalendar('create_time_2', '%Y-%m-%d', false, false, 'btn_create_time_2');" /></span><input type="hidden" value="QkTree" name="m" /><input type="hidden" value="tree_manage_list" name="a" /><input type="submit" class="button" value="{%SEARCH}" /></div>
+        </form>
+    </div>
+    <html:list
+            id="dataTable"
+            style="dataTable"
+            name="qk_tree_info"
+            checkbox="true"
+            action="true"
+            datasource="list"
+            show="id:树苗信息编号
+    ,image|image:树苗图片
+    ,create_at|to_date:创建时间
+    ,shoot_time|to_date:拍摄时间"
+            actionlist="edit_tree_info:{%EDIT}" />
+
+    <table class="dataTable">
+        <tbody>
+        <td colspan="11">
+            <input type="button" class="button button-add" value="{%ADD}" onclick="add_tree_info('{$order_id}');" />
+        </td>
+        </tbody>
+    </table>
+    <div class="page">{$page}</div>
+</div>
+<include file="Public:footer" />

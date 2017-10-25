@@ -1,0 +1,55 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<div class="main">
+<PHP>
+	function society_status($status)
+	{
+		if($status == 0)
+		{
+		return '未审核';
+		}
+		else if($status == 1)
+		{
+		return '审核通过';
+		}
+		else
+		{
+		return '拒绝通过';
+		}
+	}
+	
+
+</PHP>
+	<div class="main_title"></div>
+	<div class="blank5"></div>
+	<html:list
+			id="dataTable"
+			style="dataTable"
+			name="user"
+			datasource="refund_data"
+			show="id:公会ID|300px
+		,name:公会名称|300px
+		,nick_name:会长昵称
+		,status|society_status:状态|300px"/>
+	<form name="edit" action="__APP__" method="post" enctype="multipart/form-data" onsubmit="return confirm('确认执行操作吗，确认吗？');">
+		<table class="form" cellpadding=0 cellspacing=0>
+			<tr>
+				<td class="item_input">
+					<!--隐藏元素-->
+					<input type="hidden" name="id" value="{$implode_id}" />
+					<input type="hidden" name="status" value="1" />
+					<input type="hidden" name="{:conf("VAR_MODULE")}" value="Society" />
+					<input type="hidden" name="{:conf("VAR_ACTION")}" value="batch_examine_operate" />
+					<!--隐藏元素-->
+					<select name="status" id="status">
+						<option value="1">审核通过</option>
+						<option value="2">审核不通过</option>
+					</select>
+					<input type="submit" class="button" value="确认" />
+					
+				</td>
+			</tr>
+</table>
+		</form>
+</div>
+

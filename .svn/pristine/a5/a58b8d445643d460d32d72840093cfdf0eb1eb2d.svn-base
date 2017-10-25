@@ -1,0 +1,44 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<include file="Public:new" />
+<load href='__TMPL__Common/js/jquery.bgiframe.js' />
+<load href='__TMPL__Common/js/jquery.weebox.js' />
+<load href='__TMPL__Common/js/user.js' />
+<load href='__TMPL__Common/style/weebox.css' />
+<script type="text/javascript" src="__TMPL__Common/js/calendar/calendar.php?lang=zh-cn" ></script>
+<load href='__TMPL__Common/js/calendar/calendar.css' />
+<load href='__TMPL__Common/js/calendar/calendar.js' />
+<PHP>
+	function detail($id){
+		return "<span onclick='detail(".$id.");'></span>";
+	}
+</PHP>
+<script type="text/javascript">
+	function detail(id){
+		location.href = ROOT+"?"+VAR_MODULE+"=Prop&"+VAR_ACTION+"=detail&id="+id;
+	}
+</script>
+<div class="main">
+<div class="main_title_list"><div class="list-line-ico"></div>道具消耗统计列表&nbsp;&nbsp;&nbsp;&nbsp;
+<div class="search_row">
+	<form name="search" action="__APP__" method="get">
+		道具名称：<input type="text" class="textbox" name="name" value="{:trim($_REQUEST['name'])}" />
+		使用时间 ：<input style="margin: 0;width:130px" type="text" class="textbox" size="8" name="start_time" id="start_time" value="{:trim($_REQUEST['start_time'])}" onfocus="return showCalendar('start_time', '%Y-%m-%d %H:%M:%S', false, false, 'start_time');" /> - <input type="text" style="width:130px" class="textbox" size="8" name="end_time" id="end_time" value="{:trim($_REQUEST['end_time'])}" onfocus="return showCalendar('end_time', '%Y-%m-%d %H:%M:%S', false, false, 'end_time');" />
+		<input type="hidden" value="Prop" name="m" /><input type="hidden" value="consume_statistics" name="a" /><input type="submit" class="button" value="{%SEARCH}" /><input type="button" class="button" value="{%EXPORT}" onclick="export_csv();" />
+	</form>
+</div>
+<html:list
+	id="dataTable"
+	style="dataTable"
+	name="prop"
+	action="true"
+	datasource="list"
+	show="id:道具ID|15%,name:道具名|20%,price:单价(钻石)|20%,sale:消耗量|20%,total:总金额(钻石)|20%"
+	actionlist="id|detail|查看明细" />
+<div class="page">{$page}</div>
+<div align="center"><b style="font-size:16px;">消耗总量：{:number_format($count)} &nbsp;&nbsp;&nbsp;&nbsp; 消耗总价(钻石)：{:number_format($count_price,2)}</b></div>
+</div>
+<include file="Public:footer" />
+
+

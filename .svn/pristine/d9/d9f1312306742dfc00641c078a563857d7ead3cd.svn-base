@@ -1,0 +1,49 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" /><div class="main">
+<PHP>
+	function get_real_name($user_id) {
+		return $GLOBALS['db']->getOne("select nick_name from ".DB_PREFIX."user where id=".$user_id);
+    }
+
+	function fix($content, $length = 20) {
+		if(mb_strlen($content) > $length) {
+		    return "<span title='".$content."'>" . mb_substr($content, 0, $length) . " ...</span>";
+		} else {
+			return $content;
+		}
+	}
+</PHP> 
+<div class="main_title_list"><div class="list-line-ico"></div>动态评论</div>
+<div class="search_row">
+	<form name="search" action="__APP__" method="get">
+		{%KEYWORD}：<input type="text" class="textbox" name="title" value="{:trim($_REQUEST['title'])}" />
+		<input type="hidden" value="WeiboComment" name="m" /><input type="hidden" value="index" name="a" />
+		<input type="submit" class="button" value="{%SEARCH}" />
+	</form>
+</div>
+<html:list
+	id="dataTable"
+	style="dataTable"
+	name="weibo"
+	pk="comment_id"
+	checkbox="true"
+	action="true"
+	datasource="list"
+	show="comment_id:{%ID}|90px,user_id|get_real_name:用户,content|fix:内容,create_time:评论时间"
+	actionlist="view_reply:查看回复,del:{%DEL}" />
+	<table class="dataTable">
+		<tbody>
+			<td colspan="10">
+				<input type="button" class="button button-del" value="{%DEL}" onclick="del();" />
+			</td>
+		</tbody>
+	</table>
+<div class="page">{$page}</div>
+</div>
+<script>
+	function view_reply(id) {
+		location.href = ROOT+"?"+VAR_MODULE+"=WeiboComment&"+VAR_ACTION+"=index&to_comment_id="+id;
+	}
+</script>
+<include file="Public:footer" />

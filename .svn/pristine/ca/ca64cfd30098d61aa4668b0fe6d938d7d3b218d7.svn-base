@@ -1,0 +1,100 @@
+2.51;
+
+CREATE TABLE `%DB_PREFIX%weibo` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '动态ID',
+  `user_id` int(11) NOT NULL COMMENT '产生动态的用户UID',
+  `type` char(50) NOT NULL COMMENT 'imagetext 图文 red_photo 红包图片 weixin 出售微信  video 视频动态  goods 商品 photo 写真',
+  `content` varchar(255) NOT NULL COMMENT '文字内容',
+  `photo_image` varchar(255) NOT NULL COMMENT '写真封面',
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '售价',
+  `sale_num` int(11) NOT NULL DEFAULT '0' COMMENT '购买数量',
+  `data` text NOT NULL COMMENT '链接序列化，存储 图片列表和视频',
+  `create_time` datetime NOT NULL COMMENT '产生时间戳',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '0为下架 1为上架',
+  `from` tinyint(2) NOT NULL DEFAULT '0' COMMENT '客户端类型，0：网站；1：手机网页版；2：android；3：iphone',
+  `comment_count` int(10) NOT NULL DEFAULT '0' COMMENT '评论数',
+  `repost_count` int(10) NOT NULL DEFAULT '0' COMMENT '分享数',
+  `video_count` int(10) NOT NULL DEFAULT '0' COMMENT '视频点击数',
+  `red_count` int(10) NOT NULL DEFAULT '0' COMMENT '红包数量',
+  `tipoff_count` int(10) NOT NULL DEFAULT '0' COMMENT '被举报次数',
+  `comment_all_count` int(10) NOT NULL DEFAULT '0' COMMENT '全部评论数目',
+  `digg_count` int(11) NOT NULL DEFAULT '0' COMMENT '点赞数',
+  `is_repost` int(2) NOT NULL DEFAULT '0' COMMENT '是否转发 0-否  1-是',
+  `is_audit` int(2) NOT NULL DEFAULT '1' COMMENT '是否已审核 0-未审核 1-已审核',
+  `xpoint` varchar(25) NOT NULL DEFAULT '0' COMMENT '纬度',
+  `ypoint` varchar(25) NOT NULL DEFAULT '0' COMMENT '经度',
+  `address` varchar(255) NOT NULL COMMENT '发布地址',
+  `province` varchar(50) NOT NULL,
+  `city` varchar(50) DEFAULT NULL,
+  `is_recommend` tinyint(2) DEFAULT '1',
+  `recommend_time` datetime DEFAULT '0000-00-00 00:00:00' COMMENT '推荐时间',
+  `sort_num` int(11) NOT NULL DEFAULT '0' COMMENT '排序权重',
+  `is_top` tinyint(1) NOT NULL DEFAULT '0' COMMENT '置顶 0 未置顶 1置顶',
+  PRIMARY KEY (`id`),
+  KEY `is_del` (`status`,`create_time`) USING BTREE,
+  KEY `uid` (`user_id`,`status`,`create_time`) USING BTREE
+) COMMENT='动态列表';
+
+CREATE TABLE `%DB_PREFIX%weibo_comment` (
+  `comment_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键，评论编号',
+  `type` tinyint(1) DEFAULT '1' COMMENT '类型 1-评论 2- 点赞',
+  `weibo_id` int(11) NOT NULL DEFAULT '0' COMMENT '评论的微博',
+  `weibo_user_id` int(11) NOT NULL DEFAULT '0' COMMENT '微博会员ID',
+  `user_id` int(11) NOT NULL DEFAULT '0' COMMENT '评论者编号',
+  `content` text NOT NULL COMMENT '评论内容',
+  `to_comment_id` int(11) NOT NULL DEFAULT '0' COMMENT '被回复的评论的编号',
+  `to_user_id` int(11) NOT NULL DEFAULT '0' COMMENT '被回复的评论的作者的编号',
+  `data` text NOT NULL COMMENT '所评论的内容的相关参数（序列化存储）',
+  `create_time` datetime NOT NULL COMMENT '评论发布的时间',
+  `is_del` tinyint(1) NOT NULL DEFAULT '0' COMMENT '标记删除（0：没删除，1：已删除）',
+  `is_audit` tinyint(1) DEFAULT '1' COMMENT '是否已审核 0-未审核 1-已审核',
+  `storey` int(11) DEFAULT '0' COMMENT '评论绝对楼层',
+  `client_ip` char(15) DEFAULT NULL,
+  `client_port` char(5) DEFAULT NULL,
+  `is_read` tinyint(1) DEFAULT '0' COMMENT '读取时间',
+  PRIMARY KEY (`comment_id`)
+) COMMENT='评论和回复';
+
+CREATE TABLE `%DB_PREFIX%weibo_distribution_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `from_user_id` int(11) NOT NULL COMMENT '用户ID',
+  `to_user_id` int(11) NOT NULL COMMENT '获得抽成的 用户ID',
+  `create_date` date NOT NULL COMMENT '日期字段,按日期归档',
+  `weibo_money` double(20,4) DEFAULT '0.0000' COMMENT '动态金额',
+  `create_time` int(11) NOT NULL COMMENT '创建时间',
+  `create_ym` varchar(12) NOT NULL COMMENT '年月 如:201610',
+  `create_d` tinyint(2) NOT NULL COMMENT '日',
+  `create_w` tinyint(2) NOT NULL COMMENT '周',
+  `memo` varchar(50) NOT NULL COMMENT '消费描述',
+  `type` tinyint(1) DEFAULT NULL,
+  `type_cate` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_1` (`to_user_id`,`from_user_id`,`weibo_money`) USING BTREE
+) ;
+
+ALTER TABLE `%DB_PREFIX%user` ADD COLUMN weibo_count int(11) NOT NULL DEFAULT '0' COMMENT '动态数';
+ALTER TABLE `%DB_PREFIX%user` ADD COLUMN weibo_sort_num int(11) NOT NULL DEFAULT '0' COMMENT '动态权重';
+ALTER TABLE `%DB_PREFIX%user` ADD COLUMN weibo_recommend_weight int(11) NOT NULL DEFAULT '0' COMMENT '推荐权重';
+ALTER TABLE `%DB_PREFIX%user` ADD COLUMN weixin_account varchar(100) NULL COMMENT '微信账号';
+ALTER TABLE `%DB_PREFIX%user` ADD COLUMN weixin_price decimal(10,2) NOT NULL DEFAULT '0' COMMENT '微信价格';
+ALTER TABLE `%DB_PREFIX%user` ADD COLUMN xpoint varchar(50) NOT NULL DEFAULT '0' COMMENT '经度' , ADD COLUMN ypoint varchar(50) NOT NULL DEFAULT '0' COMMENT '纬度';
+ALTER TABLE `%DB_PREFIX%user` ADD COLUMN show_image text NOT NULL COMMENT '展示图片列表';
+ALTER TABLE `%DB_PREFIX%user` ADD COLUMN weibo_refund_money decimal(20,2) NOT NULL DEFAULT 0 COMMENT '已提现金额' ;
+ALTER TABLE `%DB_PREFIX%user` ADD COLUMN weibo_money decimal(20,2) NOT NULL DEFAULT 0 COMMENT '主播获得的金额';
+ALTER TABLE `%DB_PREFIX%user` ADD COLUMN tipoff_count int(11) NOT NULL DEFAULT '0' COMMENT '被举报的次数';
+ALTER TABLE `%DB_PREFIX%user` ADD COLUMN weibo_photo_img varchar(255) NOT NULL COMMENT '会员中心海报' ;
+ALTER TABLE `%DB_PREFIX%user` ADD COLUMN weibo_chat_price decimal(10,2) NOT NULL DEFAULT 0 COMMENT '聊天价格' ;
+ALTER TABLE `%DB_PREFIX%user` ADD COLUMN weixin_account_time datetime NULL COMMENT '微信更新时间' ;
+ALTER TABLE `%DB_PREFIX%tipoff` ADD COLUMN weibo_id int(11) NOT NULL DEFAULT 0 COMMENT '被举报的动态ID';
+
+CREATE TABLE `%DB_PREFIX%qk_svideo_favor` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL COMMENT '用户ID',
+  `weibo_id` varchar(255) NOT NULL COMMENT '收藏的ID',
+  `create_time` int(11) NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index_001` (`user_id`,`weibo_id`)
+) COMMENT='我收藏的小视屏';
+
+ALTER TABLE `%DB_PREFIX%weibo` ADD COLUMN `unlike_count` int(11) NOT NULL DEFAULT '0' COMMENT '踩一下数' AFTER `comment_all_count`;
+INSERT INTO `%DB_PREFIX%m_config` VALUES (null, 'diamonds_name', '钻石名称', '基础配置', '钻石', '0', '1', null, null, '名称');

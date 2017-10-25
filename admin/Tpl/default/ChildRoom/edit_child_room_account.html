@@ -1,0 +1,82 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<style>
+    .line {
+        min-height: 20px;
+        font-size: 13px;
+        border-bottom: 1px solid silver;
+        padding: 5px 0px;
+    }
+    .delete {
+        cursor: pointer;
+        padding: 0px 5px;
+        text-decoration: underline;
+        color: red;
+    }
+</style>
+
+<div class="main">
+    <div class="main_title">{%ADD} <a href="{:u("ChildRoom/account")}" class="back_list">{%BACK_LIST}</a>
+    </div>
+    <div class="blank5"></div>
+    <form id="video_form"  action="__APP__" method="post" enctype="multipart/form-data">
+        <table class="form" cellpadding=0 cellspacing=0>
+            <tr>
+                <td colspan=2 class="topTd"><input value="{$vo.id}" name="id" type="hidden"/></td>
+            </tr>
+            <tr>
+                <td class="item_title">房间名称:</td>
+                <td class="item_input"><input type="text" class="textbox require" value="{$vo.room_title}" name="room_title" /></td>
+            </tr>
+            <tr>
+                <td class="item_title">价格:</td>
+                <td class="item_input"><input type="text" class="textbox require" value="{$vo.price}" name="price"/></td>
+            </tr>
+            <tr>
+                <td class="item_title">验证码:</td>
+                <td class="item_input"><input type="text" class="textbox require" value="{$vo.video_code}" name="video_code"/></td>
+            </tr>
+            <tr>
+                <td class="item_title">主账号ID:</td>
+                <td class="item_input"><input type="text" class="textbox require" value="{$vo.p_user_id}" name="p_user_id"/></td>
+            </tr>
+            <tr>
+                <td class="item_title">子账号ID:</td>
+                <td class="item_input"><input type="text" class="textbox require" value="{$vo.c_user_id}"  name="c_user_id"/><span class="tip_span">[子账户ID：多个以,分开]</span></td>
+            </tr>
+            <tr>
+                <td class="item_title"></td>
+                <td class="item_input">
+                    <input type="hidden" id="a"  name="a" value="update_child_room_account"/>
+                    <input type="hidden" id="m"  name="m" value="ChildRoom"/>
+                    <input type="button" id="video_submit" class="button" value="{%EDIT}" onclick="update_child_room_account();" />
+                    <input type="reset" class="button" value="{%RESET}" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan=2 class="bottomTd"></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<script>
+    function update_child_room_account(){
+        var form_data = $("#video_form").serialize();
+        $.ajax({
+            url:ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=update_child_room_account",
+            data:form_data,
+            dataType:"json",
+            type:"post",
+            success:function(result){
+                if (result.status == '1') {
+                    alert(result.error);
+                    location.href = ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=account";
+                }else{
+                    alert(result.error);
+                }
+            }
+        });
+    }
+</script>
+<include file="Public:footer" />

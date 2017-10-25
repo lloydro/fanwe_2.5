@@ -1,0 +1,64 @@
+<div class="user-r-title clearfix">
+    <div class="common-title f-l">
+        <span class="field">主播直播时长</span>
+    </div>
+    <!--         <div class="block-font f-r">
+<span class="operation mr-20">标记为已读</span>
+<span class="operation">删除消息</span>
+</div> -->
+</div>
+<div class="user-r-content clearfix j-ajax-page">
+    <div class="search clearfix">
+        <form name="search" action="index.php?ctl=society&act=user_live_length" method="post">
+	        <div class="row">
+	            <div class="col-md-4" style="font-size:20px;">
+	                 <span>从：</span><input type="date" name="begin_date" value="{$data.begin_date}"/>
+	            </div>
+	            <div class="col-md-4" style="font-size:20px;">
+	                 <span>到：</span><input type="date" name="end_date" value="{$data.end_date}"/>
+	            </div>
+	            <div class="col-md-2">
+	                <input type="number" name="uid"  class="anchor-id form-control" placeholder="请输入主播ID" value="{$data.uid}">
+	            </div>
+	            <div class="col-md-1">
+				  	<input type="submit" class="btn btn-primary" value="搜索" />
+				</div>
+	        </div>
+        </form>
+    </div>
+    <div class="ajax-block">
+        <table  class="table table-striped">
+            <thead>
+                <tr class="form-head">
+                    <th>主播ID</th>
+                    <th>主播昵称</th>
+                    <th>直播总时长</th>
+                </tr>
+            </thead>
+            {if $data.list}
+            <tbody>
+                {foreach from=$data.list item=item key=key name=list}
+                <tr class="form-body">
+                    <td class="content-font">{$item.user_id}</td>
+                    <td class="content-font">{$item.nick_name}</td>
+                    <td class="content-font">{$item.timelen}</td>
+                </tr>
+                {/foreach}
+            </tbody>
+            {else}
+            <tbody>
+                <tr>
+                    <td colspan="3">
+                        <p class="null-data">暂无数据</p>
+                    </td>
+                </tr>
+            </tbody>
+            {/if}
+        </table>
+        <div class="m-page clearfix">
+            <div class="m-page-con">
+                {$data.page}
+            </div>
+        </div>
+    </div>
+</div>

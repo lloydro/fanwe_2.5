@@ -1,0 +1,165 @@
+<?php
+
+class SocietyIncomeAction extends CommonAction
+{
+    public function index(){
+        
+        $m_config = load_auto_cache('m_config');
+        $rate = floatval($m_config['society_public_rate']);
+
+        $id = intval($_REQUEST['id']);
+        $name = $_REQUEST['name'];
+        
+        $model = M('society');
+        $map = $this->_search ();
+        $this->_list ( $model, $map );
+        
+        if(isset($_REQUEST['_sort']) && isset($_REQUEST['_order'])){
+            $_REQUEST ['_sort'] ? $sort = 'asc' : $sort = 'desc';
+            
+            $order_by = "s.id ".$sort;
+        }else{
+            $order_by = " s.id desc";
+        }
+        
+        $field = 's.id,s.name,s.logo,s.memo,s.status,(u.ticket-u.refund_ticket) as ticket,((u.ticket-u.refund_ticket)*s.refund_rate) as money';
+        $table = DB_PREFIX."society as s,".DB_PREFIX."user as u";
+        $where = 's.user_id=u.id and s.status<>0 and s.status<>4 ';
+        $parameter = 's.user_id=u.id';
+        if ($id > 0){
+            $where .= ' and s.id='.$id;
+            $parameter .= '&s.id='.$id;
+        }
+        if ($name != ''){
+            $where .= ' and s.name like \'%' . addslashes($name) . '%\'';
+            $parameter .= '&s.name like \'%' . addslashes($name) . '%\'';
+        }
+        $count = $model->table($table)->where($where)->count();
+        $p     = new Page($count, $listRows = 10);
+        $b     = $p->firstRow;
+        $e     = $p->listRows;
+        if ($count){
+            $sql = "select $field from $table where $where order by $order_by limit $b,$e";
+            //$list = $this->_Sql_list($model,$sql,'&'.$parameter,'',0);
+            $list = $GLOBALS['db']->getAll($sql);
+
+            foreach ($list as $key => $value){
+                $list[$key]['ticket'] = round($value['ticket'],2);
+                $list[$key]['money'] = round($value['money'],2);
+                $list[$key]['logo']  = get_spec_image($value['logo']);
+            }
+        }
+        $this->assign('list', $list);
+
+        $this->display();
+    }
+
+    public function submit_refund(){
+        $id = intval($_REQUEST['id']);
+        if ($id == 0){
+            $this->error("id不能为空");
+        }
+
+        $society_info = M('society')->where("id=".$id)->field('user_id,name,refund_rate')->find();
+        $refund_exist = M('user_refund')->where('user_id='.$society_info['user_id']." and (is_pay =0 or is_pay=1)")->getField('id');
+        if ($refund_exist){
+            $this->error("这个公会还有未处理的提现");
+        }
+        //若公会有设置提现比例，则使用设置的提现比例；若没有，使用平台统一的公会提现比例。
+        if(floatval($society_info['refund_rate']) > 0){
+            $rate = floatval($society_info['refund_rate']);
+        }else{
+            $m_config = load_auto_cache("m_config");//初始化手机端配置
+            $rate = floatval($m_config['society_public_rate']);
+        }
+
+        $user_info = M('user')->where('id='.$society_info['user_id'])->field('ticket,refund_ticket')->find();
+        $refund_data = array();
+        $refund_data['ticket'] = $user_info['ticket'] - $user_info['refund_ticket'];
+        if ($refund_data['ticket'] > 0){
+            $refund_data['money'] = floatval($refund_data['ticket'] * $rate);
+            $refund_data['user_bank_id'] = -1;
+            $refund_data['user_id'] = $society_info['user_id'];
+            $refund_data['create_time'] = NOW_TIME;
+            $refund_data['memo'] = "【".$society_info['name']."】公会提现";
+            $refund_data['withdrawals_type'] = 2;
+            $refund_data['is_pay'] = 0;
+            $res = M('user_refund')->add($refund_data);
+            if ($res){
+                save_log($society_info['name'] . "公会提现" . $refund_data['money'] . "成功", 1);
+                $this->success("提现成功");
+            }else{
+                save_log($society_info['name'] . "公会提现" . $refund_data['money'] . "失败", 0);
+                $this->success("提现失败");
+            }
+        }else{
+            $this->error("此公会可提现余额为0");
+        }
+
+    }
+    
+    
+    //导出电子档
+    public function export_csv($page = 1)
+    {
+    
+        $pagesize = 10;
+        set_time_limit(0);
+        $limit = (($page - 1)*intval($pagesize)).",".(intval($pagesize));
+    
+        //定义条件
+    
+        if(trim($_REQUEST['id'])!='')
+        {
+            $where.= "s.id = ".intval($_REQUEST['id'])." and ";
+        }
+    
+        if(trim($_REQUEST['name'])!='')
+        {
+            $where.= " s.name = ".intval($_REQUEST['name'])." and ";
+        }
+        if(trim($_REQUEST['status'])!='')
+        {
+            $where.= " s.status = ".intval($_REQUEST['status'])." and ";
+        }
+        
+        $where .= " s.user_id=u.id and s.status<>0 and s.status<>4 and ";
+        $time ='1970-01-01 16:00:00';
+        $sql ="select s.id,s.name,s.memo,s.status,(u.ticket-u.refund_ticket) as ticket,((u.ticket-u.refund_ticket)*s.refund_rate) as money from ".DB_PREFIX."society as s,".DB_PREFIX."user as u where ".$where." 1=1 order by s.id limit ".$limit;
+        $list=$GLOBALS['db']->getAll($sql);
+        if($list)
+        {
+            register_shutdown_function(array(&$this, 'export_csv'), $page+1);
+            $m_config = load_auto_cache('m_config');
+            $ticket_name = $m_config['ticket_name']!=''?$m_config['ticket_name']:'印票';
+            $refund_value = array( 'id'=>'""', 'name'=>'""', 'ticket'=>'""','money'=>'""','status'=>'""','memo'=>'""');
+            if($page == 1)
+            {
+                $content = iconv("utf-8","gbk","编号,公会名称,可提现印票,可提现金额,状态,备注");
+                $content = $content . "\n";
+            }
+    
+            foreach($list as $k=>$v)
+            {
+                $refund_value['id'] = '"' . iconv('utf-8','gbk',$list[$k]['id']) . '"';
+                $refund_value['name'] = '"' . iconv('utf-8','gbk',$list[$k]['name']) . '"';
+                $refund_value['ticket'] = '"' . iconv('utf-8','gbk',$list[$k]['ticket']) . '"';
+                $refund_value['money'] = '"' . iconv('utf-8','gbk',$list[$k]['money']) . '"';
+                if($v['status']){
+                    $refund_value['status'] = '"' . iconv('utf-8','gbk','审核通过') .'"';
+                }
+                $refund_value['memo'] = '"' . iconv('utf-8','gbk',$list[$k]['memo']) . '"';
+                $content .= implode(",", $refund_value) . "\n";
+            }
+            header("Content-Disposition: attachment; filename=refund_list.csv");
+            echo $content ;
+        }
+        else
+        {
+            if($page==1)
+                $this->error(L("NO_RESULT"));
+        }
+    
+    }
+}
+

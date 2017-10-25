@@ -1,0 +1,86 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<style>
+    .line {
+        min-height: 20px;
+        font-size: 13px;
+        border-bottom: 1px solid silver;
+        padding: 5px 0px;
+    }
+    .delete {
+        cursor: pointer;
+        padding: 0px 5px;
+        text-decoration: underline;
+        color: red;
+    }
+</style>
+
+<div class="main">
+    <div class="main_title">{%ADD} <a href="{:u("QkTree/index")}" class="back_list">{%BACK_LIST}</a>
+    </div>
+    <div class="blank5"></div>
+    <form id="tree_form" name="add" action="__APP__" method="post" enctype="multipart/form-data">
+        <table class="form" cellpadding=0 cellspacing=0>
+            <tr>
+                <td colspan=2 class="topTd"></td>
+            </tr>
+            <tr>
+                <td class="item_title">树苗名称:</td>
+                <td class="item_input"><input type="text" class="textbox require" name="title" /></td>
+            </tr>
+            <tr>
+                <td class="item_title">树苗简介:</td>
+                <td class="item_input"><input type="text" style="width: 900px" class="textbox require" name="description"/></td>
+            </tr>
+            <tr>
+                <td class="item_title">钻石:</td>
+                <td class="item_input"><input type="text" class="textbox require" name="diamonds"/></td>
+            </tr>
+            <tr>
+                <td class="item_title">排序:</td>
+                <td class="item_input"><input type="text" class="textbox require" name="sort"/><span class="tip_span" >[数值越大排序越靠前]</span>
+
+                </td>
+            </tr>
+            <tr>
+                <td class="item_title">树苗图片:</td>
+                <td class="item_input">
+                    <html:imgUpload name="image" id="image" value="" /><span class="tip_span" id="tip_span">[图片规格为：345px*500px(宽*高)]</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="item_title"></td>
+                <td class="item_input">
+                    <input type="hidden" id="a"  name="a" value="insert_tree"/>
+                    <input type="hidden" id="m"  name="m" value="QkTree"/>
+                    <input type="button" id="video_submit" class="button" value="{%ADD}" onclick="insert_tree();" />
+                    <input type="reset" class="button" value="{%RESET}" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan=2 class="bottomTd"></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<script>
+    function insert_tree(){
+        var form_data = $("#tree_form").serialize();
+        $.ajax({
+            url:ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=insert_tree",
+            data:form_data,
+            dataType:"json",
+            type:"post",
+            success:function(result){
+                if (result.status == '1') {
+                    alert(result.error);
+                    location.href = ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=index";
+                }else{
+                    alert(result.error);
+                }
+            }
+        });
+    }
+</script>
+<include file="Public:footer" />

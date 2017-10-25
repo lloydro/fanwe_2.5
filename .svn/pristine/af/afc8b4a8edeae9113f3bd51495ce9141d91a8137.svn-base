@@ -1,0 +1,8 @@
+{include file="inc/header.html"}
+<div class="wrapper">
+	<div class="not-login-tip">
+		<img src="{$TMPL}/dist/statics/images/not-login.png">
+		<p>您还未登录，请先<a href="javascript:void(0)" class="J-login">登录</a></p>
+	</div>
+</div>
+{include file="inc/footer.html"}

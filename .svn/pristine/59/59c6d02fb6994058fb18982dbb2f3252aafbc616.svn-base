@@ -1,0 +1,28 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<script type="text/javascript">
+</script>
+<script type="text/javascript" src="__TMPL__Common/js/calendar/calendar.php?lang=zh-cn" ></script>
+<load href='__TMPL__Common/js/calendar/calendar.css' />
+<load href='__TMPL__Common/js/calendar/calendar.js' />
+<div class="main">
+    <div class="main_title">付费日志</div>
+    <div class="blank5"></div>
+    <div class="blank5"></div>
+    <div class="search_row">
+
+    </div>
+    <html:list
+            id="dataTable"
+            style="dataTable"
+            name="prop"
+            checkbox="true"
+            datasource="list"
+            show="video_id:房间ID|50px,from_user_id:用户ID,nick_name:用户昵称,live_fee:收取费用,create_time:付费时间"
+    />
+
+    <div class="blank5"></div>
+    <div class="page">{$page}</div>
+</div>
+<include file="Public:footer" />

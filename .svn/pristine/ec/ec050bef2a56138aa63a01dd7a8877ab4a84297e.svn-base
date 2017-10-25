@@ -1,0 +1,82 @@
+{// 引入标签库 }
+<tagLib name="html" />
+
+<include file="Public:header" />
+<div class="blank5"></div>
+<div class="main">
+	<div class="main_title_list"><div class="list-line-ico"></div>统计图表&nbsp;&nbsp;&nbsp;&nbsp;
+	<div class="search_row">
+		<form name="search" action="__APP__" method="get">
+			统计时间 ：<input style="margin: 0;width:130px" type="text" class="textbox" size="8" name="start_time" id="start_time" value="{:trim($_REQUEST['start_time'])}" onfocus="return showCalendar('start_time', '%Y-%m-%d %H:%M:%S', false, false, 'start_time');" /> - <input type="text" style="width:130px" class="textbox" size="8" name="end_time" id="end_time" value="{:trim($_REQUEST['end_time'])}" onfocus="return showCalendar('end_time', '%Y-%m-%d %H:%M:%S', false, false, 'end_time');" />
+			<input type="hidden" value="StatisticsModule" name="m" /><input type="hidden" value="chart" name="a" /><input type="submit" class="button" value="{%SEARCH}" />
+		</form>
+	</div>
+
+	<div class="blank5"></div>
+	<div class='wrapper'>
+	<load href='__TMPL__Common/js/highcharts.js' />
+	<load href='__TMPL__Common/js/exporting.js' />
+<script type="text/javascript" src="__TMPL__Common/js/calendar/calendar.php?lang=zh-cn" ></script>
+<load href='__TMPL__Common/js/calendar/calendar.css' />
+<load href='__TMPL__Common/js/calendar/calendar.js' />
+	<script type="text/javascript">
+		var appCPURateobj = eval ("[<foreach name="list" item="cate_item" key="k"><gt name="k" value='0'>,</gt>{$cate_item.money}</foreach>]");
+		var sysCPURateobj = eval ("[<foreach name="list2" item="cate_item" key="k"><gt name="k" value='0'>,</gt>{$cate_item.money}</foreach>]");
+		$(function () {
+			$('#container').highcharts({
+				chart: {
+				},
+				title: {
+					text: '查询充值与提现统计'
+				},
+				//x轴
+				xAxis: {
+					categories: [<foreach name="list" item="cate_item" key="k"><gt name="k" value='0'>,</gt>'{$cate_item.bdate|substr=5,5}'</foreach>]
+				},
+				tooltip: {
+					formatter: function() {
+						var s;
+						if (this.point.name) { // the pie chart
+							s = ''+
+									this.point.name +': '+ this.y +' ';
+						} else {
+							s = ''+this.x+'('+ this.y+'元)';
+						}
+						return s;
+					}
+				},
+				exporting:{
+					enabled:false
+				},
+				credits: {
+					enabled: false
+				},
+				series: [ {
+					type: 'spline',
+					name: '充值汇总',
+					data: appCPURateobj,
+					marker: {
+						lineWidth: 2,
+						lineColor: Highcharts.getOptions().colors[3],
+						fillColor: 'white'
+					}
+				},
+					{
+						type: 'spline',
+						name: '提现汇总',
+						data: sysCPURateobj,
+						marker: {
+							lineWidth: 2,
+							lineColor: Highcharts.getOptions().colors[4],
+							fillColor: 'red'
+						}
+					}]
+			});
+		});
+		//new Chart(document.getElementById("canvas").getContext("2d")).Line(myData);
+	</script>
+	<div align="center"><b style="font-size:16px;"><a href="__APP__?m=StatisticsModule&a=statistics_recharge&">充值金额</a>：￥{:number_format($user_payment,2)}，<a href="__APP__?m=StatisticsModule&a=statistics_refund&">提现金额</a>：￥{:number_format($user_refund,2)}，利润：￥{:number_format($user_payment-$user_refund,2)}</b></div>
+	<div id="container" style="width:1000px;height:300px;margin:0 auto"></div>
+</div>
+<div class="blank5"></div>
+<include file="Public:footer" />

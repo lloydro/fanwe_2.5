@@ -1,0 +1,116 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<PHP>
+	function live_status($status,$video){
+		if($status==1){
+            return "<a href=\"javascript:get_video_preview('".$video['id']."')\">直播中</a>";
+		}elseif($status==2){
+            return "正在创建直播";
+        }elseif($status==3){
+            return "历史";
+        }else{
+			return "直播结束";
+		}
+
+	}
+
+	function get_level($id){
+		$get_level=$GLOBALS['db']->getOne("select ul.name from ".DB_PREFIX."user_level as ul left join ".DB_PREFIX."user as u on u.user_level = ul.level where u.id=".$id);
+ 		return $get_level;
+	}
+
+	function get_nickname($id){
+		$get_nickname=$GLOBALS['db']->getOne("select nick_name from ".DB_PREFIX."user where id=".$id);
+		return emoji_decode($get_nickname);
+	}
+
+    function get_preview($id)
+    {
+        return "<a href=\"javascript:get_video_preview('".$id."')\">查看</a>";
+    }
+    function get_room_type($room_type){
+        if($room_type==1){
+            return "私密";
+        }elseif($room_type==2){
+            return "聊天室";
+        }elseif($room_type==3){
+            return "互动聊天室";
+        }else{
+            return "公开";
+        }
+    }
+	function live_pay($is_live_pay){
+	if($is_live_pay==0){
+	return "否";
+	}elseif($is_live_pay==1){
+	return "是";
+	}}
+
+	function live_stick($stick){
+	if($stick==0){
+	return "否";
+	}elseif($stick==1){
+	return "是";
+	}}
+
+	function live_pay_type($live_pay_type,$video){
+	if($video['is_live_pay']==1){
+	if($live_pay_type==1){
+	return "按场收费";
+	}elseif($live_pay_type==0){
+	return "按时收费";
+	}elseif($live_pay_type==2){
+	return "暂未收费";
+	}
+	}
+	}
+</PHP>
+<script>
+
+ function get_video_preview(id){
+     window.open(ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=play&id="+id);
+ }
+
+
+</script>
+
+<load href='__TMPL__Common/js/jquery.bgiframe.js' />
+<load href='__TMPL__Common/js/jquery.weebox.js' />
+<load href='__TMPL__Common/js/deal.js' />
+<load href='__TMPL__Common/js/user.js' />
+<load href='__TMPL__Common/style/weebox.css' />
+<script type="text/javascript" src="__TMPL__Common/js/calendar/calendar.php?lang=zh-cn" ></script>
+<load href='__TMPL__Common/js/calendar/calendar.css' />
+<load href='__TMPL__Common/js/calendar/calendar.js' />
+<div class="main">
+<div class="main_title_list"><div class="list-line-ico"></div>{$deal.name}-直播列表</div>
+<html:list
+id="dataTable"
+style="dataTable"
+name="video"
+action="true"
+datasource="list"
+show="id:房间号
+	,user_id:主播ID
+	,user_id|get_nickname=$video['user_id']:主播
+	,vote_number:{%TICKET}|50px
+	,all_watch_number:前端显示人数
+	,watch_number:实际观看人数
+	,max_watch:洪峰观看人数
+	,virtual_watch_number:当前机器人数
+	,robot_num:当前机器人头数量
+	,live_in|live_status=$video:直播状态:preview
+	,room_type|get_room_type=$video['room_type']:直播类型
+	,is_live_pay|live_pay:是否收费
+	,live_pay_type|live_pay_type=$video:收费类型
+	,create_time|to_date:创建时间
+	,begin_time|to_date:开始时间
+	,end_time|to_date:结束时间
+	,tipoff_count:举报次数:tipoff_list
+	,monitor_time:心跳时间"
+actionlist="id|get_preview=$video" />
+
+<div class="page">{$page}</div><!--(数值越大在app热门直播中越靠前)  ,vote_number:{%TICKET}-->
+</div>
+<include file="Public:footer" />

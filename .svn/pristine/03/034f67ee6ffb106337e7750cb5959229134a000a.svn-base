@@ -1,0 +1,296 @@
+<?php
+// +----------------------------------------------------------------------
+// | Fanwe 方维p2p借贷系统
+// +----------------------------------------------------------------------
+// | Copyright (c) 2011 http://www.fanwe.com All rights reserved.
+// +----------------------------------------------------------------------
+// | Author: 甘味人生(526130@qq.com)
+// +----------------------------------------------------------------------
+
+class PropStatisticsAction extends CommonAction{
+
+	//道具消耗统计
+    public function consume_statistics()
+    {      
+        //统计所有送礼物表
+        $prop_tables = array(); //存放送礼物表的数组
+        $prop_tables[] =  DB_PREFIX.'video_prop';
+        $time = time()-28800;
+        $year = intval(to_date($time,'Y')); //年
+        $month = intval(to_date($time,'m'));    //月
+        $table = DB_PREFIX.'video_prop_'.to_date($time,'Ym');
+        $res = $GLOBALS['db']->getRow("SHOW TABLES LIKE'$table'");
+        /*admin_ajax_return($table);*/
+        while ($res)    
+        {
+            $prop_tables[]=$table;      //获取该数据库下所有的送礼物表
+            $month--;
+            if ($month>0)
+            {
+                $month>=10?$prev_m = strval($year).$month:$prev_m = strval($year).'0'.$month;
+                $table = DB_PREFIX . 'video_prop_' . $prev_m;
+                $res = $GLOBALS['db']->getRow("SHOW TABLES LIKE'$table'");
+            }
+            else if ($month<=0)
+            {
+                $month = '12';
+                $year --;
+                $prev_y = $year.$month;
+                $table = DB_PREFIX . 'video_prop_' . $prev_y;
+                $res = $GLOBALS['db']->getRow("SHOW TABLES LIKE'$table'");
+            }
+        }
+
+        //列表过滤器，生成时间搜索查询Map对象
+        $map = $this->com_search();
+
+        $parameter = '';
+        $sql_w = '';
+        //查看是否有进行时间搜索
+        if($map['start_time'] != '' && $map['end_time'] != ''){
+            $parameter.=" create_time between '". $map['start_time'] . "' and '". $map['end_time'] ."'&";
+            $sql_w .=" create_time between '". $map['start_time']. "' and '". $map['end_time'] ."' and ";     
+        }  
+        //查看是否有进行道具名搜索
+        if(strim($_REQUEST['name'])!=''){
+            $sql_w .= " prop_name like '%".strim($_REQUEST['name'])."%' and ";   
+        } 
+
+        $model = D ();
+
+        //获取道具统计表的sql
+        $sql_str = "SELECT res.id,res.name,res.price,sum(res.sale) as sale,sum(res.total) as total FROM (";
+        //获取总量与总金额
+        $sql_count = "SELECT sum(res.count) as count,sum(res.count_price) as count_price FROM (";
+        for($i=0;$i<count($prop_tables);$i++)   //连接所有礼物表进行查询
+        {
+            $sql_str .= "SELECT p.id as id,p.name as name,p.diamonds as price,count(v.prop_id) as sale,sum(v.total_diamonds) as total " .
+                " FROM ".DB_PREFIX."prop p , ".$prop_tables[$i]." v WHERE p.id = v.prop_id ";
+            $sql_str .= " and ".$sql_w." 1=1 group by p.id ";
+
+            $sql_count .= "SELECT count(prop_id) as count, sum(total_diamonds) as count_price " .
+            " FROM ".$prop_tables[$i]." where 1=1 ";
+            $sql_count .= " and ".$sql_w." 1=1  and prop_id > 0 ";
+
+            if($i<count($prop_tables)-1)
+            {
+                $sql_str .= " union all ";
+                $sql_count .= " union all ";
+            }
+        }
+        $sql_str .= " ) as res group by res.id " ;
+        $sql_count .= " ) as res ";
+        $voList = $this->_Sql_list($model, $sql_str, "&".$parameter,'id',true);
+        $countList = $GLOBALS['db']->getRow($sql_count);
+        
+        $this->assign ( 'list', $voList );
+        $this->assign("count",$countList['count']);
+        $this->assign("count_price",$countList['count_price']);
+        $this->display ();
+        return;
+    }
+
+    //道具消耗明细
+    public function detail()
+    {
+        //统计所有送礼物表
+        $prop_tables = array(); //存放送礼物表的数组
+        $prop_tables[] =  DB_PREFIX.'video_prop';
+        $time = time()-28800;
+        $year = intval(to_date($time,'Y')); //年
+        $month = intval(to_date($time,'m'));    //月
+        $table = DB_PREFIX.'video_prop_'.to_date($time,'Ym');
+        $res = $GLOBALS['db']->getRow("SHOW TABLES LIKE'$table'");
+        /*admin_ajax_return($table);*/
+        while ($res)    
+        {
+            $prop_tables[]=$table;      //获取该数据库下所有的送礼物表
+            $month--;
+            if ($month>0)
+            {
+                $month>=10?$prev_m = strval($year).$month:$prev_m = strval($year).'0'.$month;
+                $table = DB_PREFIX . 'video_prop_' . $prev_m;
+                $res = $GLOBALS['db']->getRow("SHOW TABLES LIKE'$table'");
+            }
+            else if ($month<=0)
+            {
+                $month = '12';
+                $year --;
+                $prev_y = $year.$month;
+                $table = DB_PREFIX . 'video_prop_' . $prev_y;
+                $res = $GLOBALS['db']->getRow("SHOW TABLES LIKE'$table'");
+            }
+        }
+
+        //列表过滤器，生成时间搜索查询Map对象
+        $map = $this->com_search();
+
+        $prop_id = strim($_REQUEST['id']);
+
+        $parameter = '';
+        $sql_w = '';
+        //查看是否有进行时间搜索
+        if($map['start_time'] != '' && $map['end_time'] != ''){
+            $parameter.=" create_time between '". $map['start_time'] . "' and '". $map['end_time'] ."'&";
+            $sql_w .=" create_time between '". $map['start_time']. "' and '". $map['end_time'] ."' and ";     
+        }  
+        //查看是否有进行使用者或接收者ID搜索
+        if(strim($_REQUEST['from_user_id'])!=''){
+            $sql_w .= " from_user_id like '%".strim($_REQUEST['from_user_id'])."%' and ";   
+        } 
+        if(strim($_REQUEST['to_user_id'])!=''){
+            $sql_w .= " to_user_id like '%".strim($_REQUEST['to_user_id'])."%' and ";   
+        } 
+
+        $model = D ();
+
+        //获取道具明细表的sql
+        $sql_str = "";
+        //获取总量与总金额的sql
+        $sql_count = "SELECT sum(res.count) as count,sum(res.count_price) as count_price FROM (";
+        for($i=0;$i<count($prop_tables);$i++)   //连接所有礼物表进行查询
+        {
+            $sql_str .= "SELECT prop_id as id ,prop_name as name,from_user_id,to_user_id,total_diamonds as diamonds,create_time as time " .
+            " FROM ".$prop_tables[$i]." where prop_id = ".$prop_id;
+            $sql_str .= " and ".$sql_w." 1=1 ";
+
+
+            $sql_count .= "SELECT count(prop_id) as count, sum(total_diamonds) as count_price " .
+            " FROM ".$prop_tables[$i]." where prop_id = ".$prop_id;
+            $sql_count .= " and ".$sql_w." 1=1 ";
+
+
+            if($i<count($prop_tables)-1)
+            {
+                $sql_str .= " union all ";
+                $sql_count .= " union all ";
+            }
+        }
+        $sql_count .= ") as res ";
+        /*admin_ajax_return($sql_str);*/
+        $voList = $this->_Sql_list($model, $sql_str, "&".$parameter,'time');
+        for($i=0;$i<count($voList);$i++)
+        {
+            $voList[$i]['time'] = to_date($voList[$i]['time']);
+        }
+
+        $countList = $GLOBALS['db']->getRow($sql_count);
+
+        $this->assign ( 'list', $voList );
+        $this->assign("count",$countList['count']);
+        $this->assign("count_price",$countList['count_price']);
+        $this->display ();
+        return;
+    }
+
+    //导出电子表
+    public function export_csv($page = 1)
+    {
+
+        $pagesize = 10;
+        set_time_limit(0);
+        $limit = (($page - 1)*intval($pagesize)).",".(intval($pagesize));
+
+        //统计所有送礼物表
+        $prop_tables = array(); //存放送礼物表的数组
+        $prop_tables[] =  DB_PREFIX.'video_prop';
+        $time = time()-28800;
+        $year = intval(to_date($time,'Y')); //年
+        $month = intval(to_date($time,'m'));    //月
+        $table = DB_PREFIX.'video_prop_'.to_date($time,'Ym');
+        $res = $GLOBALS['db']->getRow("SHOW TABLES LIKE'$table'");
+        /*admin_ajax_return($table);*/
+        while ($res)    
+        {
+            $prop_tables[]=$table;      //获取该数据库下所有的送礼物表
+            $month--;
+            if ($month>0)
+            {
+                $month>=10?$prev_m = strval($year).$month:$prev_m = strval($year).'0'.$month;
+                $table = DB_PREFIX . 'video_prop_' . $prev_m;
+                $res = $GLOBALS['db']->getRow("SHOW TABLES LIKE'$table'");
+            }
+            else if ($month<=0)
+            {
+                $month = '12';
+                $year --;
+                $prev_y = $year.$month;
+                $table = DB_PREFIX . 'video_prop_' . $prev_y;
+                $res = $GLOBALS['db']->getRow("SHOW TABLES LIKE'$table'");
+            }
+        }
+
+        //列表过滤器，生成时间搜索查询Map对象
+        $map = $this->com_search();
+
+        $sql_w = '';
+        //查看是否有进行时间搜索
+        if($map['start_time'] != '' && $map['end_time'] != ''){
+            $parameter.=" create_time between '". $map['start_time'] . "' and '". $map['end_time'] ."'&";
+            $sql_w .=" create_time between '". $map['start_time']. "' and '". $map['end_time'] ."' and ";     
+        }  
+        //查看是否有进行道具名搜索
+        if(strim($_REQUEST['name'])!=''){
+            $sql_w .= " prop_name like '%".strim($_REQUEST['name'])."%' and ";   
+        } 
+
+        //获取道具统计表的sql
+        $sql_str = "SELECT res.id,res.name,res.price,sum(res.sale) as sale,sum(res.total) as total FROM (";
+        //获取总量与总金额
+        $sql_count = "SELECT sum(res.count) as count,sum(res.count_price) as count_price FROM (";
+        for($i=0;$i<count($prop_tables);$i++)   //连接所有礼物表进行查询
+        {
+            $sql_str .= "SELECT p.id as id,p.name as name,p.diamonds as price,count(v.prop_id) as sale,sum(v.total_diamonds) as total " .
+                " FROM ".DB_PREFIX."prop p , ".$prop_tables[$i]." v WHERE p.id = v.prop_id ";
+            $sql_str .= " and ".$sql_w." 1=1 group by p.id ";
+
+            $sql_count .= "SELECT count(prop_id) as count, sum(total_diamonds) as count_price " .
+            " FROM ".$prop_tables[$i]." where 1=1 ";
+            $sql_count .= " and ".$sql_w." 1=1 ";
+
+            if($i<count($prop_tables)-1)
+            {
+                $sql_str .= " union all ";
+                $sql_count .= " union all ";
+            }
+        }
+        $sql_str .= " ) as res group by res.id " ;
+        $sql_count .= " ) as res ";
+
+        $time ='1970-01-01 16:00:00';
+        $sql =$sql_str." limit ";
+        $sql .= $limit;
+        /*admin_ajax_return($sql);*/
+        $list=$GLOBALS['db']->getAll($sql);
+        /*admin_ajax_return($list);*/
+        if($list)
+        {
+            register_shutdown_function(array(&$this, 'export_csv'), $page+1);
+            $m_config = load_auto_cache('m_config');
+            $ticket_name = $m_config['ticket_name']!=''?$m_config['ticket_name']:'印票';
+            $refund_value = array( 'id'=>'""','name'=>'""','price'=>'""', 'sale'=>'""', 'total'=>'""'); 
+            if($page == 1)
+            {
+                $content = iconv("utf-8","gbk","ID,道具名,道具单价(钻石),道具消耗量,总消耗额(钻石)");
+                $content = $content . "\n";
+            }
+            foreach($list as $k=>$v)
+            {
+                $refund_value['id'] = '"' . iconv('utf-8','gbk',$list[$k]['id']) . '"';
+                $refund_value['name'] = '"' . iconv('utf-8','gbk',$list[$k]['name']) . '"';
+                $refund_value['price'] = '"' . iconv('utf-8','gbk',$list[$k]['price']) . '"';
+                $refund_value['sale'] = '"' . iconv('utf-8','gbk',$list[$k]['sale']) . '"';
+                $refund_value['total'] = '"' . iconv('utf-8','gbk',$list[$k]['total']) . '"';
+                $content .= implode(",", $refund_value) . "\n";
+            }
+
+            header("Content-Disposition: attachment; filename=prop_statistics.csv");
+            echo $content ;
+        }
+        else
+        {
+            if($page==1)
+                $this->error(L("NO_RESULT"));
+        }
+    }
+}

@@ -1,0 +1,51 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<script>
+    function refresh(){
+        $(document).ready(function(){
+            window.location.reload();
+        });
+    }
+    //成长管理
+    function tree_manage_list(id){
+        location.href = ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=tree_manage_list&order_id="+id;
+    }
+</script>
+
+<load href='__TMPL__Common/js/jquery.bgiframe.js' />
+<load href='__TMPL__Common/js/jquery.weebox.js' />
+<load href='__TMPL__Common/js/deal.js' />
+<load href='__TMPL__Common/js/user.js' />
+<load href='__TMPL__Common/style/weebox.css' />
+<script type="text/javascript" src="__TMPL__Common/js/calendar/calendar.php?lang=zh-cn" ></script>
+<load href='__TMPL__Common/js/calendar/calendar.css' />
+<load href='__TMPL__Common/js/calendar/calendar.js' />
+<div class="main">
+    <div class="main_title_list"><div class="list-line-ico"></div>订单列表<a href="/{$url_name}?m=QkTree&a=order_info&&">刷新</a></div>
+    <div class="search_row">
+        <form name="search" action="__APP__" method="get" class="clearfix">
+            <div>用户ID：<input type="text" class="textbox" name="user_id" value="{:trim($_REQUEST['user_id'])}" style="width:100px;" /></div>
+            <div>订单编号：<input type="text" class="textbox" name="order_id" value="{:trim($_REQUEST['order_id'])}" style="width:100px;" /></div>
+            <div>树苗名称：<input type="text" class="textbox" name="title" value="{:trim($_REQUEST['title'])}" style="width:100px;" /></div>
+            <div>钻石：<input type="text" class="textbox" name="diamonds" value="{:trim($_REQUEST['diamonds'])}" style="width:100px;" /></div>
+            <div>创建时间：<span><input type="text" class="textbox" name="create_time_1" id="create_time_1" value="{$_REQUEST['create_time_1']}" onfocus="this.blur(); return showCalendar('create_time_1', '%Y-%m-%d', false, false, 'btn_create_time_1');" /><input type="button" class="button" id="btn_create_time_1" value="{%SELECT_TIME}" onclick="return showCalendar('create_time_1', '%Y-%m-%d', false, false, 'btn_create_time_1');" /></span> - <span><input type="text" class="textbox" name="create_time_2" id="create_time_2" value="{$_REQUEST['create_time_2']}" onfocus="this.blur(); return showCalendar('create_time_2', '%Y-%m-%d', false, false, 'btn_create_time_2');" /><input type="button" class="button" id="btn_create_time_2" value="{%SELECT_TIME}" onclick="return showCalendar('create_time_2', '%Y-%m-%d', false, false, 'btn_create_time_2');" /></span><input type="hidden" value="QkTree" name="m" /><input type="hidden" value="order_info" name="a" /><input type="submit" class="button" value="{%SEARCH}" /></div>
+        </form>
+    </div>
+    <html:list
+            id="dataTable"
+            style="dataTable"
+            name="qk_tree_order"
+            action="true"
+            datasource="list"
+            show="id:订单编号
+    ,title:树苗名称
+    ,user_id:用户ID
+    ,nick_name:用户昵称
+    ,pay:订单金额
+    ,create_time|to_date:创建时间"
+            actionlist="tree_manage_list:成长管理" />
+
+    <div class="page">{$page}</div><!--(数值越大在app热门直播中越靠前)  ,vote_number:{%TICKET}-->
+</div>
+<include file="Public:footer" />

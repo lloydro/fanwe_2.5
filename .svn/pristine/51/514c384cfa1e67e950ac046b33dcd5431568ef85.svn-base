@@ -1,0 +1,129 @@
+/*1. @import (reference) "文件路径"; 
+　　将引入的文件作为样式库使用，因此文件中样式不会被直接编译为css样式规则。当前样式文件通过extend和mixins的方式引用样式库的内容。
+2. @import (inline) "文件路径"; 
+　　用于引入与less不兼容的css文件，通过inline配置告知编译器不对引入的文件进行编译处理，直接输出到最终输出。注意：引入的文件和当前文件会被编译为一个样式样式
+3. @import (less) "文件路径"; 
+　　默认使用该配置项，表示引入的文件为less文件。
+4. @import (css) "文件路径"; 
+　　表示当前操作为CSS中的@import操作。当前文件会输出一个样式文件，而被引入的文件自身为一个独立的样式文件
+5. @import (once) "文件路径"; 
+　　默认使用该配置项，表示对同一个资源仅引入一次。
+6. @import (multiple) "文件路径"; 
+　　表示对同一资源可引入多次。*/
+/*字体颜色*/
+/*主要字色*/
+/*标题*/
+/*浅色*/
+/*更浅色（适用：二级标题、简介）*/
+/*更更浅色（适用：icon图标）*/
+/*界面主题色*/
+/*背景色*/
+/*背景色*/
+/*主题风格色*/
+/*主题风格浅色*/
+/*主题风格浅色*/
+/*主题辅助风格色*/
+/*线条颜色*/
+/*主要线条颜色*/
+/*更深线条颜色*/
+/*文本输入框边框颜色*/
+/*字体大小 ，如果出现非单行情况可搭配行高，*/
+/*各类间距，高度*/
+/*横向间距*/
+/*纵向间距*/
+input:-moz-placeholder,
+textarea:-moz-placeholder,
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+  color: #D4D4D4;
+}
+input,
+button {
+  font-family: "Microsoft YaHei";
+  border: medium none;
+  overflow: visible;
+}
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+input,
+select {
+  outline: medium none;
+}
+textarea {
+  margin: 0;
+  padding: 0;
+}
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+  outline: none;
+}
+ul,
+li,
+dl,
+dd,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  font-weight: normal;
+}
+i,
+em {
+  font-style: normal;
+}
+button {
+  border: none;
+}
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+input,
+button,
+select,
+textarea {
+  outline: none;
+}
+textarea {
+  resize: none;
+}
+a {
+  -moz-transition: all .3s ease;
+  -ms-transition: all .3s ease;
+  -o-transition: all .3s ease;
+  transition: all .3s ease;
+}
+a,
+a:hover {
+  color: #444;
+  text-decoration: none;
+  outline: none;
+}
+a:active,
+a:focus {
+  color: #444;
+  outline: none;
+  text-decoration: none;
+}
+body {
+  background: #f7f9fa;
+  color: #444;
+  font: 14px/1.5 'tahoma', 'arial', 'Hiragino Sans GB', 'microsoft yahei';
+}
+input,
+select {
+  outline: medium none;
+}
+input.disable {
+  background-color: #eee !important;
+}

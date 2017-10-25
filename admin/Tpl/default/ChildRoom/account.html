@@ -1,0 +1,91 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<PHP>
+    function get_level($id){
+    $get_level=$GLOBALS['db']->getOne("select ul.name from ".DB_PREFIX."user_level as ul left join ".DB_PREFIX."user as u on u.user_level = ul.level where u.id=".$id);
+    return $get_level;
+    }
+
+    function get_nickname($id){
+    $get_nickname=$GLOBALS['db']->getOne("select nick_name from ".DB_PREFIX."user where id=".$id);
+    return emoji_decode($get_nickname);
+    }
+    function image($image){
+    if($image==''){
+    return "<a style='height:35px;width:35px;'/>图片未上传</a>";
+    }else{
+    return "<img src='".$image."' style='height:35px;width:35px;'/>";
+    }
+    }
+
+</PHP>
+<script>
+    function refresh(){
+        $(document).ready(function(){
+            window.location.reload();
+        });
+    }
+
+    //添加子房间
+    function add_child_room_account(){
+        location.href = ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=add_child_room_account";
+    }
+    //编辑子房间
+    function edit_child_room_account(id){
+        location.href = ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=edit_child_room_account&id="+id;
+    }
+    //观众列表
+    function account_list(id){
+        location.href = ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=account_list&id="+id;
+    }
+
+</script>
+
+<load href='__TMPL__Common/js/jquery.bgiframe.js' />
+<load href='__TMPL__Common/js/jquery.weebox.js' />
+<load href='__TMPL__Common/js/deal.js' />
+<load href='__TMPL__Common/js/user.js' />
+<load href='__TMPL__Common/style/weebox.css' />
+<script type="text/javascript" src="__TMPL__Common/js/calendar/calendar.php?lang=zh-cn" ></script>
+<load href='__TMPL__Common/js/calendar/calendar.css' />
+<load href='__TMPL__Common/js/calendar/calendar.js' />
+<div class="main">
+    <div class="main_title_list"><div class="list-line-ico"></div>子房间列表<a href="/{$url_name}?m=ChildRoom&a=account&&">刷新</a></div>
+    <div class="search_row">
+        <form name="search" action="__APP__" method="get" class="clearfix">
+            <div>主播ID: <input type="text" class="textbox" name="user_id" value="{:trim($_REQUEST['user_id'])}" style="width:100px;" /></div>
+            <div>主播昵称：<input type="text" class="textbox" name="nick_name" value="{:trim($_REQUEST['nick_name'])}" style="width:100px;" /></div>
+            <div><input type="hidden" value="ChildRoom" name="m" /><input type="hidden" value="account" name="a" /><input type="submit" class="button" value="{%SEARCH}"/></div>
+        </form>
+    </div>
+    <html:list
+            id="dataTable"
+            style="dataTable"
+            name="account"
+            checkbox="true"
+            action="true"
+            datasource="list"
+            show="id:编号
+       ,head_image|image:主账号头像
+       ,p_user_id:主账号
+       ,nick_name:主账号昵称
+	   ,c_user_id:子账户ID
+	   ,price:价格
+	   ,room_title:房间名称
+	   ,video_code:验证码
+	   ,is_effect|get_is_effect=$account['id']:{%IS_EFFECT}"
+            actionlist="edit_child_room_account:{%EDIT},account_list:子账户列表" />
+
+    <table class="dataTable">
+        <tbody>
+        <td colspan="11">
+            <input type="button" class="button button-add" value="{%ADD}" onclick="add_child_room_account();" />
+            <!--<input type="button" class="button button-del" value="{%DEL}" onclick="del_child_room();" />-->
+        </td>
+        </tbody>
+    </table>
+    <div class="page">{$page}</div><!--(数值越大在app热门直播中越靠前)  ,vote_number:{%TICKET}-->
+</div>
+
+<include file="Public:footer" />

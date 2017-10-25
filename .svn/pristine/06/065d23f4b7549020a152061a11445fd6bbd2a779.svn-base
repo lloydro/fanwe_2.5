@@ -1,0 +1,42 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<PHP>
+	function get_prop_name($id){
+		return $GLOBALS['db']->getOne("select name from ".DB_PREFIX."prop where id=".$id);
+    }
+</PHP>
+<script type="text/javascript">
+</script>
+<script type="text/javascript" src="__TMPL__Common/js/calendar/calendar.php?lang=zh-cn" ></script>
+<load href='__TMPL__Common/js/calendar/calendar.css' />
+<load href='__TMPL__Common/js/calendar/calendar.js' />
+<div class="main">
+	<div class="main_title">{$user_info.nick_name} 邀请码奖励</div>
+	<div class="blank5"></div>
+	<div class="blank5"></div>
+	<div class="search_row">
+		<form name="search" action="__APP__" method="get">
+			邀请的用户ID：<input type="text" class="textbox" name="from_user_id" value="{:trim($_REQUEST['from_user_id'])}" style="width:100px;" />
+			邀请的用户昵称：<input type="text" class="textbox" name="nick_name" value="{:trim($_REQUEST['nick_name'])}" style="width:100px;" />
+			<input type="hidden" value="UserGeneral" name="m" /><input type="hidden" value="invite_distribution_log" name="a" /><input type="submit" class="button" value="{%SEARCH}" />
+			<input type="hidden" value="<?php echo $_REQUEST['id'] ?>" name="id"/>
+		</form>
+
+	</div>
+	<html:list
+			id="dataTable"
+			style="dataTable"
+			name="prop"
+			checkbox="true"
+			datasource="list"
+			show="id:编号,from_user_id:邀请的用户ID,nick_name:邀请的用户昵称,prop_id|get_prop_name:礼物名称,ticket:从中获得{%TICKET}数"
+	/>
+
+	<div class="blank5"></div>
+	<div class="button_row">
+		<!--<input type="button" class="button" value="{%FOREVERDEL}" onclick="prop_detail();" />-->
+	</div>
+	<div class="page">{$page}</div>
+</div>
+<include file="Public:footer" />

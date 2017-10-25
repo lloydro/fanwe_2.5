@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{if $data.page_title neq ''}{$data.page_title}{else}{if $data.share}{$data.share.share_title}{/if}{/if}</title>
+    <link rel="stylesheet" href="{$TMPL}/dist/statics/css/main.min.css" />
+    <script type="text/javascript" src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+    <script type="text/javascript">
+        var APP_ROOT = '{$APP_ROOT}';
+    </script>
+</head>
+<body>
+<div class="con" style="background-image:url({if $data.bg_page}{$data.bg_page}{else}{$TMPL}/dist/statics/images/index-wap-bg.png{/if})">
+    <div class="con-wrap">
+        <div class="app-box">
+            <div class="mark-img">
+                <img src="{$data.app_logo}" alt="">
+            </div>
+            <h1>{$data.app_name}</h1>
+            <div class="app-download">
+                <div class="app ios">
+                    <a href='{$data.ios_down_url}'><i class="icon iconfont">&#xe61f; </i> APP store</a>
+                </div>
+                {if $data.android_filename}
+                    <div class="app android">
+                        <a href="{$data.android_filename}"><i class="icon iconfont">&#xe604; </i> Android  </a>
+                    </div>
+                {/if}
+            </div>
+        </div>
+        <div class="blank0"></div>
+        <div class="copyright">{$data.COPYRIGHT}&nbsp;{$data.NETWORK_FOR_RECORD}&nbsp;{$data.SITE_LICENSE}</div>
+    </div>
+</div>
+<?php
+    $this->_var['dpagejs'][] = $this->_var['TMPL']."/dist/qrcode.js";
+?>
+<script type="text/javascript" src="{function name="parse_script" v="$dpagejs"}"></script>
+<script type="text/javascript">
+window.onload = function () {
+    var qrcode = new QRCode(document.getElementById("qrcode"), {
+        width: 147, //设置宽高
+        height: 147
+    });
+    qrcode.makeCode('{$data.qrcode_url}');
+}
+</script>
+{include file="inc/footer.html"}

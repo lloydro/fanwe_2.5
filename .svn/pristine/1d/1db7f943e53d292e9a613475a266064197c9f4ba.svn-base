@@ -1,0 +1,57 @@
+<?php
+// +----------------------------------------------------------------------
+// | Fanwe 方维众筹商业系统
+// +----------------------------------------------------------------------
+// | Copyright (c) 2011 http://www.fanwe.com All rights reserved.
+// +----------------------------------------------------------------------
+// | Author: 甘味人生(526130@qq.com)
+// +----------------------------------------------------------------------
+
+class IndexsAction extends AuthAction{
+	/*
+	 * 网站数据统计
+	*/
+	public function statistics(){
+		
+		$user_count=M("User")->where("is_robot=0")->count();		
+		$no_effect=M("User")->where("is_robot=0 and is_effect=0 or is_effect=2")->count(); //未审核
+		$is_effect=M("User")->where("is_robot=0 and is_effect=1")->count(); //审核
+
+		//认证
+		$user_authentication=M("User")->where("is_authentication = 2 and user_type=0  and is_effect=1 and is_robot = 0")->count();
+		$business_authentication=M("User")->where("is_authentication = 2 and user_type=1 and is_effect=1 and is_robot = 0")->count();
+		$all_authentication=M("User")->where(" (user_type=0 or user_type=1) and is_authentication =2 and is_effect=1 and is_robot = 0")->count();
+
+		if(defined('QK_TREE')&& QK_TREE == 1){
+			//树苗订单
+			$tree_order_count= M("QkTreeOrder")->count();
+			$total_tree_order_money = M("QkTreeOrder")->sum('pay');
+			$m_config = load_auto_cache('m_config');
+			$diamonds_name = $m_config['diamonds_name'];
+			$this->assign("diamonds_name",$diamonds_name);
+			$this->assign("tree_order_count",$tree_order_count);
+			$this->assign("total_tree_order_money",$total_tree_order_money);
+            $this->assign("open_qk_tree",1);
+		}
+
+		//资金进出
+		//线上充值
+		$online_pay = floatval($GLOBALS['db']->getOne("SELECT sum(money) FROM ".DB_PREFIX."payment_notice where is_paid = 1 and payment_id>0  "));
+		$this->assign("online_pay",$online_pay);
+		//总计
+		$total_usre_money = $online_pay;
+		$this->assign("total_usre_money",$total_usre_money);
+
+		$this->assign("diamonds_name",$diamonds_name);
+		$this->assign("tree_order_count",$tree_order_count);
+		$this->assign("total_tree_order_money",$total_tree_order_money);
+		$this->assign("user_count",$user_count);
+		$this->assign("no_effect",$no_effect);
+		$this->assign("is_effect",$is_effect);
+		$this->assign("user_authentication",$user_authentication);
+		$this->assign("business_authentication",$business_authentication);
+		$this->assign("all_authentication",$all_authentication);
+		$this->display();
+	}
+}
+?>

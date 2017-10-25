@@ -1,0 +1,116 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+
+<script type="text/javascript">
+</script>
+<div class="main">
+<div class="main_title">推广设置</div>
+<form method='post' id="form" name="form" action="__APP__" enctype="multipart/form-data" onsubmit="return submit_check();">
+	<table class="form conf_tab" cellpadding=0 cellspacing=0 rel="{$key}" >
+		<tr>
+			<td colspan=2 class="topTd"></td>
+		</tr>
+		<foreach name="vo" item="conf_item">
+		<tr <if condition="$conf_item['code'] eq 'promoter_average_anchor_limit_num'">style="display:none"</if>>
+			<td class="item_title">{$conf_item['title']}:</td>
+			<td class="item_input">
+				<if condition="$conf_item['type'] eq 1">
+				<html:editor id="{$conf_item.code}" name="{$conf_item.code}" type="KINDEDITOR" style=" height:150px;width:750px;" content="{$conf_item.val}" /><if condition="$conf_item['desc'] neq ''"><span style="color:#999;font-size:12px;">&nbsp;{$conf_item.desc}</span></if>
+				</if>
+				<if condition="$conf_item['type'] eq 2">
+				<html:imgUpload id="{$conf_item.code}" name="{$conf_item.code}" value='$conf_item.val' /><if condition="$conf_item['desc'] neq ''"><span style="color:#999;font-size:12px;">&nbsp;{$conf_item.desc}</span></if>
+				</if>
+				<if condition="$conf_item['type'] eq 0">
+				<input type="text" class="textbox" name="{$conf_item.code}" value="{$conf_item.val}" /><if condition="$conf_item['desc'] neq ''"><span style="color:#999;font-size:12px;">&nbsp;{$conf_item.desc}</span></if>
+				</if>
+				<if condition="$conf_item['type'] eq 3">
+				<textarea class="textbox " name="{$conf_item.code}"  style="height:100px;width:250px;">{$conf_item.val}</textarea><if condition="$conf_item['desc'] neq ''"><span style="color:#999;font-size:12px;">&nbsp;{$conf_item.desc}</span></if>
+				</if>
+				<if condition="$conf_item['type'] eq 4">
+					<select name="{$conf_item.code}">
+						<foreach name="conf_item.value_scope" item="preset_value">
+							<option value="{$preset_value}" <if condition="$conf_item['val'] eq $preset_value">selected="selected"</if>>
+								{$conf_item['title_scope'][$preset_value]}
+							</option>
+						</foreach>
+					</select><if condition="$conf_item['desc'] neq ''"><span style="color:#999;font-size:12px;">&nbsp;{$conf_item.desc}</span></if>
+				</if>
+				<if condition="$conf_item['type'] eq 5">
+					
+					<select name="{$conf_item.code}">
+						<foreach name="is_limit_time_h" item="h_value">
+							<option value="{$h_value}" <if condition="$conf_item.val eq $h_value">selected="selected"</if>>
+								{$h_value}
+							</option>
+						</foreach>
+					</select>
+					<if condition="$conf_item['desc'] neq ''"><span style="color:#999;font-size:12px;">&nbsp;{$conf_item.desc}</span></if>
+				</if>
+			</td>
+			
+		</tr>
+		
+		</foreach>
+
+		<tr>
+			<td colspan=2 class="bottomTd"></td>
+		</tr>
+	</table>
+	<div class="blank5"></div>
+	<table class="form" cellpadding=0 cellspacing=0>
+		<tr>
+			<td colspan=2 class="topTd"></td>
+		</tr>
+		<tr>
+			<td class="item_title"></td>
+			<td class="item_input">
+			<!--隐藏元素-->
+			<input type="hidden" name="{:conf("VAR_MODULE")}" value="BmConfig" />
+			<input type="hidden" name="{:conf("VAR_ACTION")}" value="update" />
+			<!--隐藏元素-->
+			<input type="submit" class="button button-add" value="{%EDIT}" /><input type="reset" class="button button-del" value="{%RESET}" />
+			</td>
+		</tr>
+		<tr>
+			<td colspan=2 class="bottomTd"></td>
+		</tr>
+	</table>
+</form>
+    <script>
+
+        function submit_check(){
+            if($("select[name='sina_app_api']").val()==1){
+                if($("select[name='has_sina_login']").val()==0){
+                    alert("必须支持新浪登录才能支持新浪分享");
+                    return false;
+                }
+            }
+            if($("select[name='qq_app_api']").val()==1){
+                if($("select[name='has_qq_login']").val()==0){
+                    alert("必须支持qq登录才能支持qq分享");
+                    return false;
+                }
+            }
+            if($("select[name='wx_app_api']").val()==1){
+                if($("select[name='has_wx_login']").val()==0){
+                    alert("必须支持微信登录才能支持微信分享");
+                    return false;
+                }
+            }
+
+            if($("select[name='has_sina_login']").val()==0){
+                $("select[name='sina_app_api']").val(0);
+            }
+            if($("select[name='has_qq_login']").val()==0){
+                $("select[name='qq_app_api']").val(0);
+            }
+            if($("select[name='has_wx_login']").val()==0){
+                $("select[name='wx_app_api']").val(0);
+            }
+            return true;
+        }
+    </script>
+<div class="blank5"></div>
+</div>
+<include file="Public:footer" />

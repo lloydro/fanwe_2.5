@@ -1,0 +1,17 @@
+<div class="layout-user-l f-l" ms-controller="uc_nav">
+	{if $moshi !=0}
+	<ul class="m-title-list">
+		
+		<li class="{if $ctl eq 'society' && ($act eq 'user_manage' || $act eq 'earnings_manage' || $act eq 'illegal_index')}active{/if} act">
+			<a href="javascript:void(0);" class="anchor J-anchor">公会管理<i class="iconfont right">&#xe65b;</i><i class="iconfont bottom">&#xe65c;</i></a>
+			<div class="anchor-inner">
+				<a href='{url r="society#user_manage"}' {if $act eq 'user_manage' || $act eq 'earnings_manage' || $act eq 'illegal_index'} class="actived"{/if}>主播管理</a>
+				{if $moshi == 1}
+				<a href='{url r="society#earnings_manage"}' {if $act eq 'user_manage' || $act eq 'earnings_manage' || $act eq 'illegal_index'} class="actived"{/if}>收益管理</a>
+				{/if}
+				<a href='{url r="society#illegal_index"}' {if $act eq 'user_manage' || $act eq 'earnings_manage' || $act eq 'illegal_index'} class="actived"{/if}>违规管理</a>
+			</div>
+		</li>
+	</ul>
+	{/if}
+</div>

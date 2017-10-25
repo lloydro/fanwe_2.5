@@ -1,0 +1,278 @@
+<?php
+//动态详情页
+class weiboCModule extends baseCModule
+{
+    //动态详情
+    public function index()
+    {
+        fanwe_require(APP_ROOT_PATH.'mapi/xr/core/common.php');
+
+        $weibo_id = intval($_REQUEST['weibo_id']);
+        $is_paid = intval($_REQUEST['is_paid']);
+        $page = intval($_REQUEST['page'])?intval($_REQUEST['page']):1;
+        $page_size =20;
+
+        if($GLOBALS['user_info']){
+            $user_id = $GLOBALS['user_info']['id'];
+        }else{
+            $user_id = 0;
+        }
+
+        if (defined('OPEN_SVIDEO_MODULE') && OPEN_SVIDEO_MODULE == 1) {
+            $root = load_auto_cache("svideo_select_weibo_info",
+                array('page' => $page, 'weibo_id' => $weibo_id, 'is_paid' => $is_paid));
+
+            $sql = "select count(*) from " . DB_PREFIX . "weibo_comment where weibo_id = " . $weibo_id . " and type = 3 and user_id = " . $user_id;
+            $root['info']['has_unlike'] = $GLOBALS['db']->getOne($sql) ? 1 : 0;  //是否踩过
+
+            $sql = "select count(*) from " . DB_PREFIX . "qk_svideo_favor f where user_id = {$user_id} and weibo_id = {$weibo_id}";
+            $root['info']['has_favor'] = $GLOBALS['db']->getOne($sql) ? 1 : 0;  //是否踩过
+        } else {
+            $root = load_auto_cache("select_weibo_info",
+                array('page' => $page, 'weibo_id' => $weibo_id, 'is_paid' => $is_paid));
+        }
+        
+        for($i=0;$i<count($root['comment_list']);$i++)
+        {
+            $id = $root['comment_list'][$i]['user_id'];
+            $root['comment_list'][$i]['v_icon'] = $GLOBALS['db']->getOne("select v_icon from " . DB_PREFIX . "user where id = " .$id);
+        }
+
+        $root['info']['nick_name'] = emoji_decode($root['info']['nick_name']);
+        //获取认证图标
+        $sql = "select v_icon from " . DB_PREFIX . "user where id = " . $root['info']['user_id'];
+        $root['info']['v_icon'] = $GLOBALS['db']->getOne($sql);
+
+        //更换为https域名
+        if (!strpos($root['info']['head_image'],'https') && strpos($root['info']['head_image'],'public'))
+        {
+            $root['info']['head_image'] = explode('public',$root['info']['head_image']);
+            $root['info']['head_image'][0] = $GLOBALS['distribution_cfg']['OSS_DOMAIN_HTTPS'];
+            $root['info']['head_image'] = $root['info']['head_image'][0].'/public'.$root['info']['head_image'][1];
+        }
+        if (!strpos($root['info']['photo_image'],'https') && strpos($root['info']['photo_image'],'public'))
+        {
+            $root['info']['photo_image'] = explode('public',$root['info']['photo_image']);
+            $root['info']['photo_image'][0] = $GLOBALS['distribution_cfg']['OSS_DOMAIN_HTTPS'];
+            $root['info']['photo_image'] = $root['info']['photo_image'][0].'/public'.$root['info']['photo_image'][1];
+        }
+        if (!strpos($root['info']['video_url'],'https') && strpos($root['info']['video_url'],'public'))
+        {
+            $root['info']['video_url'] = explode('public',$root['info']['video_url']);
+            $root['info']['video_url'][0] = $GLOBALS['distribution_cfg']['OSS_DOMAIN_HTTPS'];
+            $root['info']['video_url'] = $root['info']['video_url'][0].'/public'.$root['info']['video_url'][1];
+        }
+
+        $info =  $root['info'];
+        $root['page'] = $page;
+        $root['is_admin'] = 0; //是否可以管理评论
+        $root['is_reply_but'] = 0;//是否可以评论动态
+        $root['is_reply_comment_but'] = 0; //是否可以回复评论
+
+        $root['is_show_weibo_report'] = 0; //是否显示举报动态
+        $root['is_show_user_report'] = 0; //是否显示举报动态
+        $root['is_show_user_black'] = 0; //	是否显示拉黑用户
+
+        $root['is_show_top'] = 0; //	是否显示置顶
+        $root['is_show_deal_weibo'] = 0; //	是否显示删除动态
+
+        //$root['is_show_deal_comment'] = 0; //	是否显示删除评论
+
+        $root['info']['has_digg'] =0;  //是否点赞过
+        if($info['price']){
+            $is_pay =0;
+        }
+
+        if($user_id){
+            //判断是否为本人
+            $to_user_id = $info['user_id'];
+
+
+
+            if($user_id==$to_user_id){
+                $root['is_admin'] = 1;
+                $root['is_show_deal_weibo'] = 1;
+                $root['is_show_top'] = 1;
+                $is_pay = 1;
+            }else{
+                $root['is_show_weibo_report'] = 1;
+                $root['is_show_user_report'] = 1;
+                $root['is_show_user_black'] = 1;
+                $is_pay = 1;
+                if($info['price']){
+                    if(count($info['images'])>0){
+                        $payed = $GLOBALS['db']->getOne("select id from ".DB_PREFIX."payment_notice where user_id = ".$user_id." and type in (11,13,14) and is_paid = 1 and order_id = ".$info['weibo_id']);
+                        if($payed>0){
+                            $is_pay =1;
+                        }else{
+                            $is_pay =0;
+                        }
+                    }
+                }
+            }
+
+            $root['is_reply_but'] = 1;
+            $root['is_reply_comment_but'] = 1;
+            //判断是否点赞过
+            if(in_array($user_id,$root['digg_user_list'])){
+                $root['info']['has_digg'] =1;
+            }
+
+        }
+        //获取图片
+
+        if(count($info['images'])>0){
+            $images = $info['images'];
+            foreach($images as $k1=>$v1){
+                if(is_object($v1)){
+                    $v1 = (array)$v1;
+                }
+                if($v1['url']){
+                    $is_model = $v1['is_model'];
+                    $images[$k1]['orginal_url'] =  '';
+                    $info_type = $info['type'].'_info';
+                    if($info['price']&&in_array($info['type'],$this->image_pay_type)){
+                        if($is_model){
+                            if($is_pay){
+                                $images[$k1]['url'] =  deal_weio_image($v1['url'],$info_type);
+                                $images[$k1]['is_model'] =  0;
+                                $images[$k1]['orginal_url'] =  get_spec_image($v1['url']);
+                            }else{
+                                $images[$k1]['url'] = deal_weio_image($v1['url'],$info_type,1);
+                            }
+                        }else{
+                            $images[$k1]['url'] =  deal_weio_image($v1['url'],$info_type);
+                            $images[$k1]['orginal_url'] =  get_spec_image($v1['url']);
+                        }
+                    }else{
+                        $images[$k1]['url'] =  deal_weio_image($v1['url'],$info_type);
+                        $images[$k1]['is_model'] =  0;
+                        $images[$k1]['orginal_url'] =  get_spec_image($v1['url']);
+                    }
+
+
+                }
+            }
+
+            $root['info']['images'] = $images;
+        }
+        $root['user_id'] = $user_id;
+        $root['invite_info'] = $this->get_invite_info();
+        //整理传递分享链接参数
+        $root['invite_info']['imageUrl'] = $root['info']['photo_image'];
+        $root['invite_info']['headImage'] = $root['info']['head_image'];
+        $root['invite_info']['videoUrl'] = $root['info']['video_url'];
+
+        if(count($root['comment_list'])==$page_size){
+            $root['has_next'] = 1;
+        }else{
+            $root['has_next'] = 0;
+        }
+        $root['status'] = 1;
+        $root['error'] = '';
+        $root['app_down_url'] = SITE_DOMAIN."/appdown.php";
+        unset($root['info']['data']);
+        unset($root['digg_user_list']);
+        if($is_paid){
+        	$root['info']['status'] = 1;
+            $pay_list =  $root['info'];
+            api_ajax_return($pay_list);
+        }else{
+
+            api_ajax_return($root);
+        }
+
+    }
+
+    public function get_invite_info($distribution_rate,$invite_image,$app_name = ''){
+        $m_config =  load_auto_cache("m_config");//初始化手机端配置
+        $invite_url = SITE_DOMAIN.'/wap/xr/index.html#/activeIndex?user_id='.$GLOBALS['user_info']['id'];
+        $invite_image = $m_config['weibo_distribution_img'];
+        $invite_info['title'] = '【推荐】《'.$m_config['program_title'].'》';
+        $nick_name = emoji_decode($GLOBALS['user_info']['nick_name']);
+        $invite_info['content'] = $nick_name.' 请您加入 '.$app_name."APP,让您毫不费力地发照片挣红包，还有美女帅哥排队等您铃！";
+        $invite_info['imageUrl'] = empty($invite_image) ? $m_config['app_logo'] : $invite_image;
+        $invite_info['clickUrl'] = $invite_url;
+        return $invite_info;
+
+    }
+
+    //点赞列表
+    public function digg_list(){
+        $weibo_id = intval($_REQUEST['weibo_id']);
+        $page = intval($_REQUEST['page'])?intval($_REQUEST['page']):1;
+        $page_size =20;
+        $list = load_auto_cache("select_weibo_digg",array('page'=>$page,'page_size'=>$page_size,'weibo_id'=>$weibo_id));
+
+        if(count($list)==$page_size){
+            $root['has_next'] = 1;
+        }else{
+            $root['has_next'] = 0;
+        }
+
+        $root['page'] = $page;
+        $root['status'] = 1;
+        $root['error'] = '';
+        $root['list'] = $list;
+        api_ajax_return($root);
+
+    }
+
+    //商品详情
+    public function goods_info(){
+        $weibo_id = intval($_REQUEST['weibo_id']);
+        $goods_info = $GLOBALS['db']->getRow("select id as weibo_id,price,data as images,photo_image,red_count,content,create_time from ".DB_PREFIX."weibo where id = ".$weibo_id." and type = 'goods'");
+        if(!$goods_info){
+            $root['error'] = "商品不存在!";
+            $root['status'] = 0;
+            api_ajax_return($root);
+        }
+        $root = array(
+            'status'=>1,
+            'error'=>''
+        );
+        if($goods_info['photo_image']){
+            $goods_info['photo_image'] = deal_weio_image($goods_info['photo_image'],'goods_info');
+        }
+        if(!$goods_info['images']){
+            $root['error'] = "商品图片不存在!";
+            $root['status'] = 0;
+            api_ajax_return($root);
+        }
+        $goods_info['images'] = unserialize($goods_info['images']);
+        foreach($goods_info['images'] as $k=>$v){
+            if($v){
+                $goods_info['images'][$k]['url'] = get_spec_image($v['url']);
+            }
+        }
+
+        $root['goods'] = $goods_info;
+
+        api_ajax_return($root);
+    }
+
+    public function add_video_count(){
+        if(!$GLOBALS['user_info']){
+            $root['error'] = "用户未登陆,请先登陆.";
+            $root['status'] = 0;
+            api_ajax_return($root);
+        }
+        $weibo_id = intval($_REQUEST['weibo_id']);
+        $weibo = $GLOBALS['db']->getRow("select id,video_count from ".DB_PREFIX."weibo where id = $weibo_id and type ='video'");
+        if(!$weibo){
+            $root['error'] = "该动态不存在！.";
+            $root['status'] = 0;
+            api_ajax_return($root);
+        }
+        $re = $GLOBALS['db']->query("update ".DB_PREFIX."weibo set video_count=video_count+1 where id = $weibo_id");
+        $root['error'] = "";
+        $root['status'] = 1;
+        $video_count = $GLOBALS['db']->getOne("select video_count from ".DB_PREFIX."weibo where id = $weibo_id ");
+        $root['video_count'] = intval($video_count);
+        api_ajax_return($root);
+
+    }
+
+}
+
+?>

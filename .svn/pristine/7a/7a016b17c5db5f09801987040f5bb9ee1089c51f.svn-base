@@ -1,0 +1,52 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<include file="Public:new" />
+<load href='__TMPL__Common/js/jquery.bgiframe.js' />
+<load href='__TMPL__Common/js/jquery.weebox.js' />
+<load href='__TMPL__Common/js/user.js' />
+<load href='__TMPL__Common/style/weebox.css' />
+<script type="text/javascript" src="__TMPL__Common/js/calendar/calendar.php?lang=zh-cn" ></script>
+<load href='__TMPL__Common/js/calendar/calendar.css' />
+<load href='__TMPL__Common/js/calendar/calendar.js' />
+<PHP>
+	function to_money($money){
+		return format_price($money);
+	}
+	function get_refund_user_name($uid)
+	{
+		return M("User")->where("id=".$uid)->getField("nick_name");
+	}
+	function get_lastpay($uid)
+	{
+		return to_date(M("UserRefund")->where("is_pay=3 and user_id=".$uid)->order('pay_time desc')->getField("pay_time"));
+	}
+	function jump_to_list($uid)
+	{
+		return "<a href='__APP__?m=UserRefundList&a=index&user_id=$uid&is_pay=3&'>$uid</a>";
+	}
+</PHP>
+<div class="main">
+<div class="main_title_list"><div class="list-line-ico"></div>提现统计列表&nbsp;&nbsp;&nbsp;&nbsp;<a href="__APP__?m=UserRefundList&a=index&">查看提现列表</a></div>
+<div class="search_row">
+	<form name="search" action="__APP__" method="get">
+		统计时间 ：<input style="margin: 0;width:130px" type="text" class="textbox" size="8" name="start_time" id="start_time" value="{:trim($_REQUEST['start_time'])}" onfocus="return showCalendar('start_time', '%Y-%m-%d %H:%M:%S', false, false, 'start_time');" /> - <input type="text" style="width:130px" class="textbox" size="8" name="end_time" id="end_time" value="{:trim($_REQUEST['end_time'])}" onfocus="return showCalendar('end_time', '%Y-%m-%d %H:%M:%S', false, false, 'end_time');" />
+		<input type="hidden" value="StatisticsModule" name="m" /><input type="hidden" value="statistics_refund" name="a" /><input type="submit" class="button" value="{%SEARCH}" /><input type="button" class="button" value="{%EXPORT}" onclick="export_csv();" />
+	</form>
+</div>
+<html:list
+	id="dataTable"
+	style="dataTable"
+	name="deal"
+	datasource="list"
+	show="user_id|jump_to_list:用户ID
+		,user_id|get_refund_user_name:{%NICK_NAME}
+		,money|to_money:金额
+		,ticket|:{%TICKET}
+		,user_id|get_lastpay:最后提现时间
+		,is_pay|get_status:是否审核"
+	 />
+<div class="page">{$page}</div>
+<div align="center"><b style="font-size:16px;">提现总人数：{:number_format($count)} &nbsp;&nbsp;&nbsp;&nbsp; 提现总金额：￥{:number_format($user_refund,2)}</b></div>
+</div>
+<include file="Public:footer" />

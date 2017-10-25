@@ -1,0 +1,2386 @@
+/*字体颜色*/
+/*主要字色*/
+/*标题*/
+/*浅色*/
+/*更浅色（适用：二级标题、简介）*/
+/*更更浅色（适用：icon图标）*/
+/*界面主题色*/
+/*背景色*/
+/*背景色*/
+/*主题风格色*/
+/*主题风格浅色*/
+/*主题风格浅色*/
+/*主题辅助风格色*/
+/*线条颜色*/
+/*主要线条颜色*/
+/*更深线条颜色*/
+/*文本输入框边框颜色*/
+/*字体大小 ，如果出现非单行情况可搭配行高，*/
+/*各类间距，高度*/
+/*横向间距*/
+/*纵向间距*/
+.m-sidebar {
+  position: fixed;
+  right: 50px;
+  bottom: 20%;
+  width: 38px;
+  height: 38px;
+  line-height: 38px;
+  border-radius: 50%;
+  background: #00dfb2;
+  text-align: center;
+  display: block;
+  border: 2px solid #00dfb2;
+  cursor: pointer;
+  overflow: hidden;
+}
+.m-sidebar:hover .top-block {
+  -webkit-transform: translate(-42px);
+  transform: translate(-42px);
+}
+.m-sidebar .top-block {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  -webkit-transition: all 0.3s cubic-bezier(0.22, 0.58, 0.12, 0.98);
+  transition: all 0.3s cubic-bezier(0.22, 0.58, 0.12, 0.98);
+  white-space: nowrap;
+}
+.m-sidebar .top-block .go-top {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  vertical-align: top;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 38px;
+}
+.m-sidebar .top-block .go-top .icon-top {
+  color: #fff;
+}
+.m-sidebar .top-block .go-top-white {
+  display: inline-block;
+  width: 100%;
+  color: #00dfb2;
+  height: 100%;
+  background: #fff;
+  border-radius: 50%;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.m-sidebar .top-block .go-top-white .icon-top {
+  color: #00dfb2;
+}
+.footer {
+  background: #fff;
+  color: #aaa;
+  text-align: center;
+  margin-top: 20px;
+}
+.footer .footer-top {
+  height: 80px;
+  line-height: 80px;
+}
+.footer .footer-top a {
+  color: #444;
+  margin: 0 20px;
+}
+.footer .footer-bottom {
+  background: #333;
+  padding: 20px;
+  font-size: 12px;
+  color: #808080;
+  line-height: 30px;
+}
+
+/*字体颜色*/
+/*主要字色*/
+/*标题*/
+/*浅色*/
+/*更浅色（适用：二级标题、简介）*/
+/*更更浅色（适用：icon图标）*/
+/*界面主题色*/
+/*背景色*/
+/*背景色*/
+/*主题风格色*/
+/*主题风格浅色*/
+/*主题风格浅色*/
+/*主题辅助风格色*/
+/*线条颜色*/
+/*主要线条颜色*/
+/*更深线条颜色*/
+/*文本输入框边框颜色*/
+/*字体大小 ，如果出现非单行情况可搭配行高，*/
+/*各类间距，高度*/
+/*横向间距*/
+/*纵向间距*/
+.m-login {
+  display: block;
+  background: #fff;
+  padding: 20px;
+  box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+.m-login .form-group .form-control {
+  width: 318px;
+  height: 26px;
+  box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  padding-left: 10px;
+  padding-right: 10px;
+  background: #f9f9f9;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+.m-login .form-group .form-control::-webkit-input-placeholder {
+  color: #cecece;
+}
+.m-login .form-group .form-control:-moz-placeholder {
+  color: #cecece;
+}
+.m-login .form-group .form-control::-moz-placeholder {
+  color: #cecece;
+}
+.m-login .form-group .form-control.input-verify {
+  width: 208px;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  margin-right: 10px;
+}
+.m-login .btn-primary {
+  height: 40px;
+  line-height: 40px;
+  padding: 0;
+  font-size: 16px;
+  width: 338px;
+}
+.m-login .submit-group {
+  margin: 20px 0 25px;
+}
+.m-login .form-group .control-label {
+  color: #999;
+  width: initial !important;
+  height: 17px;
+  line-height: 16px;
+  margin-bottom: 35px;
+  text-align: center;
+  background: url("../dist/statics/images/login-line.png") center center no-repeat;
+}
+.m-login .form-group .control-label span {
+  padding: 0 10px;
+  background: #fff;
+}
+.m-login .form-group .control-content,
+.m-login .form-group .control-label {
+  font-size: 14px;
+  color: #333;
+}
+.m-login .block-login-content .field {
+  padding-left: 10px;
+  font-size: 16px;
+  color: #999;
+}
+.m-login .block-login-content .left {
+  width: 100%;
+  position: relative;
+}
+.m-login .block-login-content .left .form-group {
+  margin-bottom: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.m-login .block-login-content .left .form-group .send-code {
+  width: 100px;
+  height: 40px;
+  line-height: 40px;
+  box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  background: #fff;
+  font-size: 14px;
+  color: #fff;
+  background: #00dfb2;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 3px;
+}
+.m-login .block-login-content .right {
+  width: 100%;
+}
+.m-login .block-login-content .right .form-group {
+  margin-bottom: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.m-login .block-login-content .right .form-group .field {
+  font-size: 16px;
+}
+.m-login .block-login-content .right .form-group .part-account {
+  width: 60px;
+  height: 66px;
+  line-height: 62px;
+  color: #fff;
+  cursor: pointer;
+  text-align: center;
+  background: url("../dist/statics/images/login-bg.png") no-repeat;
+}
+.m-login .block-login-content .right .form-group .part-account .iconfont {
+  font-size: 36px;
+}
+.m-login .block-login-content .right .form-group .green {
+  background-position: 0 0;
+  margin: 0 65px 10px 7px;
+}
+.m-login .block-login-content .right .form-group .blue {
+  background-position: 0 -69px;
+  margin: 0 65px 10px 7px;
+}
+.m-login .block-login-content .right .form-group .pink {
+  background-position: 0 -139px;
+  margin: 0 7px 10px 7px;
+}
+.m-recharge {
+  padding: 0 10px;
+  margin-top: -10px;
+}
+.m-recharge .form-group {
+  padding: 0;
+  margin-bottom: 10px;
+}
+.m-recharge .form-group .control-content .number-txt {
+  display: block;
+  font-size: 14px;
+  height: 30px;
+  line-height: 30px;
+  box-sizing: content-box;
+  color: #b1aab1;
+}
+.m-recharge .control-label {
+  font-size: 16px;
+  color: #909090;
+}
+.m-recharge .pay_type {
+  border: 1px solid #d9d9d9;
+  float: left;
+  margin-right: 20px;
+  position: relative;
+}
+.m-recharge .pay_type .pay-label {
+  margin: 0;
+}
+.m-recharge .pay_type .pay-label .pay-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  filter: alpha(opacity=0);
+  -moz-opacity: 0;
+  -khtml-opacity: 0;
+  opacity: 0;
+}
+.m-recharge .pay_type .pay-label img {
+  cursor: pointer;
+}
+.m-recharge .checked {
+  border: 1px solid #00dfb2;
+}
+.m-recharge .checked:after {
+  background: url(../images/icon-choose.png) no-repeat;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  height: 13px;
+  width: 13px;
+  display: block;
+  content: "";
+}
+.m-recharge .money-list {
+  margin: -10px;
+  width: 100%;
+}
+.m-recharge .money-list li {
+  padding: 10px;
+  float: left;
+  overflow: hidden;
+  width: 230px;
+}
+.m-recharge .money-list li span {
+  display: block;
+  font-size: 14px;
+  height: 30px;
+  line-height: 30px;
+  box-sizing: content-box;
+  -moz-box-sizing: content-box;
+}
+.m-recharge .money-list li .money-label {
+  padding: 0 15px;
+  border: 1px solid #d9d9d9;
+  color: #3e3e3e;
+  margin: 0 10px 0 0;
+  cursor: pointer;
+  float: left;
+  position: relative;
+}
+.m-recharge .money-list li .money-label .pay-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  filter: alpha(opacity=0);
+  -moz-opacity: 0;
+  -khtml-opacity: 0;
+  opacity: 0;
+}
+.m-recharge .money-list li .checked {
+  border: 2px solid #00dfb2;
+  padding: 0 14px;
+  height: 28px;
+  line-height: 28px;
+  box-sizing: content-box;
+  -moz-box-sizing: content-box;
+}
+.m-recharge .money-list li .checked span {
+  height: 28px;
+  line-height: 28px;
+  box-sizing: content-box;
+  -moz-box-sizing: content-box;
+}
+.m-recharge .money-list li .number-txt {
+  color: #b1aab1;
+  float: left;
+}
+.m-recharge .form-control {
+  width: 103px;
+  text-align: center;
+  box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  height: 16px;
+  margin-right: 10px;
+}
+.m-recharge .submit-group {
+  margin-top: 24px;
+}
+.m-recharge .submit-group .btn-primary {
+  padding: 8px 53px;
+  font-size: 16px;
+}
+.m-recharge .remark {
+  color: #999;
+  font-size: 12px;
+  text-align: right;
+}
+.m-exchange .money-list li {
+  width: 250px;
+}
+.m-exchange {
+  padding: 0;
+  margin-top: -10px;
+}
+.m-exchange .dialog-tc2 .dialog-title {
+  padding: 0 5px 6px ;
+  border: none;
+  color: #444;
+  cursor: pointer;
+  margin-right: 20px;
+}
+.m-exchange .dialog-tc2 .active {
+  border-bottom: 2px solid #00dfb2;
+  color: #00dfb2;
+}
+.m-exchange .m-recharge {
+  padding: 10px;
+  margin: 0;
+}
+.m-exchange .form-group .control-label {
+  width: 70px;
+  text-align: left;
+}
+.m-exchange .form-group .balance-numb {
+  font-size: 20px;
+  color: #00dfb2;
+  margin-right: 10px;
+}
+.m-exchange .form-group .control-content .form-control {
+  margin-right: 10px;
+}
+.m-exchange .form-group .control-content .number-txt {
+  display: block;
+  font-size: 14px;
+  height: 30px;
+  line-height: 30px;
+  box-sizing: content-box;
+  color: #b1aab1;
+}
+.m-create-family {
+  padding: 0 15px 15px;
+  margin-top: -10px;
+  text-align: center;
+}
+.m-create-family .create-family-cue {
+  padding: 30px 0 45px;
+  text-align: center;
+}
+.m-create-family .create-family-cue span {
+  font-size: 16px;
+  color: #909090;
+}
+.m-create-family .btn-groups .btn {
+  padding: 8px 42px;
+  box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  font-size: 16px;
+  float: left;
+}
+.m-create-family .btn-groups a.btn-primary {
+  margin-right: 27px;
+  border-radius: 3px;
+}
+.m-create-family .btn-groups a.btn-create {
+  margin: 0;
+  float: none;
+}
+.m-create-family .create-portrait {
+  padding: 30px;
+}
+.m-create-family .create-portrait .portrait {
+  height: 111px;
+  width: 111px;
+  margin: 0 auto 10px;
+  background: url(../images/icon-portrait.png) no-repeat;
+  cursor: pointer;
+  overflow: hidden;
+}
+.m-create-family .create-portrait .portrait img {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 50%;
+}
+.m-create-family .create-portrait .portrait img[src=""] {
+  opacity: 0;
+}
+.m-create-family .create-portrait .create-portrait-txt {
+  font-size: 16px;
+}
+.m-create-family .input-name {
+  width: 258px;
+  box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  height: 22px;
+  border: 1px solid #ddd;
+  padding: 3px 10px;
+  color: #444;
+}
+.m-create-family .input-enounce {
+  width: 258px;
+  box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  height: 151px;
+  border: 1px solid #ddd;
+  padding: 3px 10px;
+  color: #444;
+  display: block;
+  margin: 0 auto 20px;
+}
+.m-page {
+  padding: 16px;
+  text-align: center;
+}
+.m-page .m-page-con {
+  padding: 20px 0;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+}
+.m-page .m-page-con span.current {
+  margin-left: 10px;
+  height: 26px;
+  line-height: 26px;
+  border: 1px solid #ddd;
+  padding: 0 12.5px;
+  font-size: 12px;
+  border-radius: 3px;
+  text-decoration: none;
+  background: #00dfb2;
+  color: #fff;
+  border-color: #00dfb2;
+  display: inline-block;
+}
+.m-page .m-page-con span.record {
+  margin-left: 10px;
+  height: 26px;
+  line-height: 26px;
+  padding: 0 12.5px;
+  font-size: 12px;
+  text-decoration: none;
+  color: #444;
+}
+.m-page .m-page-con a {
+  display: inline-block;
+  margin-left: 10px;
+  height: 26px;
+  line-height: 26px;
+  border: 1px solid #dddddd;
+  padding: 0 12.5px;
+  font-size: 12px;
+  border-radius: 3px ;
+  text-decoration: none;
+  color: #444;
+  float: none;
+}
+.m-page .m-page-con a:hover {
+  background: #00dfb2;
+  color: #fff;
+  border-color: #00dfb2;
+}
+.m-page .m-page-con .page-on {
+  background: #00dfb2;
+  color: #fff;
+  border-color: #00dfb2;
+}
+.m-page .m-page-con .page-skip-txt {
+  margin-left: 10px;
+  height: 26px;
+  line-height: 26px;
+  font-size: 12px;
+  color: #444;
+  float: left;
+}
+.m-page .m-page-con .input {
+  width: 32px;
+  height: 26px;
+  line-height: 26px;
+  padding: 0 5px;
+  margin: 0;
+  text-align: center;
+  border: 1px solid #dddddd;
+  box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  border-radius: 3px ;
+  float: left;
+}
+.header {
+  background: #fff;
+  height: 50px;
+  border-bottom: 1px solid #eee;
+}
+.header .block-logo {
+  width: 155px;
+  height: 51px;
+  float: left;
+  margin-right: 35px;
+}
+.header .block-logo a {
+  max-height: 100%;
+  display: table-cell;
+  vertical-align: middle;
+}
+.header .block-logo img {
+  display: table-cell;
+  vertical-align: middle;
+}
+.header .block-menu {
+  float: left;
+}
+.header .block-menu a {
+  padding: 0 5px;
+  display: inline-block;
+  height: 48px;
+  line-height: 48px;
+  font-size: 16px;
+  margin: 0 10px;
+  position: relative;
+}
+.header .block-menu a.active {
+  color: #00dfb2;
+}
+.header .block-menu a.active:after {
+  height: 4px;
+  background: #00dfb2;
+  content: " ";
+  width: 100%;
+  display: table;
+  position: absolute;
+  top: 47px;
+  left: 0px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+.header .block-menu a:hover {
+  color: #00dfb2;
+}
+.header .block-search {
+  float: right;
+  margin-top: 13px;
+}
+.header .block-search .header-input {
+  border: 1px solid #d9d9d9;
+  font-size: 12px;
+  height: 24px;
+  line-height: 23px;
+  *line-height: 27px;
+  border-radius: 3px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: 0;
+  padding: 0 13px;
+  width: 142px;
+  float: left;
+  vertical-align: center;
+  box-sizing: content-box;
+  -moz-box-sizing: content-box;
+}
+.header .block-search .btn-search {
+  color: #d9d9d9;
+  border: 1px solid #d9d9d9;
+  height: 24px;
+  line-height: 23px;
+  *line-height: 27px;
+  display: block;
+  padding: 0 8px;
+  border-left: 0;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  float: left;
+  box-sizing: content-box;
+  -moz-box-sizing: content-box;
+}
+.header .block-search .btn-search .iconfont {
+  font-size: 16px;
+  line-height: 27px;
+}
+.header .block-search .btn {
+  font-size: 12px;
+  padding: 0 12px;
+  height: 24px;
+  line-height: 24px;
+  *line-height: 27px;
+  border-radius: 3px;
+  margin-left: 10px;
+  box-sizing: content-box;
+  -moz-box-sizing: content-box;
+}
+.header .block-search .block-search-user {
+  margin-left: 20px;
+  display: block;
+  float: left;
+  position: relative;
+  z-index: 990;
+  color: #999;
+  font-size: 12px;
+  margin-top: -2px;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+}
+.header .block-search .block-search-user .search-user-icon {
+  position: relative;
+  display: block;
+  width: 25px;
+  height: 21px;
+  line-height: 21px;
+  text-align: center;
+}
+.header .block-search .block-search-user .search-user-icon i {
+  width: 25px;
+  height: 21px;
+  line-height: 24px;
+  font-size: 30px;
+  color: #9598a7;
+}
+.header .block-search .block-search-user .search-user-icon span {
+  position: absolute;
+  background: #00dfb2;
+  border-radius: 10px;
+  top: -6px;
+  right: -12px;
+  width: 20px;
+  height: 16px;
+  line-height: 16px;
+  color: #fff;
+}
+.header .block-search .block-search-user .search-user-name {
+  display: block;
+  line-height: 24px;
+}
+.header .block-search .block-search-user .search-user-name img {
+  height: 30px;
+  width: 30px;
+}
+.header .block-search .block-search-user .search-user-name .up {
+  display: none;
+}
+.header .block-search .block-search-user .search-user {
+  width: 200px;
+  box-shadow: 0px 3px 5px #dbdbdb;
+  position: absolute;
+  top: 45px;
+  right: 0;
+  background: #fff;
+  -webkit-transition: none;
+  transition: none;
+  -webkit-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+  -webkit-transform-origin: 90% 0;
+  -ms-transform-origin: 90% 0;
+  transform-origin: 90% 0;
+  visibility: hidden;
+}
+.header .block-search .block-search-user .search-user .null {
+  height: 15px;
+  width: 100%;
+  background: transparent;
+  position: absolute;
+  top: -15px;
+  right: 0;
+}
+.header .block-search .block-search-user .search-user .search-user-top {
+  position: absolute;
+  top: -8px;
+  right: 115px;
+}
+.header .block-search .block-search-user .search-user .search-user-info {
+  padding: 13px 15px 13px 15px;
+  border-bottom: 1px solid #eee;
+}
+.header .block-search .block-search-user .search-user .search-user-info .user-info-img {
+  width: 60px;
+  height: 60px;
+  margin-right: 15px;
+  float: left;
+}
+.header .block-search .block-search-user .search-user .search-user-info .user-info-img img {
+  margin: 0;
+}
+.header .block-search .block-search-user .search-user .search-user-info .user-info-txt {
+  font-size: 16px;
+}
+.header .block-search .block-search-user .search-user .search-user-info .user-info-txt .logname {
+  padding: 4px 0;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+}
+.header .block-search .block-search-user .search-user .search-user-info .user-info-txt .logname a.user-name {
+  line-height: 18px;
+  width: 96px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.header .block-search .block-search-user .search-user .search-user-info .user-info-txt .logname a.icon-btn {
+  color: #b8c0cc;
+  margin-right: 11px;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+}
+.header .block-search .block-search-user .search-user .search-user-info .user-info-txt .logname a.icon-btn i.uname {
+  color: #65dca5;
+  font-size: 18px;
+  line-height: 18px;
+}
+.header .block-search .block-search-user .search-user .search-user-info .user-info-txt .logname a.icon-btn i.mobile {
+  color: #00dfb2;
+}
+.header .block-search .block-search-user .search-user .search-user-grade {
+  border-bottom: 1px solid #eee;
+  padding: 7px 15px;
+  font-size: 14px;
+  color: #444;
+}
+.header .block-search .block-search-user .search-user .search-user-grade .grade {
+  padding: 15px 0;
+}
+.header .block-search .block-search-user .search-user .search-user-grade .grade .icon-grade {
+  font-size: 12px;
+  line-height: 12px;
+  color: #00dfb2;
+}
+.header .block-search .block-search-user .search-user .search-user-grade .grade .icon-grade i {
+  display: block;
+}
+.header .block-search .block-search-user .search-user .search-user-grade .grade .progress-grade {
+  background: #4c565e;
+  height: 12px;
+  width: 128px;
+  border-radius: 8px;
+}
+.header .block-search .block-search-user .search-user .search-user-grade .grade .progress-grade .progress-grade-num {
+  background: #00e0b4;
+  width: 30%;
+  font-size: 12px;
+  color: #fff;
+  height: 8px;
+  margin: 2px;
+  line-height: 13px;
+  text-align: center;
+  border-radius: 8px;
+}
+.header .block-search .block-search-user .search-user .search-user-money {
+  padding: 10px 15px 0;
+  font-size: 14px;
+  color: #444;
+  border-bottom: 1px solid #eee;
+}
+.header .block-search .block-search-user .search-user .search-user-money p a {
+  float: right;
+  background: #00dfb2;
+  padding: 0 9px;
+  line-height: 18px;
+  color: #fff;
+  font-size: 12px;
+  border-radius: 4px;
+  margin-top: 2px;
+}
+.header .block-search .block-search-user .search-user .search-user-money p a:hover {
+  background: #01ffcc;
+}
+.header .block-search .block-search-user .search-user .search-user-money .money {
+  padding: 11px 0 17px;
+}
+.header .block-search .block-search-user .search-user .search-user-money .money .gift {
+  margin-right: 10px;
+  color: #999;
+  height: 25px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  line-height: 25px;
+  font-size: 12px;
+  position: relative;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+}
+.header .block-search .block-search-user .search-user .search-user-money .money .gift i {
+  font-size: 25px;
+  width: 20px;
+  height: 20px;
+  background: url(../images/icon-user.png) no-repeat;
+  margin-right: 10px;
+}
+.header .block-search .block-search-user .search-user .search-user-money .money .gift i.jewel {
+  background-position: 1px 2px;
+}
+.header .block-search .block-search-user .search-user .search-user-money .money .gift i.ticket {
+  background-position: 1px -25px;
+}
+.header .block-search .block-search-user .search-user .search-user-money .money .gift em {
+  padding: 0 5px;
+}
+.header .block-search .block-search-user .search-user .search-user-data {
+  padding: 11px 15px 9px;
+  border-bottom: 1px solid #eee;
+}
+.header .block-search .block-search-user .search-user .search-user-data a {
+  display: block;
+  font-size: 14px;
+  line-height: 20px;
+}
+.header .block-search .block-search-user .search-user .search-user-data a:hover {
+  color: #00dfb2;
+}
+.header .block-search .block-search-user .search-user .search-user-out {
+  padding: 12px 15px 16px;
+}
+.header .block-search .block-search-user .search-user .search-user-out a {
+  font-size: 14px;
+  line-height: 14px;
+}
+.header .block-search .block-search-user .search-user .search-user-out a:hover {
+  color: #00dfb2;
+}
+.header .block-search .block-search-user .hover {
+  visibility: visible;
+  opacity: 1;
+  -webkit-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+  z-index: 999999999;
+  -webkit-transition: all 0.3s cubic-bezier(0.31, 0.57, 0.68, 1.36);
+  transition: all 0.3s cubic-bezier(0.31, 0.57, 0.68, 1.36);
+}
+.wrapper .m-unlisted {
+  padding-bottom: 40px;
+  text-align: center;
+}
+.wrapper .m-unlisted .unlisted-img {
+  background: url(../images/not-login.png) no-repeat;
+  width: 100%;
+  height: 340px;
+  margin: 45px auto;
+  background-position: 50%;
+  background-size: 65%;
+}
+.wrapper .m-unlisted a {
+  padding: 5px 60px;
+  font-size: 20px;
+  border-radius: 50px;
+}
+
+/*字体颜色*/
+/*主要字色*/
+/*标题*/
+/*浅色*/
+/*更浅色（适用：二级标题、简介）*/
+/*更更浅色（适用：icon图标）*/
+/*界面主题色*/
+/*背景色*/
+/*背景色*/
+/*主题风格色*/
+/*主题风格浅色*/
+/*主题风格浅色*/
+/*主题辅助风格色*/
+/*线条颜色*/
+/*主要线条颜色*/
+/*更深线条颜色*/
+/*文本输入框边框颜色*/
+/*字体大小 ，如果出现非单行情况可搭配行高，*/
+/*各类间距，高度*/
+/*横向间距*/
+/*纵向间距*/
+.not-login-tip {
+  padding: 80px 0;
+  text-align: center;
+  min-height: 800px;
+}
+.not-login-tip p {
+  font-size: 20px;
+  line-height: 2;
+}
+.not-login-tip p a {
+  color: #ff0000;
+}
+
+/*字体颜色*/
+/*主要字色*/
+/*标题*/
+/*浅色*/
+/*更浅色（适用：二级标题、简介）*/
+/*更更浅色（适用：icon图标）*/
+/*界面主题色*/
+/*背景色*/
+/*背景色*/
+/*主题风格色*/
+/*主题风格浅色*/
+/*主题风格浅色*/
+/*主题辅助风格色*/
+/*线条颜色*/
+/*主要线条颜色*/
+/*更深线条颜色*/
+/*文本输入框边框颜色*/
+/*字体大小 ，如果出现非单行情况可搭配行高，*/
+/*各类间距，高度*/
+/*横向间距*/
+/*纵向间距*/
+.avatar-normal {
+  width: 40px;
+  height: 40px;
+  -moz-border-radius: 50%;
+  -khtml-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.avatar-middle {
+  width: 60px;
+  height: 60px;
+  -moz-border-radius: 50%;
+  -khtml-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.avatar-big {
+  width: 80px;
+  height: 80px;
+  -moz-border-radius: 50%;
+  -khtml-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.avatar-biger {
+  width: 100px;
+  height: 100px;
+  -moz-border-radius: 50%;
+  -khtml-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.ui-grade-img {
+  width: 23px;
+  height: 16px;
+}
+.ui-grade {
+  width: 22px;
+  height: 16px;
+  line-height: 16px;
+  background: url(../images/icon-all-grade.png) no-repeat;
+  display: inline-block;
+  padding-left: 15px;
+  color: #fff;
+  font-size: 12px;
+  text-align: center;
+  width: 23px;
+}
+.grade-stars {
+  background-position: 0 0;
+}
+.grade-moon {
+  background-position: 0 -21px;
+}
+.grade-sun {
+  background-position: 0 -42px;
+}
+.form-group {
+  margin-bottom: 5px;
+  padding: 5px 0;
+  overflow: inherit;
+  clear: both;
+}
+.form-group label {
+  color: #999;
+  font-weight: normal;
+}
+.form-group .control-label {
+  width: 90px;
+  float: left;
+  text-align: right;
+  font-size: 14px;
+  margin: 0;
+  margin-right: 10px;
+  overflow: hidden;
+  color: #666;
+}
+.form-group .control-label,
+.form-group .control-content {
+  height: 34px;
+  line-height: 34px;
+  font-size: 14px;
+  float: left;
+  word-break: break-word;
+}
+.form-group .control-content-auto {
+  height: auto;
+  line-height: initial;
+}
+.small-form-group .control-label,
+.small-form-group .control-content {
+  height: 30px;
+  line-height: 30px;
+  font-size: 14px;
+  float: left;
+}
+.smaller-form-group .control-label,
+.smaller-form-group .control-content {
+  height: 26px;
+  line-height: 26px;
+  font-size: 14px;
+  float: left;
+}
+.form-vertical .control-label {
+  display: block;
+  margin: 0 0 5px 0;
+  text-align: left;
+  float: none;
+  width: 100%;
+}
+.submit-group {
+  margin: 10px 0;
+}
+
+/*字体颜色*/
+/*主要字色*/
+/*标题*/
+/*浅色*/
+/*更浅色（适用：二级标题、简介）*/
+/*更更浅色（适用：icon图标）*/
+/*界面主题色*/
+/*背景色*/
+/*背景色*/
+/*主题风格色*/
+/*主题风格浅色*/
+/*主题风格浅色*/
+/*主题辅助风格色*/
+/*线条颜色*/
+/*主要线条颜色*/
+/*更深线条颜色*/
+/*文本输入框边框颜色*/
+/*字体大小 ，如果出现非单行情况可搭配行高，*/
+/*各类间距，高度*/
+/*横向间距*/
+/*纵向间距*/
+.page-user-account .uc-info-l {
+  position: relative;
+  width: 100%;
+  padding: 20px;
+  background-color: #f7f9fa;
+  box-sizing: border-box;
+}
+.page-user-account .head-photo {
+  width: 100px;
+  height: 100px;
+  margin-right: 10px;
+  position: relative;
+  text-align: center;
+  overflow: hidden;
+}
+.page-user-account .head-photo img {
+  width: 100%;
+  height: 100%;
+}
+.page-user-account .head-photo:hover .block-change {
+  top: 0;
+  -webkit-transition: ease .3s;
+  -moz-transition: ease .3s;
+  -o-transition: ease .3s;
+  transition: ease .3s;
+}
+.page-user-account .head-photo .block-change {
+  position: absolute;
+  top: -100px;
+  left: 0;
+}
+.page-user-account .head-photo .block-change .change-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 100px;
+  background: #000;
+  filter: alpha(opacity=50);
+  -moz-opacity: 0.5;
+  -khtml-opacity: 0.5;
+  opacity: 0.5;
+}
+.page-user-account .head-photo .block-change .change-photo {
+  width: 70px;
+  position: absolute;
+  top: 22px;
+  left: 27px;
+  cursor: pointer;
+  z-index: 99;
+}
+.page-user-account .head-photo .block-change .change-photo .iconfont {
+  color: #fff;
+  font-size: 40px;
+}
+.page-user-account .head-photo .block-change .change-photo p {
+  position: absolute;
+  top: 58px;
+  left: 3px;
+  color: #fff;
+  font-size: 16px;
+  line-height: 16px;
+  height: 16px;
+}
+.page-user-account .block-uc-info .user-nickname {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+.page-user-account .block-uc-info .user-other {
+  line-height: 2;
+}
+.page-user-account .brn-setpwd {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+.page-user-account .uc-assets .uc-total-bar {
+  width: 100%;
+  margin-top: 10px;
+}
+.page-user-account .uc-assets .uc-total-bar .uc-total-head {
+  display: flex;
+  font-size: 16px;
+  justify-content: space-between;
+}
+.page-user-account .uc-assets .uc-total-bar .uc-total-head a,
+.page-user-account .uc-assets .uc-total-bar .uc-total-head em {
+  color: #00dfb2;
+}
+.page-user-account .uc-assets .uc-total-bar .total-bar {
+  display: flex;
+  justify-content: space-between;
+  height: 40px;
+  line-height: 40px;
+  padding: 0 15px;
+  background-color: #00dfb2;
+  color: #fff;
+  margin-top: 15px;
+}
+
+
+
+/*字体颜色*/
+/*主要字色*/
+/*标题*/
+/*浅色*/
+/*更浅色（适用：二级标题、简介）*/
+/*更更浅色（适用：icon图标）*/
+/*界面主题色*/
+/*背景色*/
+/*背景色*/
+/*主题风格色*/
+/*主题风格浅色*/
+/*主题风格浅色*/
+/*主题辅助风格色*/
+/*线条颜色*/
+/*主要线条颜色*/
+/*更深线条颜色*/
+/*文本输入框边框颜色*/
+/*字体大小 ，如果出现非单行情况可搭配行高，*/
+/*各类间距，高度*/
+/*横向间距*/
+/*纵向间距*/
+.page-user-create_anchor .star_submit {
+  margin-bottom: 10px;
+}
+.page-user-create_anchor .star_submit .field_tittle {
+  color: #595959;
+  font-size: 16px;
+  width: 110px;
+  text-align: center;
+}
+.page-user-create_anchor .submit-button {
+  padding-top: 50px;
+}
+.page-user-create_anchor .submit-button .star_btn_confirm,
+.page-user-create_anchor .submit-button .star_btn_cancel {
+  height: 40px;
+  width: 100px;
+  text-align: center;
+  color: #FFF;
+  font-size: 16px;
+  display: inline-block;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 1px;
+}
+.page-user-create_anchor .submit-button .star_btn_confirm {
+  background: #00dfb2;
+  margin-right: 10px;
+}
+.page-user-create_anchor .field_input {
+  width: 500px;
+  position: relative;
+}
+.page-user-create_anchor .field_input .input-radio {
+  width: 500px;
+}
+.page-user-create_anchor .field_input .input-radio .radio_input_wrap {
+  float: left;
+  margin-right: 30px;
+}
+.page-user-create_anchor .file-idcard {
+  width: 160px !important;
+  margin: 0 0 10px;
+}
+.page-user-create_anchor .file-idcard .upload_pic {
+  background-color: #fafafa;
+  border-radius: 1px;
+  margin-right: 9px;
+  height: 160px;
+  width: 160px;
+  overflow: hidden;
+}
+.page-user-create_anchor .file-idcard .upload_pic .plus_icon {
+  background: url("../dist/statics/images/IDcard-add-photo.png") no-repeat;
+  cursor: pointer;
+  margin: 28px auto 15px;
+  background-size: 100%;
+  height: 60px;
+  width: 60px;
+  border-radius: 50px;
+  background-size: cover;
+}
+.page-user-create_anchor .file-idcard .upload_pic .plus_text {
+  font-size: 14px;
+  color: #666666;
+  text-align: center;
+  height: 20px;
+  line-height: 20px;
+}
+.page-user-create_anchor .file-idcard .upload_pic .plus_subhead {
+  font-size: 12px;
+  color: #a9a9ab;
+  text-align: center;
+  line-height: 0;
+  height: 20px;
+  line-height: 20px;
+}
+.page-user-create_anchor .file-idcard .pic_container {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.page-user-create_anchor .file-idcard .pic_container img {
+  border: 0;
+}
+.page-user-create_anchor .file-idcard .uploadimg_poster {
+  position: absolute;
+  top: 0;
+  left: 0;
+  filter: alpha(opacity=0);
+  /* IE */
+  -moz-opacity: 0;
+  /* 老版Mozilla */
+  -khtml-opacity: 0;
+  /* 老版Safari */
+  opacity: 0;
+  /* 支持opacity的浏览器*/
+}
+.page-user-create_anchor .file-idcard .uploadimg_poster input {
+  width: 500px;
+  height: 500px;
+}
+.page-user-create_anchor .file-idcard .uploadimg_poster input[type=file] {
+  display: block;
+  width: 160px;
+  height: 160px;
+  opacity: 0;
+}
+.page-user-create_anchor .form-group .radio-inline {
+  color: #444;
+}
+
+.form-group .col-sm-10 {
+  padding: 0;
+}
+.form-group .col-sm-10 select {
+  border-color: #d9d9d9;
+  height: 34px;
+  width: 134px;
+  margin-right: 10px;
+}
+.form-group .control-label {
+  padding: 0;
+}
+.form-group .open-close {
+  height: 23px;
+  line-height: 23px;
+}
+.form-group .form-control {
+  width: 200px;
+  box-shadow: none;
+}
+.form-group .btn-primary {
+  border-radius: 0;
+}
+
+
+
+/*字体颜色*/
+/*主要字色*/
+/*标题*/
+/*浅色*/
+/*更浅色（适用：二级标题、简介）*/
+/*更更浅色（适用：icon图标）*/
+/*界面主题色*/
+/*背景色*/
+/*背景色*/
+/*主题风格色*/
+/*主题风格浅色*/
+/*主题风格浅色*/
+/*主题辅助风格色*/
+/*线条颜色*/
+/*主要线条颜色*/
+/*更深线条颜色*/
+/*文本输入框边框颜色*/
+/*字体大小 ，如果出现非单行情况可搭配行高，*/
+/*各类间距，高度*/
+/*横向间距*/
+/*纵向间距*/
+/*
+盒子阴影 
+@right_left 右边阴影为正数 左边负数
+@bottom_top 下边阴影为正数 上边负数
+@box  阴影大小
+@box_color 阴影颜色
+*/
+/*
+定义圆角
+@radius 圆角大小
+*/
+/*
+文字阴影,可以指定多组阴影
+@right_left1 右边阴影为正数 左边负数
+@bottom_top1 下边阴影为正数 上边负数
+@text  阴影大小
+@text_color 阴影颜色
+*/
+/*
+透明度 或渐变 1为不透明 0透明
+css3 rgba(110, 142, 185, .4)!important;前三个是颜色值 后一个是透明值
+用来兼容所有浏览器
+*/
+/*
+列布局
+@c1 列数
+@c2 列宽
+@c3 列间距
+@c4 边框样式
+*/
+/*背景渐变
+@start  渐变开始颜色
+@end  结束颜色
+*/
+/*
+画轮廓 就是内部框
+@outline 样式
+@outline1 间距 负数在内部
+*/
+/*
+旋转角度
+@ro定义度数 
+IE不支持 滤镜支持0，1，2，3
+*/
+.rotate50 {
+  transform: rotate(50deg);
+  -webkit-transform: rotate(50deg);
+  -moz-transform: rotate(50deg);
+  -o-transform: rotate(50deg);
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+}
+/*
+菱形旋转角度
+@x横向缩放比例
+@y纵向缩放比例
+*/
+.skew30 {
+  transform: skew(50deg, 30deg);
+  -webkit-transform: skew(50deg, 30deg);
+  -moz-transform: skew(50deg, 30deg);
+  -o-transform: skew(50deg, 30deg);
+  -ms-transform: skew(50deg, 30deg);
+}
+/*
+放大缩小
+@x横向缩放比例
+@y纵向缩放比例
+*/
+.my_scale {
+  transform: scale(1.2, 1.2);
+  -webkit-transform: scale(1.2, 1.2);
+  -moz-transform: scale(1.2, 1.2);
+  -o-transform: scale(1.2, 1.2);
+  -ms-transform: scale(1.2, 1.2);
+}
+/*
+移动距离
+@x横向移动距离
+@y纵向移动距离
+*/
+.translate80 {
+  transform: translate(80px, 80px);
+  -webkit-transform: translate(80px, 80px);
+  -moz-transform: translate(80px, 80px);
+  -o-transform: translate(80px, 80px);
+  -ms-transform: translate(80px, 80px);
+}
+/*
+综合上面4种变化,效果看下面的过度动画
+@rotate
+@scale
+@skew
+@translate
+*/
+/*
+过度动画 
+id是css属性
+2s过度时间 0s是开始时间
+ease-in进入
+*/
+/*
+less文件中定义的函数
+Animation 动画 
+@animation-name规定需要绑定到选择器的 keyframe 名称
+@animation-duration规定完成动画所花费的时间，以秒或毫秒计,默认是 0。
+@animation-timing-function规定动画的速度曲线。默认是 "ease"。
+@animation-delay规定在动画开始之前的延迟。默认是 0。
+@animation-iteration-count规定动画应该播放的次数。默认是 1。
+@animation-direction规定是否应该轮流反向播放动画。默认是 "normal"。
+*/
+.my_animation {
+  animation: mykeyframes 5s linear 2s infinite normal;
+  /* Firefox: */
+  -moz-animation: mykeyframes 5s linear 2s infinite normal;
+  /* Safari 和 Chrome: */
+  -webkit-animation: mykeyframes 5s linear 2s infinite normal;
+  /* Opera: */
+  -o-animation: mykeyframes 5s linear 2s infinite normal;
+}
+/***CSS定义的keyframes如下：****/
+@keyframes mykeyframes {
+  0% {
+    background: red;
+    left: 0px;
+    top: 0px;
+  }
+  25% {
+    background: yellow;
+    left: 200px;
+    top: 0px;
+  }
+  50% {
+    background: blue;
+    left: 200px;
+    top: 200px;
+  }
+  75% {
+    background: green;
+    left: 0px;
+    top: 200px;
+  }
+  100% {
+    background: red;
+    left: 0px;
+    top: 0px;
+  }
+}
+@-moz-keyframes mykeyframes {
+  /* Firefox */
+  0% {
+    background: red;
+    left: 0px;
+    top: 0px;
+  }
+  25% {
+    background: yellow;
+    left: 200px;
+    top: 0px;
+  }
+  50% {
+    background: blue;
+    left: 200px;
+    top: 200px;
+  }
+  75% {
+    background: green;
+    left: 0px;
+    top: 200px;
+  }
+  100% {
+    background: red;
+    left: 0px;
+    top: 0px;
+  }
+}
+@-webkit-keyframes mykeyframes {
+  /* Safari 和 Chrome */
+  0% {
+    background: red;
+    left: 0px;
+    top: 0px;
+  }
+  25% {
+    background: yellow;
+    left: 200px;
+    top: 0px;
+  }
+  50% {
+    background: blue;
+    left: 200px;
+    top: 200px;
+  }
+  75% {
+    background: green;
+    left: 0px;
+    top: 200px;
+  }
+  100% {
+    background: red;
+    left: 0px;
+    top: 0px;
+  }
+}
+@-o-keyframes mykeyframes {
+  /* Opera */
+  0% {
+    background: red;
+    left: 0px;
+    top: 0px;
+  }
+  25% {
+    background: yellow;
+    left: 200px;
+    top: 0px;
+  }
+  50% {
+    background: blue;
+    left: 200px;
+    top: 200px;
+  }
+  75% {
+    background: green;
+    left: 0px;
+    top: 200px;
+  }
+  100% {
+    background: red;
+    left: 0px;
+    top: 0px;
+  }
+}
+.page-user-promoter_info .container-fluid {
+  padding-left: 0;
+  padding-right: 0;
+  overflow: hidden;
+}
+.page-user-promoter_info .container-fluid .head-photo {
+  width: 100px;
+  height: 100px;
+  margin-right: 10px;
+  position: relative;
+  text-align: center;
+  overflow: hidden;
+}
+.page-user-promoter_info .container-fluid .head-photo img {
+  width: 100%;
+  height: 100%;
+}
+.page-user-promoter_info .container-fluid .head-photo:hover .block-change {
+  top: 0;
+  -webkit-transition: ease .3s;
+  -moz-transition: ease .3s;
+  -o-transition: ease .3s;
+  transition: ease .3s;
+}
+.page-user-promoter_info .container-fluid .head-photo .block-change {
+  position: absolute;
+  top: -100px;
+  left: 0;
+}
+.page-user-promoter_info .container-fluid .head-photo .block-change .change-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 100px;
+  background: #000;
+  filter: alpha(opacity=50);
+  -moz-opacity: 0.5;
+  -khtml-opacity: 0.5;
+  opacity: 0.5;
+}
+.page-user-promoter_info .container-fluid .head-photo .block-change .change-photo {
+  width: 70px;
+  position: absolute;
+  top: 22px;
+  left: 27px;
+  cursor: pointer;
+  z-index: 99;
+}
+.page-user-promoter_info .container-fluid .head-photo .block-change .change-photo .iconfont {
+  color: #fff;
+  font-size: 40px;
+}
+.page-user-promoter_info .container-fluid .head-photo .block-change .change-photo p {
+  position: absolute;
+  top: 58px;
+  left: 3px;
+  color: #fff;
+  font-size: 16px;
+  line-height: 16px;
+  height: 16px;
+}
+.page-user-promoter_info .container-fluid .block-uc-info .user-nickname {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+.page-user-promoter_info .container-fluid .block-uc-info .user-other {
+  font-size: 13px;
+}
+.page-user-promoter_info .m-common-item {
+  margin-top: 15px;
+  min-height: 150px;
+}
+.page-user-promoter_info .m-common-item .m-common-title {
+  border-bottom: 1px solid #eee;
+  position: relative;
+  margin-bottom: 20px;
+}
+.page-user-promoter_info .m-common-item .m-common-title .field {
+  position: relative;
+  padding: 0 28px 8px;
+  *padding: 0 28px 6px;
+  box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  line-height: 40px;
+  font-size: 18px;
+  color: #3e3e3e;
+  font-weight: 500;
+  border-bottom: 2px solid #00dfb2;
+}
+.page-user-promoter_info .m-common-item .common-content {
+  overflow: hidden;
+}
+.page-user-promoter_info .data-count {
+  padding: 15px 0;
+  background-color: #f7f9fa;
+}
+.page-user-promoter_info .data-count .data-count-block {
+  width: 33.33%;
+  float: left;
+  text-align: center;
+  border-right: 1px solid #eee;
+  box-sizing: border-box;
+}
+.page-user-promoter_info .data-count .data-count-block a {
+  display: block;
+}
+.page-user-promoter_info .data-count .data-count-block label {
+  display: block;
+  margin-top: 10px;
+  font-weight: normal;
+}
+.page-user-promoter_info .data-count .data-count-block span {
+  font-size: 26px;
+}
+.page-user-promoter_info .data-count .data-count-block:last-child {
+  border-right: 0;
+}
+.page-user-promoter_info .uc-info-l {
+  width: 50%;
+  float: left;
+  padding: 20px;
+  background-color: #f7f9fa;
+  box-sizing: border-box;
+}
+.page-user-promoter_info .uc-info-r {
+  width: 48%;
+  float: right;
+}
+
+
+
+
+/*字体颜色*/
+/*主要字色*/
+/*标题*/
+/*浅色*/
+/*更浅色（适用：二级标题、简介）*/
+/*更更浅色（适用：icon图标）*/
+/*界面主题色*/
+/*背景色*/
+/*背景色*/
+/*主题风格色*/
+/*主题风格浅色*/
+/*主题风格浅色*/
+/*主题辅助风格色*/
+/*线条颜色*/
+/*主要线条颜色*/
+/*更深线条颜色*/
+/*文本输入框边框颜色*/
+/*字体大小 ，如果出现非单行情况可搭配行高，*/
+/*各类间距，高度*/
+/*横向间距*/
+/*纵向间距*/
+/*
+盒子阴影 
+@right_left 右边阴影为正数 左边负数
+@bottom_top 下边阴影为正数 上边负数
+@box  阴影大小
+@box_color 阴影颜色
+*/
+/*
+定义圆角
+@radius 圆角大小
+*/
+/*
+文字阴影,可以指定多组阴影
+@right_left1 右边阴影为正数 左边负数
+@bottom_top1 下边阴影为正数 上边负数
+@text  阴影大小
+@text_color 阴影颜色
+*/
+/*
+透明度 或渐变 1为不透明 0透明
+css3 rgba(110, 142, 185, .4)!important;前三个是颜色值 后一个是透明值
+用来兼容所有浏览器
+*/
+/*
+列布局
+@c1 列数
+@c2 列宽
+@c3 列间距
+@c4 边框样式
+*/
+/*背景渐变
+@start  渐变开始颜色
+@end  结束颜色
+*/
+/*
+画轮廓 就是内部框
+@outline 样式
+@outline1 间距 负数在内部
+*/
+/*
+旋转角度
+@ro定义度数 
+IE不支持 滤镜支持0，1，2，3
+*/
+.rotate50 {
+  transform: rotate(50deg);
+  -webkit-transform: rotate(50deg);
+  -moz-transform: rotate(50deg);
+  -o-transform: rotate(50deg);
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+}
+/*
+菱形旋转角度
+@x横向缩放比例
+@y纵向缩放比例
+*/
+.skew30 {
+  transform: skew(50deg, 30deg);
+  -webkit-transform: skew(50deg, 30deg);
+  -moz-transform: skew(50deg, 30deg);
+  -o-transform: skew(50deg, 30deg);
+  -ms-transform: skew(50deg, 30deg);
+}
+/*
+放大缩小
+@x横向缩放比例
+@y纵向缩放比例
+*/
+.my_scale {
+  transform: scale(1.2, 1.2);
+  -webkit-transform: scale(1.2, 1.2);
+  -moz-transform: scale(1.2, 1.2);
+  -o-transform: scale(1.2, 1.2);
+  -ms-transform: scale(1.2, 1.2);
+}
+/*
+移动距离
+@x横向移动距离
+@y纵向移动距离
+*/
+.translate80 {
+  transform: translate(80px, 80px);
+  -webkit-transform: translate(80px, 80px);
+  -moz-transform: translate(80px, 80px);
+  -o-transform: translate(80px, 80px);
+  -ms-transform: translate(80px, 80px);
+}
+/*
+综合上面4种变化,效果看下面的过度动画
+@rotate
+@scale
+@skew
+@translate
+*/
+/*
+过度动画 
+id是css属性
+2s过度时间 0s是开始时间
+ease-in进入
+*/
+/*
+less文件中定义的函数
+Animation 动画 
+@animation-name规定需要绑定到选择器的 keyframe 名称
+@animation-duration规定完成动画所花费的时间，以秒或毫秒计,默认是 0。
+@animation-timing-function规定动画的速度曲线。默认是 "ease"。
+@animation-delay规定在动画开始之前的延迟。默认是 0。
+@animation-iteration-count规定动画应该播放的次数。默认是 1。
+@animation-direction规定是否应该轮流反向播放动画。默认是 "normal"。
+*/
+.my_animation {
+  animation: mykeyframes 5s linear 2s infinite normal;
+  /* Firefox: */
+  -moz-animation: mykeyframes 5s linear 2s infinite normal;
+  /* Safari 和 Chrome: */
+  -webkit-animation: mykeyframes 5s linear 2s infinite normal;
+  /* Opera: */
+  -o-animation: mykeyframes 5s linear 2s infinite normal;
+}
+/***CSS定义的keyframes如下：****/
+@keyframes mykeyframes {
+  0% {
+    background: red;
+    left: 0px;
+    top: 0px;
+  }
+  25% {
+    background: yellow;
+    left: 200px;
+    top: 0px;
+  }
+  50% {
+    background: blue;
+    left: 200px;
+    top: 200px;
+  }
+  75% {
+    background: green;
+    left: 0px;
+    top: 200px;
+  }
+  100% {
+    background: red;
+    left: 0px;
+    top: 0px;
+  }
+}
+@-moz-keyframes mykeyframes {
+  /* Firefox */
+  0% {
+    background: red;
+    left: 0px;
+    top: 0px;
+  }
+  25% {
+    background: yellow;
+    left: 200px;
+    top: 0px;
+  }
+  50% {
+    background: blue;
+    left: 200px;
+    top: 200px;
+  }
+  75% {
+    background: green;
+    left: 0px;
+    top: 200px;
+  }
+  100% {
+    background: red;
+    left: 0px;
+    top: 0px;
+  }
+}
+@-webkit-keyframes mykeyframes {
+  /* Safari 和 Chrome */
+  0% {
+    background: red;
+    left: 0px;
+    top: 0px;
+  }
+  25% {
+    background: yellow;
+    left: 200px;
+    top: 0px;
+  }
+  50% {
+    background: blue;
+    left: 200px;
+    top: 200px;
+  }
+  75% {
+    background: green;
+    left: 0px;
+    top: 200px;
+  }
+  100% {
+    background: red;
+    left: 0px;
+    top: 0px;
+  }
+}
+@-o-keyframes mykeyframes {
+  /* Opera */
+  0% {
+    background: red;
+    left: 0px;
+    top: 0px;
+  }
+  25% {
+    background: yellow;
+    left: 200px;
+    top: 0px;
+  }
+  50% {
+    background: blue;
+    left: 200px;
+    top: 200px;
+  }
+  75% {
+    background: green;
+    left: 0px;
+    top: 200px;
+  }
+  100% {
+    background: red;
+    left: 0px;
+    top: 0px;
+  }
+}
+.search {
+  margin-bottom: 20px;
+  font-size: 13px;
+}
+.search .search-list {
+  float: left;
+  margin: 0 5px;
+}
+.search .search-list input {
+  border: 1px solid #ddd;
+  padding: 0 5px;
+  height: 24px;
+  line-height: 24px;
+  box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  border-radius: 2px;
+  margin: 0 10px;
+  width: 120px;
+  float: left;
+}
+.search .search-list span {
+  line-height: 26px;
+  float: left;
+}
+.search .search-list select {
+  padding: 0 10px;
+  border: 1px solid #ddd;
+  margin-left: 10px;
+  margin-right: 10px;
+  height: 24px;
+  line-height: 24px;
+  float: left;
+}
+.search .calendar-arrow span.next {
+  float: right;
+}
+.search .calendar-hd a span {
+  float: none;
+}
+.search .btn-circle {
+  line-height: 26px;
+  height: 26px;
+  padding: 0px 16px;
+  border-radius: 5px;
+  margin-left: 10px;
+  float: left;
+}
+.search #demo {
+  float: left;
+}
+.search #demo input {
+  width: 80px;
+}
+.uc-table {
+  text-align: center;
+  width: 100%;
+}
+.uc-table thead tr {
+  background: #f7f9fa;
+}
+.uc-table thead tr .icon-gray {
+  font-size: 18px;
+  color: #d2d2d2;
+}
+.uc-table thead tr th {
+  text-align: center;
+  padding: 10px;
+  line-height: 12px;
+  font-size: 12px;
+  color: #444;
+  font-weight: 500;
+}
+.uc-table tbody tr {
+  border-bottom: 1px dashed #dbddde;
+}
+.uc-table tbody tr td {
+  font-size: 12px;
+  color: #666;
+  padding: 10px;
+}
+.uc-table tbody tr td a:hover {
+  color: #fea01e;
+}
+.uc-table tbody tr .table-link {
+  color: #00dfb2;
+}
+.uc-table tbody tr .img-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 14px;
+  overflow: hidden;
+}
+.uc-table tbody tr .sender {
+  font-size: 12px;
+  color: #fea01e;
+}
+.uc-table tbody tr .icon-orange {
+  font-size: 18px;
+  color: #00dfb2;
+}
+.uc-table tbody tr .icon-green {
+  font-size: 18px;
+  color: #65dca5;
+}
+.uc-table tbody tr .font-length {
+  width: 398px;
+  display: block;
+  line-height: 2;
+}
+.m-page {
+  padding: 16px;
+  text-align: center;
+}
+.m-page .m-page-con {
+  padding: 20px 0;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+}
+.m-page .m-page-con span.current {
+  margin-left: 10px;
+  height: 26px;
+  line-height: 26px;
+  border: 1px solid #ddd;
+  padding: 0 12.5px;
+  font-size: 12px;
+  border-radius: 3px;
+  text-decoration: none;
+  background: #00dfb2;
+  color: #fff;
+  border-color: #00dfb2;
+  display: inline-block;
+}
+.m-page .m-page-con span.record {
+  margin-left: 10px;
+  height: 26px;
+  line-height: 26px;
+  padding: 0 12.5px;
+  font-size: 12px;
+  text-decoration: none;
+  color: #444;
+}
+.m-page .m-page-con a {
+  display: inline-block;
+  margin-left: 10px;
+  height: 26px;
+  line-height: 26px;
+  border: 1px solid #dddddd;
+  padding: 0 12.5px;
+  font-size: 12px;
+  border-radius: 3px ;
+  text-decoration: none;
+  color: #444;
+  float: none;
+}
+.m-page .m-page-con a:hover {
+  background: #00dfb2;
+  color: #fff;
+  border-color: #00dfb2;
+}
+.m-page .m-page-con .page-on {
+  background: #00dfb2;
+  color: #fff;
+  border-color: #00dfb2;
+}
+.m-page .m-page-con .page-skip-txt {
+  margin-left: 10px;
+  height: 26px;
+  line-height: 26px;
+  font-size: 12px;
+  color: #444;
+  float: left;
+}
+.m-page .m-page-con .input {
+  width: 32px;
+  height: 26px;
+  line-height: 26px;
+  padding: 0 5px;
+  margin: 0;
+  text-align: center;
+  border: 1px solid #dddddd;
+  box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  border-radius: 3px ;
+  float: left;
+}
+.user-main {
+  width: 100%;
+  height: auto;
+  background: #eee;
+}
+.layout-user-l {
+  width: 240px;
+  float: left;
+}
+.layout-user-r {
+  width: 960px;
+  min-height: 771px;
+  overflow: hidden;
+  background: #fff;
+  float: left;
+}
+.user-r-main {
+  padding: 20px;
+  overflow: hidden;
+}
+.m-title-list {
+  width: 100%;
+  height: 100%;
+  background: #eee;
+  overflow: hidden;
+}
+.m-title-list .active {
+  color: #fff;
+  background: #00dfb2;
+}
+.m-title-list .active a {
+  color: #fff;
+}
+.m-title-list .active a .iconfont {
+  color: #fff;
+}
+.m-title-list .active a.anchor {
+  position: relative;
+}
+.m-title-list .act .anchor-inner a {
+  border-bottom: 1px solid #f7f9fa;
+  height: 48px;
+}
+.m-title-list .act .income {
+  height: 195px;
+}
+.m-title-list .act .illegal {
+  height: 97px;
+}
+.m-title-list .act .iconfont.right {
+  display: none;
+}
+.m-title-list .act .iconfont.bottom {
+  display: inline-block;
+}
+.m-title-list li {
+  padding-left: 58px;
+  line-height: 48px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.m-title-list li a {
+  font-size: 16px;
+  color: #444;
+  cursor: pointer;
+  display: block;
+}
+.m-title-list li a .iconfont {
+  padding-right: 12px;
+  color: #b8c0cc;
+  font-size: 20px;
+  vertical-align: bottom;
+}
+.m-title-list li a .iconfont.right {
+  position: absolute;
+  right: -5px;
+  font-size: 18px;
+  top: 0;
+}
+.m-title-list li a .iconfont.bottom {
+  position: absolute;
+  right: -4px;
+  top: 2px;
+  font-size: 18px;
+  display: none;
+}
+.m-title-list li a.anchor {
+  position: relative;
+  width: 100%;
+}
+.m-title-list li .anchor-inner {
+  margin-left: -58px;
+  text-align: center;
+  background: #fff;
+  overflow: hidden;
+}
+.m-title-list li .anchor-inner a {
+  color: #555;
+  height: 0;
+  transition: height 0.5s;
+  -moz-transition: height 0.5s;
+  /* Firefox 4 */
+  -webkit-transition: height 0.5s;
+  /* Safari 和 Chrome */
+  -o-transition: height 0.5s;
+}
+.m-title-list li .anchor-inner a:last-child {
+  border: 0;
+}
+.m-title-list li .anchor-inner .actived {
+  color: #00dfb2;
+}
+.user-r-title {
+  border-bottom: 1px solid #eee;
+  position: relative;
+  margin-top: -10px;
+}
+.user-r-title .common-title {
+  float: left;
+}
+.user-r-title .common-title a {
+  position: relative;
+  padding: 0 28px 8px;
+  *padding: 0 28px 6px;
+  box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  line-height: 40px;
+  font-size: 16px;
+  color: #3e3e3e;
+  font-weight: 500;
+  float: left;
+}
+.user-r-title .common-title .field {
+  position: relative;
+  box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  line-height: 40px;
+  border-bottom: 2px solid #00dfb2;
+  font-size: 16px;
+  color: #3e3e3e;
+  font-weight: 500;
+  float: left;
+}
+.user-r-title .common-title span {
+  position: relative;
+  padding: 0 28px 8px;
+  *padding: 0 28px 6px;
+  box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  line-height: 40px;
+  font-size: 16px;
+  color: #3e3e3e;
+  font-weight: 500;
+  float: left;
+}
+.user-r-title .common-title-after {
+  float: right;
+  height: 50px;
+  line-height: 50px;
+}
+.user-r-content {
+  margin-top: 20px;
+}
+.uc-total-bar {
+  background-color: #f7f9fa;
+  padding: 15px 20px;
+}
+.uc-total-bar p {
+  display: flex;
+  justify-content: space-between;
+}
+.uc-total-bar em {
+  color: #00dfb2;
+}

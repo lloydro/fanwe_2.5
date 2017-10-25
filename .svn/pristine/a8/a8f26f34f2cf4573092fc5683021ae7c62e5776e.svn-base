@@ -1,0 +1,270 @@
+<?php
+	class UserStatisticsAction extends CommonAction{
+
+		
+
+	    //私信收礼统计
+		public function private_statistics()
+		{
+			//统计所有送礼物表
+			$prop_tables = array();
+            $prop_tables[] =  DB_PREFIX.'video_prop';
+			$time = time()-28800;
+			$year = intval(to_date($time,'Y'));	//年
+			$month = intval(to_date($time,'m'));	//月
+			$table = DB_PREFIX.'video_prop_'.to_date($time,'Ym');
+    		$res = $GLOBALS['db']->getRow("SHOW TABLES LIKE'$table'");
+    		/*admin_ajax_return($table);*/
+    		while ($res)	
+    		{
+    			$prop_tables[]=$table;		//获取该数据库下所有的送礼物表
+    			$month--;
+    			if ($month>0)
+    			{
+    				$month>=10?$prev_m = strval($year).$month:$prev_m = strval($year).'0'.$month;
+    				$table = DB_PREFIX . 'video_prop_' . $prev_m;
+    				$res = $GLOBALS['db']->getRow("SHOW TABLES LIKE'$table'");
+    			}
+    			else if ($month<=0)
+    			{
+    				$month = '12';
+    				$year --;
+    				$prev_y = $year.$month;
+    				$table = DB_PREFIX . 'video_prop_' . $prev_y;
+    				$res = $GLOBALS['db']->getRow("SHOW TABLES LIKE'$table'");
+    			}
+    		}
+    		/*admin_ajax_return($prop_tables);*/
+			/* SELECT id,nick_name,sum(nums) as nums,sum(diamonds) as diamonds FROM (SELECT ... fanwe_video_prop_201707 ... 
+			union SELECT ... fanwe_video_prop_201706 ... ) as res group by id;;*/
+			$map = $this->com_search(); //获取时间搜索状态
+
+	        $parameter = '';
+	        $sql_w = '';
+	        //查看是否有进行时间搜索
+	        if($map['start_time'] != '' && $map['end_time'] != ''){
+	            $parameter.=" t1.create_time between '". $map['start_time'] . "' and '". $map['end_time'] ."'&";
+	            $sql_w .=" t1.create_time between '". $map['start_time']. "' and '". $map['end_time'] ."' and ";     
+	        }  
+
+	        if(strim($_REQUEST['id'])!=''){
+	            $sql_w .= " to_user_id like '%".strim($_REQUEST['id'])."%' and ";   
+	        } 
+	        if(strim($_REQUEST['nick_name'])!=''){
+	            $sql_w .= " nick_name like '%".strim($_REQUEST['nick_name'])."%' and ";   
+	        } 
+
+	        $model = D ();
+
+	        $sql_str = 'SELECT id,nick_name,sum(nums) as nums,sum(diamonds) as diamonds FROM (';
+	        for($i=0;$i<count($prop_tables);$i++)	//连接所有礼物表进行查询
+	        {
+	        	$sql_str .= "SELECT to_user_id as id,nick_name,count(*) as nums,sum(total_diamonds) as diamonds "."FROM ".$prop_tables[$i]." t1,".DB_PREFIX."user t2 where t1.to_user_id=t2.id and t1.is_private = 1";
+	        	$sql_str .= " and ".$sql_w." 1=1 group by to_user_id ";
+	        	if($i<count($prop_tables)-1)
+	        	{
+	        		$sql_str .= " union all ";
+	        	}
+	        }
+	        $sql_str .= " ) as res group by id " ;
+	        /*admin_ajax_return($sql_str);*/
+	        $voList = $this->_Sql_list($model,$sql_str,"&".$parameter,'id',true);
+	      	
+	        $this->assign ( 'list', $voList );
+	        $this->display ();
+	        return;
+		}
+
+
+		//私信收礼明细
+		public function private_detail()
+		{
+
+			//统计所有送礼物表
+			$prop_tables = array();
+			$time = time()-28800;
+			$year = intval(to_date($time,'Y'));	//年
+			$month = intval(to_date($time,'m'));	//月
+			$table = DB_PREFIX.'video_prop_'.to_date($time,'Ym');
+    		$res = $GLOBALS['db']->getRow("SHOW TABLES LIKE'$table'");
+    		/*admin_ajax_return($table);*/
+    		while ($res)	
+    		{
+    			$prop_tables[]=$table;		//获取该数据库下所有的送礼物表
+    			$month--;
+    			if ($month>0)
+    			{
+    				$month>=10?$prev_m = strval($year).$month:$prev_m = strval($year).'0'.$month;
+    				$table = DB_PREFIX . 'video_prop_' . $prev_m;
+    				$res = $GLOBALS['db']->getRow("SHOW TABLES LIKE'$table'");
+    			}
+    			else if ($month<=0)
+    			{
+    				$month = '12';
+    				$year --;
+    				$prev_y = $year.$month;
+    				$table = DB_PREFIX . 'video_prop_' . $prev_y;
+    				$res = $GLOBALS['db']->getRow("SHOW TABLES LIKE'$table'");
+    			}
+    		}
+			/*SELECT from_user_id as id,nick_name,total_diamonds as diamonds,t1.create_time as time from fanwe_video_prop t1,fanwe_user t2 where t1.from_user_id=t2.id and t1.is_private = 1 and to_user_id = 100993;*/
+			$map = $this->com_search(); //获取时间搜索状态
+
+	        $id = strim($_REQUEST['id']);   //主播ID
+
+	        $parameter = '';
+	        $sql_w = '';
+	        //查看是否有进行时间搜索
+	        if($map['start_time'] != '' && $map['end_time'] != ''){
+	            $parameter.=" t1.create_time between '". $map['start_time'] . "' and '". $map['end_time'] ."'&";
+	            $sql_w .=" t1.create_time between '". $map['start_time']. "' and '". $map['end_time'] ."' and ";     
+	        }  
+	        //查看是否有进行送礼者ID或昵称搜索
+	        if(strim($_REQUEST['sid'])!=''){
+	            $sql_w .= " t2.id like '%".strim($_REQUEST['sid'])."%' and ";   
+	        } 
+	        if(strim($_REQUEST['nick_name'])!=''){
+	            $sql_w .= " nick_name like '%".strim($_REQUEST['nick_name'])."%' and ";   
+	        } 
+
+	        $model = D ();
+
+	        $sql_str = '';
+	        for ($i=0;$i<count($prop_tables);$i++)	//连接所有礼物表进行查询
+	        {
+	        	$sql_str .= "SELECT from_user_id as sid,nick_name,total_diamonds as diamonds,t1.create_time as time "."FROM ".$prop_tables[$i]." t1,".DB_PREFIX."user t2 where t1.from_user_id = t2.id and t1.is_private = 1 and to_user_id = ".$id;
+	        	$sql_str .= " and ".$sql_w." 1=1 ";
+	        	if($i<count($prop_tables)-1)
+	        	{
+	        		$sql_str .= " union all ";
+	        	}
+	        }
+	        
+
+	        /*admin_ajax_return($sql_str);*/
+	        $voList = $this->_Sql_list($model, $sql_str, "&".$parameter,'time');
+
+	        for($i=0;$i<count($voList);$i++)
+	        {
+	            $voList[$i]['time'] = to_date($voList[$i]['time']);
+	        }
+
+	        $this->assign ( 'list', $voList );
+
+	        //获取总获益
+	        $sql_diamonds_count = "SELECT sum(diamonds) as count_diamonds FROM ( ".$sql_str." ) as res";
+	        $count_diamonds = $GLOBALS['db']->getOne($sql_diamonds_count);
+	        //获取总人数
+	        $sql_nums_count = "SELECT res.sid FROM ( ".$sql_str." ) as res group by res.sid";
+	        $count = $GLOBALS['db']->getAll($sql_nums_count);
+	        $count = count($count);
+
+	        $this->assign("count",$count);
+	        $this->assign("count_diamonds",$count_diamonds);
+	        $this->display ();
+	        return;
+
+		}
+
+		//导出电子表
+	    public function export_csv($page = 1)
+	    {
+
+	        $pagesize = 10;
+	        set_time_limit(0);
+	        $limit = (($page - 1)*intval($pagesize)).",".(intval($pagesize));
+
+	        //统计所有送礼物表
+			$prop_tables = array();
+			$time = time()-28800;
+			$year = intval(to_date($time,'Y'));	//年
+			$month = intval(to_date($time,'m'));	//月
+			$table = DB_PREFIX.'video_prop_'.to_date($time,'Ym');
+    		$res = $GLOBALS['db']->getRow("SHOW TABLES LIKE'$table'");
+    		/*admin_ajax_return($table);*/
+    		while ($res)	
+    		{
+    			$prop_tables[]=$table;		//获取该数据库下所有的送礼物表
+    			$month--;
+    			if ($month>0)
+    			{
+    				$month>=10?$prev_m = strval($year).$month:$prev_m = strval($year).'0'.$month;
+    				$table = DB_PREFIX . 'video_prop_' . $prev_m;
+    				$res = $GLOBALS['db']->getRow("SHOW TABLES LIKE'$table'");
+    			}
+    			else if ($month<=0)
+    			{
+    				$month = '12';
+    				$year --;
+    				$prev_y = $year.$month;
+    				$table = DB_PREFIX . 'video_prop_' . $prev_y;
+    				$res = $GLOBALS['db']->getRow("SHOW TABLES LIKE'$table'");
+    			}
+    		}
+
+			$map = $this->com_search(); //获取时间搜索状态
+
+	        $sql_w = '';
+	        //查看是否有进行时间搜索
+	        if($map['start_time'] != '' && $map['end_time'] != ''){
+	            $parameter.=" t1.create_time between '". $map['start_time'] . "' and '". $map['end_time'] ."'&";
+	            $sql_w .=" t1.create_time between '". $map['start_time']. "' and '". $map['end_time'] ."' and ";     
+	        }  
+
+	        if(strim($_REQUEST['id'])!=''){
+	            $sql_w .= " to_user_id like '%".strim($_REQUEST['id'])."%' and ";   
+	        } 
+	        if(strim($_REQUEST['nick_name'])!=''){
+	            $sql_w .= " nick_name like '%".strim($_REQUEST['nick_name'])."%' and ";   
+	        } 
+	        $sql_str = 'SELECT id,nick_name,sum(nums) as nums,sum(diamonds) as diamonds FROM (';
+	        for($i=0;$i<count($prop_tables);$i++)	//连接所有礼物表进行查询
+	        {
+	        	$sql_str .= "SELECT to_user_id as id,nick_name,count(*) as nums,sum(total_diamonds) as diamonds "."FROM ".$prop_tables[$i]." t1,".DB_PREFIX."user t2 where t1.to_user_id=t2.id and t1.is_private = 1";
+	        	$sql_str .= " and ".$sql_w." 1=1 group by to_user_id ";
+	        	if($i<count($prop_tables)-1)
+	        	{
+	        		$sql_str .= " union all ";
+	        	}
+	        }
+	        $sql_str .= " ) as res group by id " ;
+
+	        $time ='1970-01-01 16:00:00';
+	        $sql =$sql_str." limit ";
+	        $sql .= $limit;
+	        /*admin_ajax_return($sql);*/
+	        $list=$GLOBALS['db']->getAll($sql);
+	        /*admin_ajax_return($list);*/
+	        if($list)
+	        {
+	            register_shutdown_function(array(&$this, 'export_csv'), $page+1);
+	            $m_config = load_auto_cache('m_config');
+	            $ticket_name = $m_config['ticket_name']!=''?$m_config['ticket_name']:'印票';
+	            $refund_value = array( 'id'=>'""','nick_name'=>'""','diamonds'=>'""','nums'=>'""'); 
+	            if($page == 1)
+	            {
+	                $content = iconv("utf-8","gbk","主播ID,主播昵称,收礼总获益(钻石),私信送礼人数");
+	                $content = $content . "\n";
+	            }
+	            foreach($list as $k=>$v)
+	            {
+	                $refund_value['id'] = '"' . iconv('utf-8','gbk',$list[$k]['id']) . '"';
+	                $refund_value['nick_name'] = '"' . iconv('utf-8','gbk',$list[$k]['nick_name']) . '"';
+	                $refund_value['nums'] = '"' . iconv('utf-8','gbk',$list[$k]['nums']) . '"';
+	                $refund_value['diamonds'] = '"' . iconv('utf-8','gbk',$list[$k]['diamonds']) . '"';
+	                $content .= implode(",", $refund_value) . "\n";
+	            }
+
+	            header("Content-Disposition: attachment; filename=private_statistics.csv");
+	            echo $content ;
+	        }
+	        else
+	        {
+	            if($page==1)
+	                $this->error(L("NO_RESULT"));
+	        }
+	    }
+
+
+
+	}

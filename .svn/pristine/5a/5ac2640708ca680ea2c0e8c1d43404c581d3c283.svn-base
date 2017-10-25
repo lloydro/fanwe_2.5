@@ -1,0 +1,151 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<div class="main">
+<div class="main_title">{%EDIT} <a href="{:u("Navigation/index")}" class="back_list">{%BACK_LIST}</a></div>
+<div class="blank5"></div>
+<form name="edit" action="__APP__" method="post" enctype="multipart/form-data">
+<table class="form" cellpadding=0 cellspacing=0>
+	<tr>
+		<td colspan=2 class="topTd"></td>
+	</tr>
+	<tr>
+		<td class="item_title">标题:</td>
+		<td class="item_input"><input type="text" class="textbox require" name="name" value="{$vo.name}" /></td>
+	</tr>
+	<tr>
+		<td class="item_title">图片:</td>
+		<td class="item_input"><html:imgUpload name = 'icon' id='icon' value="$vo.icon" />
+            <span class="tip_span" id="tip_span">&nbsp;显示图标</span>
+		</td>
+	</tr>
+    <tr id="select_type">
+        <td class="item_title">类型:</td>
+        <td class="item_input">
+            <select name="tag" id="tag">
+                <option value="anchor_rank" <if condition="$vo['tag'] eq anchor_rank"> selected="selected"</if> >anchor_rank</option>
+                <option value="random_game" <if condition="$vo['tag'] eq random_game"> selected="selected"</if> >random_game</option>
+                <option value="hero_rank" <if condition="$vo['tag'] eq hero_rank"> selected="selected"</if>>hero_rank</option>
+            </select>
+
+        </td>
+    </tr>
+	<tr>
+		<td class="item_title">{%SORT}:</td>
+		<td class="item_input"><input type="text" class="textbox" name="sort" value="{$vo.sort}" /></td>
+	</tr>
+	
+	<tr>
+		<td class="item_title"></td>
+		<td class="item_input">
+			<!--隐藏元素-->
+			<input type="hidden" name="{:conf("VAR_MODULE")}" value="Navigation" />
+			<input type="hidden" name="{:conf("VAR_ACTION")}" value="update" />
+			<input type="hidden" name="id" value="{$vo.id}" />
+			<!--隐藏元素-->
+			<input type="submit" class="button" value="{%EDIT}" />
+			<input type="reset" class="button" value="{%RESET}" />
+		</td>
+	</tr>
+	<tr>
+		<td colspan=2 class="bottomTd"></td>
+	</tr>
+</table>
+    <script>
+        $(function(){
+            var type = $('#type option:selected').val();
+            var position = $('#position option:selected').val();
+            if(type==1){
+                $('#family_id').show();
+            }else{
+                $('#family_id').hide();
+            }
+
+            if(type==0){
+                $("#url").show();
+            }else{
+                $("#url").hide();
+            }
+			
+			if(type>=6 && type<=9){
+                    $('#edu_show_id').show();
+                    $('#edu_show_id input').attr('name','show_id');
+					if( type==8)
+						$('#edu_show_id_title').html("房间号：");
+					else if( type==6)
+						$('#edu_show_id_title').html("机构id：");
+                    else if( type==9)
+                        $('#edu_show_id_title').html("课程id：");
+					else
+						$('#edu_show_id_title').html("会员id：");
+						
+                }else{
+                    $('#edu_show_id').hide();
+                    $('#edu_show_id input').removeAttr('name');
+                }
+
+
+            if(position == 3){
+                $("#select_type").hide();
+                $("#type").val(0);
+                $("#url").show();
+            }else{
+                $("#select_type").show();
+            }
+
+            $("#type").change(function(){
+                type = $(this).val();
+                if(type==1){
+                    $('#family_id').show();
+                }else{
+                    $('#family_id').hide();
+                }
+
+                if(type!=0){
+                    $("#url").hide();
+                    $("input[name='url']").val('');
+                }else{
+                    $("#url").show();
+                }
+				
+				if(type>=6 && type<=9){
+                    $('#edu_show_id').show();
+                    $('#edu_show_id input').attr('name','show_id');
+					if( type==8)
+						$('#edu_show_id_title').html("房间号：");
+					else if( type==6)
+						$('#edu_show_id_title').html("机构id：");
+                    else if( type==9)
+                        $('#edu_show_id_title').html("课程id：");
+					else
+						$('#edu_show_id_title').html("会员id：");
+						
+                }else{
+                    $('#edu_show_id').hide();
+                    $('#edu_show_id input').removeAttr('name');
+                }
+            });
+
+            $("#position").change(function(){
+                position = $(this).val();
+                if(position == 3){
+                    $("#select_type").hide();
+                    $("#type").val(0);
+                    $("#url").show();
+                }else{
+                    type = $('#type option:selected').val();
+                    if(type==0){
+                        $("#url").show();
+                    }else{
+                        $("#url").hide();
+                        $("input[name='url']").val('');
+                    }
+                    $("#select_type").show();
+                }
+            });
+
+        });
+    </script>
+</form>
+</div>
+<include file="Public:footer" />

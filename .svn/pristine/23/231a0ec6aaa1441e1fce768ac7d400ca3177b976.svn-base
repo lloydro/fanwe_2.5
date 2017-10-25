@@ -1,0 +1,37 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<include file="Public:new" />
+<load href='__TMPL__Common/js/jquery.bgiframe.js' />
+<load href='__TMPL__Common/js/jquery.weebox.js' />
+<load href='__TMPL__Common/js/user.js' />
+<load href='__TMPL__Common/style/weebox.css' />
+<script type="text/javascript" src="__TMPL__Common/js/calendar/calendar.php?lang=zh-cn" ></script>
+<load href='__TMPL__Common/js/calendar/calendar.css' />
+<load href='__TMPL__Common/js/calendar/calendar.js' />
+<div class="main">
+<div class="main_title_list"><div class="list-line-ico"></div>主播<span style="color:red;font-size: 16px">{:trim($_REQUEST['id'])}</span>私信收礼明细&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="{:u("UserStatistics/private_statistics")}" class="back_list">返回</a>
+<div class="search_row">
+	<form name="search" action="__APP__" method="get">
+		送礼者ID：<input type="text" class="textbox" name="sid" value="{:trim($_REQUEST['sid'])}" />
+		送礼者昵称：<input type="text" class="textbox" name="nick_name" value="{:trim($_REQUEST['nick_name'])}" />
+		送礼时间 ：<input style="margin: 0;width:130px" type="text" class="textbox" size="8" name="start_time" id="start_time" value="{:trim($_REQUEST['start_time'])}" onfocus="return showCalendar('start_time', '%Y-%m-%d %H:%M:%S', false, false, 'start_time');" /> - <input type="text" style="width:130px" class="textbox" size="8" name="end_time" id="end_time" value="{:trim($_REQUEST['end_time'])}" onfocus="return showCalendar('end_time', '%Y-%m-%d %H:%M:%S', false, false, 'end_time');" />
+		<input type="hidden" value="UserStatistics" name="m" /><input type="hidden" value="private_detail" name="a" /><input type="hidden" value="{:trim($_REQUEST['id'])}" name="id" /><input type="submit" class="button" value="{%SEARCH}" />
+	</form>
+</div>
+<html:list
+	id="dataTable"
+	style="dataTable"
+	name="prop"
+	action="true"
+	datasource="list"
+	show="sid:送礼者ID|20%,nick_name:送礼者昵称|30%,diamonds:收礼获益(钻石)|20%,time:收礼时间|25%"
+	actionlist="sid|abc:无"
+	/>
+<div class="page">{$page}</div>
+<div align="center"><b style="font-size:16px;">收礼总收益(钻石)：{:number_format($count_diamonds)} &nbsp;&nbsp;&nbsp;&nbsp; </b><b style="font-size:16px;">送礼总人数：{:number_format($count)} &nbsp;&nbsp;&nbsp;&nbsp; </b></div>
+</div>
+<include file="Public:footer" />
+
+

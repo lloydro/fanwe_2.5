@@ -1,0 +1,45 @@
+<div class="user-r-title clearfix">
+    <div class="common-title f-l">
+        <span class="field">注册资料</span>
+    </div>
+</div>
+<div class="user-r-content clearfix j-ajax-page">
+    <div class="search clearfix">
+    	
+    </div>
+    <div class="ajax-block">
+        <div class="media">
+			<div class="media-left">
+				<a href="#">
+				  <img style="width:350px;height:350px;" class="media-object" src="{$data.logo}" alt="...">
+				</a>
+			</div>
+			<div class="media-body">
+				<!-- <ul class="list-group">
+					<li class="list-group-item">公会ID：{$data.id}</li>
+					<li class="list-group-item">公会名称：{$data.name}</li>
+					<li class="list-group-item">公会长昵称：{$data.nick_name}</li>
+					<li class="list-group-item">公会人数：{$data.user_count}</li>
+					<li class="list-group-item">创建时间：{$data.create_time}</li>
+					<li class="list-group-item">公会邀请码：{$data.society_code}</li>
+					<li class="list-group-item">公会宣言：{$data.manifesto}</li>
+				</ul> -->
+
+				<div class="list-group">
+					<span class="list-group-item active">
+						公会信息
+					</span>
+					<span class="list-group-item">公会ID：{$data.id}</span>
+					<span class="list-group-item">公会名称：{$data.name}</span>
+					<span class="list-group-item">公会长昵称：{$data.nick_name}</span>
+					<span class="list-group-item">公会人数：{$data.user_count}</span>
+					<span class="list-group-item">创建时间：{$data.create_time}</span>
+					{if $data.open_society_code}
+					<span class="list-group-item">公会邀请码：{$data.society_code}</span>
+					{/if}
+					<span class="list-group-item">公会宣言：{$data.manifesto}</span>
+				</div>
+			</div>
+		</div>
+    </div>
+</div>

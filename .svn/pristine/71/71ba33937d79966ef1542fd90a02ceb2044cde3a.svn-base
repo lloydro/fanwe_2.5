@@ -1,0 +1,95 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<include file="Public:new" />
+<load href='__TMPL__Common/js/jquery.bgiframe.js' />
+<load href='__TMPL__Common/js/jquery.weebox.js' />
+<load href='__TMPL__Common/js/user.js' />
+<load href='__TMPL__Common/js/deal.js' />
+<load href='__TMPL__Common/style/weebox.css' />
+<script type="text/javascript" src="__TMPL__Common/js/calendar/calendar.php?lang=zh-cn" ></script>
+<load href='__TMPL__Common/js/calendar/calendar.css' />
+<load href='__TMPL__Common/js/calendar/calendar.js' />
+<php>
+function get_coins($id,$user_id){
+    return "<a href=\"javascript:detail(".$id.",".$user_id.")\">明细</a>";
+}
+function closed_prop($id,$user_id){
+    return "<a href=\"javascript:closed_prop(".$id.",".$user_id.")\">明细</a>";
+}
+function getpName($id,$user_id)
+	{
+	return M("BmPromoter")->where("user_id=".$user_id)->getField("name");
+	}
+function isSpecial($id,$bm_special)
+	{
+	if($bm_special==1){
+		return "是";
+	}else{
+		return "否";
+	}
+	
+	}
+</php>
+<script type="text/javascript">
+    function detail(id,user_id)
+    {
+        location.href = ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=detail&id="+id+"&user_id="+user_id;
+    }
+    function closed_prop(id,user_id)
+    {
+        location.href = ROOT+"?"+VAR_MODULE+"="+"UserGeneral"+"&"+VAR_ACTION+"=prop&id="+user_id;
+    }
+    
+</script>
+<div class="main">
+    <div class="main_title_list"><div class="list-line-ico"></div>游戏币礼物消费分析</div>
+    <div class="search_row">
+        <form name="search" action="__APP__" method="get" class="clearfix">
+            <div>年:
+                <select name="year">
+                    <?php foreach ($years as $value): ?>
+                        <option value="{$value}"<?php if ($value==$year): ?> selected="selected"<?php endif ?>>{$value}</option>
+                    <?php endforeach ?>
+                </select>
+            </div>
+            <div>月:
+                <select name="month">
+                    <?php foreach ($months as $value): ?>
+                        <option value="{$value}"<?php if ($value==$month): ?> selected="selected"<?php endif ?>>{$value}</option>
+                    <?php endforeach ?>
+                </select>
+            </div>
+            <div>推广会员名称:<input type="text" class="textbox" name="nick_name" value="{:trim($_REQUEST['nick_name'])}" style="width:100px;" /></div>
+            <div>上线推广商:<input type="text" class="textbox" name="name" value="{:trim($_REQUEST['name'])}" style="width:100px;" /></div>
+            <div>上线推广中心:<input type="text" class="textbox" name="p_name" value="{:trim($_REQUEST['p_name'])}" style="width:100px;" /></div>
+            <div>上级会员ID：<input type="text" style="width:60px;" class="textbox" name="bm_pid" value="{:trim($_REQUEST['bm_pid'])}" /></div>
+            <input type="hidden" value="BmPromoterPropFrom" name="m" />
+            <input type="hidden" value="index" name="a" />
+            <input type="submit" class="button" value="{%SEARCH}" />
+        </form>
+        <div class="search_row">
+			<div class=""> 总送出：{$all_total_ticket}{%TICKET}</div>
+			<div class=""> 总送出：{$all_total_diamonds}游戏币</div>
+			<!--  <div class=""> 主播总收益：{$podcast_total_ticket}{%TICKET}</div>
+			<div class=""> 推广商总收益：{$pormoter_total_ticket}{%TICKET}</div>
+			,podcast_total_ticket:主播获得{%TICKET}
+    ,pormoter_total_ticket:推广商获得{%TICKET}-->
+		</div>
+    </div>
+    
+<html:list
+    id="dataTable"
+    style="dataTable"
+    name="user"
+    action="true"
+    datasource="list"
+    show="nick_name:推广会员名称
+    ,name:上线推广商
+    ,p_name|getpName=$user['promoter_p_id']:上线推广中心
+    ,total_diamonds:送出总游戏币
+    ,total_ticket:送出总{%TICKET}"
+    actionlist="id|closed_prop=$user['user_id']" />
+<div class="page">{$page}</div>
+</div>
+<include file="Public:footer" />

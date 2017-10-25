@@ -1,0 +1,87 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<script type="text/javascript" src="__TMPL__Common/js/calendar/calendar.php?lang=zh-cn" ></script>
+<load href='__TMPL__Common/js/calendar/calendar.css' />
+<load href='__TMPL__Common/js/calendar/calendar.js' />
+<php>
+	function get_user_diamonds($user_id)
+	{
+		return M("User")->where("id=".intval($user_id))->getField("diamonds");
+	}
+	function to_user_list($user_id)
+	{
+		return '<a href="'.U('UserGeneral/index',array('id'=>$user_id)).'">'.$user_id.'</a>';
+	}
+
+	function get_promoter_one_name($pid)
+	{
+		$promoter_name=M("BmPromoter")->where("user_id=".intval($pid))->getField("name");
+		return $child_count.'<a href="'.U('BmPromoterOne/index',array('id'=>$pid)).'">'.$promoter_name.'</a>';
+	}
+
+	function get_promoter_status($status)
+	{
+		if($status ==0){
+			return "待审核";
+		}elseif($status ==2){
+			return "驳回";
+		}elseif($status ==1){
+			return "通过";
+		}
+	}
+</php>
+<script>
+
+</script>
+<div class="main">
+<div class="main_title_list"><div class="list-line-ico"></div>会员单位审核列表</div>
+<div class="search_row">
+	<form name="search" action="__APP__" method="get">
+		<div>会员单位名称：<input type="text" class="textbox" name="name" value="{:trim($_REQUEST['name'])}" /></div>
+		<div>运营中心名称：<input type="text" class="textbox" name="parent_name" value="{:trim($_REQUEST['parent_name'])}" /></div>
+		<div>绑定会员ID：<input type="text" style="width:60px;" class="textbox" name="user_id" value="{:trim($_REQUEST['user_id'])}" /></div>
+		<div>审核状态：
+			<select name="status">
+				<option value="-1">全部</option>
+				<option value="0">待审核</option>
+				<option value="1">通过</option>
+				<option value="2">驳回</option>
+			</select>
+		</div>
+		<div>创建时间：
+		<span><input type="text" class="textbox" name="create_time_1" id="create_time_1" value="{$_REQUEST['create_time_1']}" onfocus="this.blur(); return showCalendar('create_time_1', '%Y-%m-%d', false, false, 'btn_create_time_1');" /><input type="button" class="button" id="btn_create_time_1" value="{%SELECT_TIME}" onclick="return showCalendar('create_time_1', '%Y-%m-%d', false, false, 'btn_create_time_1');" /></span>
+		- <span><input type="text" class="textbox" name="create_time_2" id="create_time_2" value="{$_REQUEST['create_time_2']}" onfocus="this.blur(); return showCalendar('create_time_2', '%Y-%m-%d', false, false, 'btn_create_time_2');" /><input type="button" class="button" id="btn_create_time_2" value="{%SELECT_TIME}" onclick="return showCalendar('create_time_2', '%Y-%m-%d', false, false, 'btn_create_time_2');" /></span>
+		<input type="hidden" value="XyPromoterTwoSubmit" name="m" />
+		<input type="hidden" value="index" name="a" />
+		<input type="submit" class="button" value="{%SEARCH}" />
+	</div>
+
+	</form>
+</div>
+<html:list
+	id="dataTable"
+	style="dataTable"
+	name="data"
+	checkbox="true"
+	action="true"
+	datasource="list"
+	show="
+	,id:会员单位ID|100px
+	,name:会员单位名称
+	,pid|get_promoter_one_name:上级运营中心名称
+	,user_id|to_user_list:绑定会员ID
+	,user_id|get_user_diamonds:钻石数
+	,create_time|to_date:{%CREATE_TIME}
+	,status|get_promoter_status:审核状态"
+	actionlist="edit:审核查看, foreverdel:{%DEL}" />
+	<table class="dataTable">
+		<tbody>
+		<td colspan="9">
+			<input type="button" class="button button-del" value="{%DEL}" onclick="foreverdel();" />
+		</td>
+		</tbody>
+	</table>
+<div class="page">{$page}</div>
+</div>
+<include file="Public:footer" />

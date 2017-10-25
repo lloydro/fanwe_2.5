@@ -1,0 +1,397 @@
+/*1. @import (reference) "文件路径"; 
+　　将引入的文件作为样式库使用，因此文件中样式不会被直接编译为css样式规则。当前样式文件通过extend和mixins的方式引用样式库的内容。
+2. @import (inline) "文件路径"; 
+　　用于引入与less不兼容的css文件，通过inline配置告知编译器不对引入的文件进行编译处理，直接输出到最终输出。注意：引入的文件和当前文件会被编译为一个样式样式
+3. @import (less) "文件路径"; 
+　　默认使用该配置项，表示引入的文件为less文件。
+4. @import (css) "文件路径"; 
+　　表示当前操作为CSS中的@import操作。当前文件会输出一个样式文件，而被引入的文件自身为一个独立的样式文件
+5. @import (once) "文件路径"; 
+　　默认使用该配置项，表示对同一个资源仅引入一次。
+6. @import (multiple) "文件路径"; 
+　　表示对同一资源可引入多次。*/
+/*字体颜色*/
+/*主要字色*/
+/*标题*/
+/*浅色*/
+/*更浅色（适用：二级标题、简介）*/
+/*更更浅色（适用：icon图标）*/
+/*界面主题色*/
+/*背景色*/
+/*背景色*/
+/*主题风格色*/
+/*主题风格浅色*/
+/*主题风格浅色*/
+/*主题辅助风格色*/
+/*线条颜色*/
+/*主要线条颜色*/
+/*更深线条颜色*/
+/*文本输入框边框颜色*/
+/*字体大小 ，如果出现非单行情况可搭配行高，*/
+/*各类间距，高度*/
+/*横向间距*/
+/*纵向间距*/
+input:-moz-placeholder,
+textarea:-moz-placeholder,
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+  color: #D4D4D4;
+}
+input,
+button {
+  font-family: "Microsoft YaHei";
+  border: medium none;
+  overflow: visible;
+}
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+input,
+select {
+  outline: medium none;
+}
+textarea {
+  margin: 0;
+  padding: 0;
+}
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+  outline: none;
+}
+ul,
+li,
+dl,
+dd,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  font-weight: normal;
+}
+i,
+em {
+  font-style: normal;
+}
+button {
+  border: none;
+}
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+input,
+button,
+select,
+textarea {
+  outline: none;
+}
+textarea {
+  resize: none;
+}
+a {
+  -moz-transition: all .3s ease;
+  -ms-transition: all .3s ease;
+  -o-transition: all .3s ease;
+  transition: all .3s ease;
+}
+a,
+a:hover {
+  color: #444;
+  text-decoration: none;
+  outline: none;
+}
+a:active,
+a:focus {
+  color: #444;
+  outline: none;
+  text-decoration: none;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+@font-face {
+  font-family: 'iconfont';
+  /* project id 150535 */
+  src: url('//at.alicdn.com/t/font_o09290odl8ebqpvi.eot');
+  src: url('//at.alicdn.com/t/font_o09290odl8ebqpvi.eot?#iefix') format('embedded-opentype'), url('//at.alicdn.com/t/font_o09290odl8ebqpvi.woff') format('woff'), url('//at.alicdn.com/t/font_o09290odl8ebqpvi.ttf') format('truetype'), url('//at.alicdn.com/t/font_o09290odl8ebqpvi.svg#iconfont') format('svg');
+}
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+}
+body {
+  background: #f7f9fa;
+  color: #444;
+  font: 14px/1.5 'tahoma', 'arial', 'Hiragino Sans GB', 'microsoft yahei';
+}
+input,
+select {
+  outline: medium none;
+}
+input.disable {
+  background-color: #eee !important;
+}
+.wrapper {
+  width: 1200px;
+  margin: 0 auto;
+}
+.clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+.clearfix {
+  zoom: 1;
+}
+*html .clearfix {
+  height: 1%;
+}
+* + html .clearfix {
+  height: 1%;
+}
+.blank0,
+.clear {
+  clear: both;
+  visibility: hidden;
+  font-size: 0;
+  height: 0;
+  line-height: 0;
+}
+.f-l {
+  float: left;
+}
+.f-r {
+  float: right;
+}
+.t-l {
+  text-align: left;
+}
+.t-c {
+  text-align: center;
+}
+.t-r {
+  text-align: right;
+}
+.m-5 {
+  margin: 5px;
+}
+.m-10 {
+  margin: 10px;
+}
+.m-15 {
+  margin: 15px;
+}
+.m-20 {
+  margin: 20px;
+}
+.mb-5 {
+  margin-bottom: 5px;
+}
+.mb-10 {
+  margin-bottom: 10px;
+}
+.mb-15 {
+  margin-bottom: 15px;
+}
+.mb-20 {
+  margin-bottom: 20px;
+}
+.mt-5 {
+  margin-top: 5px;
+}
+.mt-10 {
+  margin-top: 10px;
+}
+.mt-15 {
+  margin-top: 15px;
+}
+.mt-20 {
+  margin-top: 20px;
+}
+.ml-5 {
+  margin-left: 5px;
+}
+.ml-10 {
+  margin-left: 10px;
+}
+.ml-15 {
+  margin-left: 15px;
+}
+.ml-20 {
+  margin-left: 20px;
+}
+.mr-5 {
+  margin-right: 5px;
+}
+.mr-10 {
+  margin-right: 10px;
+}
+.mr-15 {
+  margin-right: 15px;
+}
+.mr-20 {
+  margin-right: 20px;
+}
+.p-5 {
+  padding: 5px;
+}
+.p-10 {
+  padding: 10px;
+}
+.p-15 {
+  padding: 15px;
+}
+.p-20 {
+  padding: 20px;
+}
+.pb-5 {
+  padding-bottom: 5px;
+}
+.pb-10 {
+  padding-bottom: 10px;
+}
+.pb-15 {
+  padding-bottom: 15px;
+}
+.pb-20 {
+  padding-bottom: 20px;
+}
+.pt-5 {
+  padding-top: 5px;
+}
+.pt-10 {
+  padding-top: 10px;
+}
+.pt-15 {
+  padding-top: 15px;
+}
+.pt-20 {
+  padding-top: 20px;
+}
+.pl-5 {
+  padding-left: 5px;
+}
+.pl-10 {
+  padding-left: 10px;
+}
+.pl-15 {
+  padding-left: 15px;
+}
+.pl-20 {
+  padding-left: 20px;
+}
+.pr-5 {
+  padding-right: 5px;
+}
+.pr-10 {
+  padding-right: 10px;
+}
+.pr-15 {
+  padding-right: 15px;
+}
+.pr-20 {
+  padding-right: 20px;
+}
+.row {
+  margin-right: -10px;
+  margin-left: -10px;
+}
+.col-xs-1,
+.col-sm-1,
+.col-md-1,
+.col-lg-1,
+.col-xs-2,
+.col-sm-2,
+.col-md-2,
+.col-lg-2,
+.col-xs-3,
+.col-sm-3,
+.col-md-3,
+.col-lg-3,
+.col-xs-4,
+.col-sm-4,
+.col-md-4,
+.col-lg-4,
+.col-xs-5,
+.col-sm-5,
+.col-md-5,
+.col-lg-5,
+.col-xs-6,
+.col-sm-6,
+.col-md-6,
+.col-lg-6,
+.col-xs-7,
+.col-sm-7,
+.col-md-7,
+.col-lg-7,
+.col-xs-8,
+.col-sm-8,
+.col-md-8,
+.col-lg-8,
+.col-xs-9,
+.col-sm-9,
+.col-md-9,
+.col-lg-9,
+.col-xs-10,
+.col-sm-10,
+.col-md-10,
+.col-lg-10,
+.col-xs-11,
+.col-sm-11,
+.col-md-11,
+.col-lg-11,
+.col-xs-12,
+.col-sm-12,
+.col-md-12,
+.col-lg-12 {
+  padding: 10px;
+}
+.null-data {
+  padding: 20px;
+  text-align: center;
+}
+.null-data:before {
+  content: '';
+  background: url(../images/not-data.png) no-repeat;
+  width: 220px;
+  height: 181px;
+  display: block;
+  margin: 20px auto 10px;
+  background-size: 100%;
+}
+#headerwrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 500;
+  width: 100%;
+  background: #fff;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+#bodywrapper {
+  margin-top: 51px;
+  overflow: hidden;
+}
+.ms-controller {
+  visibility: hidden;
+}

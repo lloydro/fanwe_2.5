@@ -1,0 +1,161 @@
+<?php
+// +----------------------------------------------------------------------
+// | Fanwe 方维直播系统
+// +----------------------------------------------------------------------
+// | Copyright (c) 2011 http://www.fanwe.com All rights reserved.
+// +----------------------------------------------------------------------
+// | Author: 甘味人生(526130@qq.com)
+// +----------------------------------------------------------------------
+
+class WeiboContributionRedisService extends BaseRedisService
+{
+
+    var $user_weibo_contribution; //:podcast_id   zset 有序数据,user_id:贡献数
+    var $video_contribution;//：video_id  zset 有序数据,user_id:贡献数
+
+    var $video_vote_number_db; //   zset video_id:映票数(vote_number)
+
+//    var $user_hash_db; //所有会员数据 user_id hash数据 存储在线数据
+    /**
+     +----------------------------------------------------------
+     * 架构函数
+     +----------------------------------------------------------
+     * @access public
+     +----------------------------------------------------------
+     */
+    public function __construct()
+    {
+
+        parent::__construct();
+        $this->user_weibo_contribution = $this->prefix.'user_weibo_contribution:';
+        $this->user_hash_db = $this->prefix.'user_hash_db';
+
+    }
+
+
+    /*
+     * 添加
+     * $video_id 为0时候，是直接发送礼物
+     */
+    public function insert_db($user_id,$podcast_id,$num){
+        $data = array();
+
+        $pipe = $this->redis->multi();
+        //主播获取ticket，发送人 获取积分
+        $pipe->zIncrBy($this->user_weibo_contribution.$podcast_id,$num,$user_id);
+
+        $replies = $pipe->exec();
+        return $replies[0];
+    }
+
+    /*
+     * 获取当前主播 最多贡献
+     *
+     */
+    public function get_podcast_contribute($podcast_id,$page,$page_size=20,$is_only_list = false){
+        $root = array();
+        if($page==0){
+            $page = 1;
+        }
+        $root['page'] = $page;
+       //$page_size=20;
+        $start = ($page-1)*$page_size;
+        $end = $page*$page_size-1;
+        $user_num_array =  $this->redis->zRevRange($this->user_weibo_contribution.$podcast_id,$start,$end,true);
+        $user_keys = array_keys($user_num_array);
+        $user_list_array = $this->redis->hMGet($this->user_hash_db,$user_keys);
+        $user_list = array();
+        $level_list = $GLOBALS['db']->getAll("select * from ".DB_PREFIX."user_level");
+        $level_list_array =array();
+        foreach($level_list as $k=>$v){
+            if($v['level']){
+                $level_list_array[$v['level']] = get_spec_image($v['icon'],200,200,1);
+            }
+        }
+        $root['total_num'] = intval($this->redis->zCard($this->user_contribution.$podcast_id));
+        if(is_array($user_list_array)){
+            foreach($user_list_array as $k=>$v){
+              if($v){
+                  $user = json_decode($v,true);
+                  $user_con = array();
+                  $user_con['user_id'] = $k;
+                  $user_con['nick_name'] = $user['nick_name']?$user['nick_name']:'';
+                  $user_con['sex'] = $user['sex']?$user['sex']:'0';
+                  $user_con['is_authentication'] = $user['is_authentication']?$user['is_authentication']:'0';
+                  $user_con['v_icon'] = $user['v_icon']?$user['v_icon']:'';
+                  $user_con['v_type'] = $user['v_type']?$user['v_type']:'';
+                  $user_con['user_level'] = $user['user_level']?$user['user_level']:'1';
+                  $user_con['head_image'] = get_spec_image($user['head_image']);
+                  $user_con['num'] = $user_num_array[$k];
+                  $user_con['use_ticket']=intval($user_num_array[$k]);
+                  $user_con['use_money']=intval($user_num_array[$k]);
+                  $user_con['user_level_img'] = $level_list_array[$user_con['user_level']];
+                  $user_list[] = $user_con;
+              }
+            }
+        }
+        if($is_only_list){
+            return $user_list;
+        }
+        $root['list'] = $user_list;
+        $root['user'] = $this->redis->hMGet($this->user_db.$podcast_id,array('nick_name','sex','head_image','ticket','user_level','v_type','v_icon'));
+        $user = $root['user'];
+        $root['user']['sex'] = $user['sex']?$user['sex']:0;
+        $root['user']['nick_name'] = $user['nick_name']?$user['nick_name']:$podcast_id;
+        $root['user']['ticket'] = intval($user['ticket'])?intval($user['ticket']):'';
+        $root['user']['user_level'] = $user['user_level']?$user['user_level']:'1';
+        $root['user']['v_type'] = $user['v_type']?$user['v_type']:'';
+        $root['user']['v_icon'] = $user['v_icon']?$user['v_icon']:'';
+        $root['user']['user_id'] = $podcast_id;
+        $root['user']['head_image'] = get_spec_image( $root['user']['head_image']);
+        if($page == 0){
+            $root['has_next'] = 0;
+        }else{
+            if((count($user_num_array)==$page_size)  ){
+                $root['has_next'] = 1;
+            }else{
+                $root['has_next'] = 0;
+            }
+        }
+        $root['rs_count']=count($user_num_array);
+        $root['status'] = 1;
+        return $root;
+    }
+    //分销功能
+    public function distribution_calculate($user_id, $total_weibo_money,$memo)
+    {
+        $root = array();
+        $m_config = load_auto_cache("m_config");//初始化手机端配置
+        $table = DB_PREFIX . 'weibo_distribution_log';
+//        fanwe_require(APP_ROOT_PATH . 'mapi/lib/redis/UserRedisService.php');
+//        $user_redis = new UserRedisService();
+//        $to_user_id = $user_redis->getOne_db($user_id, 'p_user_id');
+        $to_user_id = $GLOBALS['db']->getOne("select p_user_id from ".DB_PREFIX."user where id = ".$user_id);
+            
+        if (intval($to_user_id) > 0 && intval($m_config['distribution']) == 1 && $user_id > 0 && $total_weibo_money > 0) {
+            $weibo_money = $m_config['distribution_rate'] * 0.01 * $total_weibo_money;
+
+            //插入:分销日志
+            $video_prop = array();
+            $video_prop['from_user_id'] = $user_id;
+            $video_prop['to_user_id'] = $to_user_id;
+            $video_prop['create_date'] = "'" . to_date(NOW_TIME, 'Y-m-d') . "'";
+            $video_prop['weibo_money'] = $weibo_money;
+            $video_prop['create_time'] = NOW_TIME;
+            $video_prop['create_ym'] = to_date($video_prop['create_time'], 'Ym');
+            $video_prop['create_d'] = to_date($video_prop['create_time'], 'd');
+            $video_prop['create_w'] = to_date($video_prop['create_time'], 'W');
+            $video_prop['memo'] = strim($memo);
+            $result = $GLOBALS['db']->autoExecute($table,$video_prop,'INSERT');
+
+            if (intval($result) > 0) {
+                $sql = "update " . DB_PREFIX . "user set weibo_money = weibo_money + " . $weibo_money . " where id = " . $to_user_id;
+                $GLOBALS['db']->query($sql);
+            }
+
+        }
+    }
+
+}//类定义结束
+
+?>

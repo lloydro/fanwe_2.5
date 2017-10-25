@@ -1,0 +1,62 @@
+<div class="user-r-title clearfix">
+    <div class="common-title f-l">
+        <span class="field">公会月收入</span>
+    </div>
+    <!--         <div class="block-font f-r">
+<span class="operation mr-20">标记为已读</span>
+<span class="operation">删除消息</span>
+</div> -->
+</div>
+<div class="user-r-content clearfix j-ajax-page">
+    <div class="search clearfix">
+    <form name="search" action="index.php?ctl=society&act=society_income_month" method="post">
+        <div class="col-md-3">
+	        <input style="font-size:20px;" type="month" name="date_str" value="{$data.list.date}"/>
+		</div>
+		<div class="col-md-1">
+		  	<input type="submit" class="btn btn-primary" value="搜索" />
+		</div>
+		<!-- <div class="col-md-1">
+		  	<input type="submit" class="btn btn-primary" value="导出" />
+		</div> -->
+	</form>
+    </div>
+    <div class="ajax-block">
+        <table class="table table-striped">
+            <thead>
+                <tr class="form-head">
+                    <th>日期</th>
+                    <th>总印票</th>
+                    <th>分成比例</th>
+                    <th>结算金额</th>
+                    <th>实际收入</th>
+                </tr>
+            </thead>
+            {if $data.list}
+            <tbody>
+                <tr class="form-body">
+                    <td class="content-font">{$data.list.date}</td>
+                    <td class="content-font">{$data.list.ticket}</td>
+                    
+                    <td class="content-font">{$data.list.society_rate}</td>
+                    <td class="content-font">{$data.list.society_money}</td>
+                    <td class="content-font">{$data.list.total_money}</td>
+                </tr>
+            </tbody>
+            {else}
+            <tbody>
+                <tr>
+                    <td colspan="5">
+                        <p class="null-data">暂无数据</p>
+                    </td>
+                </tr>
+            </tbody>
+            {/if}
+        </table>
+        <div class="m-page clearfix">
+            <div class="m-page-con">
+                {$data.page}
+            </div>
+        </div>
+    </div>
+</div>

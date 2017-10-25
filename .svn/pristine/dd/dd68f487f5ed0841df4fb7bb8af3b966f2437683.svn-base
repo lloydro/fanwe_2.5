@@ -1,0 +1,69 @@
+{include file="inc/header.html"}
+
+<script type="text/javascript">
+function operationAjax(url,usre_id,society_id,is_agree){
+	$.ajax({
+		url:url,
+		type:'post',
+		data:'applyFor_id='+usre_id+'&is_agree='+is_agree+'&society_id='+society_id,
+		success:function(res){
+			//res = JSON.parse(res);
+			//if(res.output_debug.data.status == 1){
+				//alert(res.output_debug.data.error);
+				location.reload();
+			//}
+		},error:function(res){
+			location.reload();
+		}
+	});
+}
+//同意 或拒绝 人员加入公会 或 退出公会
+function agree(usre_id,society_id,ffn,is_agree){
+	var url =window.location.protocol +'//'+ window.location.hostname + window.location.pathname +"?ctl=society_app&act="+ffn;
+	if(confirm('请确认')){
+		if(is_agree){
+			var res = operationAjax(url,usre_id,society_id,1);
+		}else{
+			var res = operationAjax(url,usre_id,society_id,0);
+		}
+	}
+	//location.reload();
+}
+
+
+//踢出成员
+function out_user(usre_id,society_id){
+	var url =window.location.protocol +'//'+ window.location.hostname + window.location.pathname +"?ctl=society_app&act=member_del";
+	if(confirm('是否将其踢出')){
+		$.ajax({
+			url:url,
+			type:'post',
+			data:'member_id='+usre_id+'&society_id='+society_id,
+			success:function(res){
+				location.reload();
+			},error:function(res){
+				console.log(res)
+			}
+		});
+	}
+}
+</script>
+<div class="wrapper">
+	<div class="user-main bg-user-center mt-20 clearfix">
+		<!--左侧菜单区 -->
+		{include file="inc/inc-user-left.html"}
+		<!-- 右侧内容区 -->
+		<div class="layout-user-r">
+			<div class="user-r-main">
+				{include file="inc/inc-society-user_manage.html"}
+			</div>
+		</div>
+	</div>
+</div>
+<?php
+	$this->_var['dcpagejs'][] = $this->_var['TMPL_REAL']."/dist/statics/js/society-user_manage.js";
+?>
+<script type="text/javascript">
+
+</script>
+{include file="inc/footer.html"}

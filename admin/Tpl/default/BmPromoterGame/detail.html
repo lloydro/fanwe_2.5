@@ -1,0 +1,58 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<include file="Public:new" />
+<load href='__TMPL__Common/js/jquery.bgiframe.js' />
+<load href='__TMPL__Common/js/jquery.weebox.js' />
+<load href='__TMPL__Common/js/user.js' />
+<load href='__TMPL__Common/js/deal.js' />
+<load href='__TMPL__Common/style/weebox.css' />
+<script type="text/javascript" src="__TMPL__Common/js/calendar/calendar.php?lang=zh-cn" ></script>
+<load href='__TMPL__Common/js/calendar/calendar.css' />
+<load href='__TMPL__Common/js/calendar/calendar.js' />
+<div class="main">
+    <div class="main_title_list"><div class="list-line-ico"></div>游戏收益明细</div>
+    <div class="search_row">
+        <form name="search" action="__APP__" method="get" class="clearfix">
+            <div>游戏类型：
+                <select name="game_id">
+                    <option value="0">所有</option>
+                    <?php foreach ($games as $key => $value): ?>
+                        <option value="{$key}"<?php if ($key==intval($_REQUEST['game_id'])): ?> selected="selected"<?php endif ?>>{$value}</option>
+                    <?php endforeach ?>
+                </select>
+            </div>
+            <div>胜负：
+                <select name="win">
+                    <option value="0">所有</option>
+                    <option value="1" <?php if (1==intval($_REQUEST['win'])): ?> selected="selected"<?php endif ?>>胜</option>
+                    <option value="-1" <?php if (-1==intval($_REQUEST['win'])): ?> selected="selected"<?php endif ?>>负</option>
+                </select>
+            </div>
+            <div>时间：
+                <span><input type="text" class="textbox" name="create_time_1" id="create_time_1" value="{$_REQUEST['create_time_1']}" onfocus="this.blur(); return showCalendar('create_time_1', '%Y-%m-%d', false, false, 'btn_create_time_1');" /><input type="button" class="button" id="btn_create_time_1" value="{%SELECT_TIME}" onclick="return showCalendar('create_time_1', '%Y-%m-%d', false, false, 'btn_create_time_1');" /></span>
+                - <span><input type="text" class="textbox" name="create_time_2" id="create_time_2" value="{$_REQUEST['create_time_2']}" onfocus="this.blur(); return showCalendar('create_time_2', '%Y-%m-%d', false, false, 'btn_create_time_2');" /><input type="button" class="button" id="btn_create_time_2" value="{%SELECT_TIME}" onclick="return showCalendar('create_time_2', '%Y-%m-%d', false, false, 'btn_create_time_2');" /></span>
+                <input type="hidden" value="{:intval($_REQUEST['id'])}" name="id" />
+                <input type="hidden" value="{:intval($_REQUEST['user_id'])}" name="user_id" />
+                <input type="hidden" value="BmPromoterGame" name="m" />
+                <input type="hidden" value="detail" name="a" />
+                <input type="submit" class="button" value="{%SEARCH}" />
+            </div>
+        </form>
+    平台总收入：{$sum.platform_gain}
+</div>
+<html:list
+    id="dataTable"
+    style="dataTable"
+    name="user"
+    datasource="list"
+    show="create_time:时间
+    ,game_type:游戏类型
+    ,sum_bet:下注金额
+    ,sum_win:胜负
+    ,sum_win:游戏流水
+    ,platform_gain:平台流水收入
+    ,promoter_gain:推广中心流水收入"/>
+<div class="page">{$page}</div>
+</div>
+<include file="Public:footer" />

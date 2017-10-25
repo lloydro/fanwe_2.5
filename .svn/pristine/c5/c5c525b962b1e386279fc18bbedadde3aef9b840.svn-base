@@ -1,0 +1,42 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<script type="text/javascript">
+</script>
+<script type="text/javascript" src="__TMPL__Common/js/calendar/calendar.php?lang=zh-cn" ></script>
+<load href='__TMPL__Common/js/calendar/calendar.css' />
+<load href='__TMPL__Common/js/calendar/calendar.js' />
+<div class="main">
+    <div class="main_title">{%USER_PROP_DETAIL}</div>
+    <div class="blank5"></div>
+    <div class="blank5"></div>
+    <div class="search_row">
+        <form name="search" action="__APP__" method="get" class="clearfix">
+            <div>礼物名称:<select name="prop_id">
+                <option value="-1">全部</option>
+                <option value="0" <if condition="$_REQUEST['prop_id']!='' && $_REQUEST['prop_id'] eq 0">selected="selected"</if>>弹幕</option>
+                <foreach name="prop" item="prop_item">
+                    <option value="{$prop_item.id}" <if condition="$_REQUEST['prop_id'] eq $prop_item['id']">selected="selected"</if>>{$prop_item.name}</option>
+                </foreach>
+            </select></div>
+            <div>
+                <input type="hidden" value="{$room_id}" name="room_id">
+                <input type="hidden" value="ChildRoom" name="m" /><input type="hidden" value="prop_list" name="a" /><input type="submit" class="button" value="{%SEARCH}" />
+            </div>
+
+        </form>
+
+    </div>
+    <html:list
+            id="dataTable"
+            style="dataTable"
+            name="prop"
+            checkbox="true"
+            datasource="list"
+            show="prop_id:礼物ID|50px,prop_name:礼物名称,to_user_id:用户ID,nick_name:用户昵称,num:数量,total_ticket:获得{%TICKET},create_time:赠送时间,from_ip:赠送IP"
+    />
+
+    <div class="blank5"></div>
+    <div class="page">{$page}</div>
+</div>
+<include file="Public:footer" />

@@ -1,0 +1,408 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<PHP>
+    function live_status($status,$video){
+    if($status==1){
+    //return "<a href='__ROOT__/video.php?channelid=".$video['channelid']."' target='_blank'>直播中</a>";
+    return "<a href=\"javascript:get_video_preview('".$video['id']."')\">直播中</a>";
+    }elseif($status==2){
+    return "正在创建直播";
+    }elseif($status==3){
+    return "历史";
+    }else{
+    return "直播结束";
+    }
+
+    }
+
+    function push($id,$video){
+    return "<a href=\"javascript:push_anchor('".$id."')\">粉丝推送</a>";
+    }
+    function push_all($id,$video){
+    return "<a href=\"javascript:push_anchor_all('".$id."')\">全服推送</a>";
+    }
+    function stick($id,$video){
+    if(intval(defined('OPEN_STICK') && OPEN_STICK)){
+    if($video['stick']==1){
+    return "<a href=\"javascript:stick('".$id."')\">取消手动置顶</a>";
+    }else{
+    return "<a href=\"javascript:stick('".$id."')\">手动置顶</a>";
+    }}
+    }
+    function close($id,$video){
+    if($video['live_in']==1){
+    return "<a href=\"javascript:close_live('".$video['user_id']."','".$video["id"]."')\">关闭房间</a>";
+    }else{
+    return "<a href=\"javascript:demand_video_status('".$id."')\">下线</a>";
+    }
+    }
+
+    function forbid_send_msg($id,$video){
+    return "<a href=\"javascript:forbid('".$id."')\">被禁言观众</a>";
+    }
+
+    function get_level($id){
+    $get_level=$GLOBALS['db']->getOne("select ul.name from ".DB_PREFIX."user_level as ul left join ".DB_PREFIX."user as u on u.user_level = ul.level where u.id=".$id);
+    return $get_level;
+    }
+
+    function get_nickname($id){
+    $get_nickname=$GLOBALS['db']->getOne("select nick_name from ".DB_PREFIX."user where id=".$id);
+    return emoji_decode($get_nickname);
+    }
+
+    function get_preview($id)
+    {
+    return "<a href=\"javascript:get_video_preview('".$id."')\">查看</a>";
+    }
+    function get_room_type($room_type){
+    if($room_type==1){
+    return "私密";
+    }elseif($room_type==2){
+    return "聊天室";
+    }elseif($room_type==3){
+    return "互动聊天室";
+    }else{
+    return "公开";
+    }
+    }
+    function live_pay($is_live_pay){
+    if($is_live_pay==0){
+    return "否";
+    }elseif($is_live_pay==1){
+    return "是";
+    }}
+
+    function live_stick($stick){
+    if($stick==0){
+    return "否";
+    }elseif($stick==1){
+    return "是";
+    }}
+
+    function live_pay_type($live_pay_type,$video){
+    if($video['is_live_pay']==1){
+    if($live_pay_type==1){
+    return "按场收费";
+    }elseif($live_pay_type==0){
+    return "按时收费";
+    }elseif($live_pay_type==2){
+    return "暂未收费";
+    }
+    }
+    }
+    function set_live_pay($id,$video){
+    if($video['pay_editable']==1){
+    return "<a href=\"javascript:set_live_pay('".$id."')\">付费设置</a>";
+    }
+    }
+</PHP>
+<script>
+    function del_child_room(id)
+    {
+        if(!id)
+        {
+            idBox = $(".key:checked");
+            if(idBox.length == 0)
+            {
+                alert(LANG['DELETE_EMPTY_WARNING']);
+                return;
+            }
+            idArray = new Array();
+            $.each( idBox, function(i, n){
+                idArray.push($(n).val());
+            });
+            id = idArray.join(",");
+        }
+        if(confirm(LANG['CONFIRM_DELETE']))
+            $.ajax({
+                url: ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=del_video&id="+id,
+                data: "ajax=1",
+                dataType: "json",
+                success: function(obj){
+                    alert(obj.info);
+                    func();
+                    function func(){
+                        if(obj.status==1){
+                            location.href=location.href;
+                        }
+                    }
+                }
+            });
+    }
+    function demand_video_status(id)
+    {
+        if(confirm("确定要修改状态？"))
+            $.ajax({
+                url: ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=set_demand_video_status&id="+id,
+                data: "ajax=1",
+                dataType: "json",
+                success: function(obj){
+                    alert(obj.info);
+                    func();
+                    function func(){
+                        if(obj.status==1){
+                            location.href=location.href;
+                        }
+                    }
+                }
+            });
+    }
+
+    function forbid(id){
+        location.href = ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=forbid&id="+id;
+    }
+
+    function get_video_preview(id){
+        window.open(ROOT+"?"+VAR_MODULE+"=Video&"+VAR_ACTION+"=play&id="+id);
+    }
+
+    function virtual(id){
+        location.href = ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=list_virtual&id="+id;
+
+    }
+    function tipoff_list(id){
+        location.href = ROOT+"?"+VAR_MODULE+"=Tipoff&"+VAR_ACTION+"=index&video_id="+id;
+    }
+    function stick(id){
+        $.ajax({
+            url: ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=stick&id="+id,
+            data: "",
+            dataType: "json",
+            success: function(obj){
+                alert(obj.info);
+                func();
+                function func(){
+                    if(obj.status==1){
+                        location.href=location.href;
+                    }
+                }
+            }
+        });
+    }
+    function push_anchor(id){
+        $.ajax({
+            url: ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=push_anchor&id="+id,
+            data: "",
+            dataType: "json",
+            success: function(obj){
+                console.log(obj);
+                $("#info").html(obj.info);
+                if(obj.status==1){
+                    if(obj.info){
+                        alert(obj.info);
+                    }
+                    else{
+                        alert('操作成功');
+                    }
+                }
+                else{
+                    if(obj.info){
+                        alert(obj.info);
+                    }
+                    else{
+                        alert('操作成功');
+                    }
+                }
+            }
+        });
+    }
+    function push_anchor_all(id){
+        $.ajax({
+            url: ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=push_anchor_all&id="+id,
+            data: "",
+            dataType: "json",
+            success: function(obj){
+                $("#info").html(obj.info);
+                if(obj.status==1){
+                    if(obj.info){
+                        alert(obj.info);
+                    }
+                    else{
+                        alert('操作成功');
+                    }
+                }
+                else{
+                    if(obj.info){
+                        alert(obj.info);
+                    }
+                    else{
+                        alert('操作成功');
+                    }
+                }
+            }
+        });
+    }
+    function refresh(){
+        $(document).ready(function(){
+            window.location.reload();
+        });
+    }
+    function close_live($user_id,$room_id){
+        var r=confirm("确定关闭这个直播？？");
+        if (r==true){
+            $.ajax({
+                url: ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=close_live&user_id="+$user_id+"&room_id="+$room_id,
+                data: "",
+                dataType: "json",
+                success: function(obj){
+                    $("#info").html(obj.info);
+                    if(obj.status==1){
+                        if(obj.info){
+                            alert(obj.info);
+                            refresh();
+                        }
+                        else{
+                            alert('操作成功');
+                            refresh();
+                        }
+                    }
+                    else{
+                        if(obj.info){
+                            alert(obj.info);
+                            refresh();
+                        }
+                        else{
+                            alert('操作成功');
+                            refresh();
+                        }
+                    }
+                }
+            });
+        }else{
+
+        }
+    }
+    //直播设置
+    function video_set(id)
+    {
+        $.ajax({
+            url: ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=video_set&id="+id,
+            data: "ajax=1",
+            dataType: "json",
+            success: function(msg){
+                if(msg.status==0){
+                    alert(msg.info);
+                }
+            },
+            error: function(){
+                $.weeboxs.open(ROOT+'?'+VAR_MODULE+'='+MODULE_NAME+'&'+VAR_ACTION+'=video_set&id='+id, {contentType:'ajax',showButton:false,title:LANG['USER_VIDEO_SET'],width:600,height:260});
+            }
+        });
+
+    }
+    //推送地址
+    function push_url(id)
+    {
+        $.ajax({
+            url: ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=push_url&id="+id,
+            data: "ajax=1",
+            dataType: "json",
+            success: function(msg){
+                if(msg.status==0){
+                    alert(msg.info);
+                }
+            },
+            error: function(){
+                $.weeboxs.open(ROOT+'?'+VAR_MODULE+'='+MODULE_NAME+'&'+VAR_ACTION+'=push_url&id='+id, {contentType:'ajax',showButton:false,title:'推流地址',width:1024,height:300});
+            }
+        });
+
+    }
+
+    function set_live_pay(id){
+        $.ajax({
+            url: ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=set_live_pay&id="+id,
+            data: "ajax=1",
+            dataType: "json",
+            success: function(msg){
+                if(msg.status==0){
+                    alert(msg.info);
+                }
+            },
+            error: function(){
+                $.weeboxs.open(ROOT+'?'+VAR_MODULE+'='+MODULE_NAME+'&'+VAR_ACTION+'=set_live_pay&id='+id, {contentType:'ajax',showButton:false,title:'付费设置',width:600,height:200});
+            }
+        });
+    }
+    //添加子房间
+    function add_child_room(){
+        location.href = ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=add_child_room";
+    }
+    //编辑子房间
+    function edit_child_room(id){
+        location.href = ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=edit_child_room&child_room_id="+id;
+    }
+    //观众列表
+    function viewer_list(id){
+        location.href = ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=viewer_list&child_room_id="+id;
+    }
+    //礼物列表
+    function prop_list(id){
+        location.href = ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=prop_list&room_id="+id;
+    }
+     //付费列表
+    function pay_list(id){
+        location.href = ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=pay_list&room_id="+id;
+    }
+</script>
+
+<load href='__TMPL__Common/js/jquery.bgiframe.js' />
+<load href='__TMPL__Common/js/jquery.weebox.js' />
+<load href='__TMPL__Common/js/deal.js' />
+<load href='__TMPL__Common/js/user.js' />
+<load href='__TMPL__Common/style/weebox.css' />
+<script type="text/javascript" src="__TMPL__Common/js/calendar/calendar.php?lang=zh-cn" ></script>
+<load href='__TMPL__Common/js/calendar/calendar.css' />
+<load href='__TMPL__Common/js/calendar/calendar.js' />
+<div class="main">
+    <div class="main_title_list"><div class="list-line-ico"></div>子房间列表<a href="/{$url_name}?m=ChildRoom&a=index&&">刷新</a></div>
+    <div class="search_row">
+        <form name="search" action="__APP__" method="get" class="clearfix">
+            <div>主播ID: <input type="text" class="textbox" name="user_id" value="{:trim($_REQUEST['user_id'])}" style="width:100px;" /></div>
+            <div>主播昵称：<input type="text" class="textbox" name="nick_name" value="{:trim($_REQUEST['nick_name'])}" style="width:100px;" /></div>
+            <div>话题：<select name="cate_id">
+                <option value="0">全部</option>
+                <foreach name="cate_list" item="cate_item">
+                    <option value="{$cate_item.id}" <if condition="$_REQUEST['cate_id'] eq $cate_item['id']">selected="selected"</if>>{$cate_item.title}</option>
+                </foreach>
+            </select></div>
+            <div>分类：<select name="classified_id">
+                <option value="0">全部</option>
+                <foreach name="classified_list" item="classified_item">
+                    <option value="{$classified_item.id}" <if condition="$_REQUEST['classified_id'] eq $classified_item['id']">selected="selected"</if>>{$classified_item.title}</option>
+                </foreach>
+            </select></div>
+            <div>创建时间：<span><input type="text" class="textbox" name="create_time_1" id="create_time_1" value="{$_REQUEST['create_time_1']}" onfocus="this.blur(); return showCalendar('create_time_1', '%Y-%m-%d', false, false, 'btn_create_time_1');" /><input type="button" class="button" id="btn_create_time_1" value="{%SELECT_TIME}" onclick="return showCalendar('create_time_1', '%Y-%m-%d', false, false, 'btn_create_time_1');" /></span> - <span><input type="text" class="textbox" name="create_time_2" id="create_time_2" value="{$_REQUEST['create_time_2']}" onfocus="this.blur(); return showCalendar('create_time_2', '%Y-%m-%d', false, false, 'btn_create_time_2');" /><input type="button" class="button" id="btn_create_time_2" value="{%SELECT_TIME}" onclick="return showCalendar('create_time_2', '%Y-%m-%d', false, false, 'btn_create_time_2');" /></span><input type="hidden" value="ChildRoom" name="m" /><input type="hidden" value="index" name="a" /><input type="submit" class="button" value="{%SEARCH}" /></div>
+        </form>
+    </div>
+     <html:list
+         id="dataTable"
+         style="dataTable"
+         name="video"
+         action="true"
+         datasource="list"
+         show="id:房间号
+    ,user_id:主播ID
+    ,user_id|get_nickname=$video['user_id']:主播
+    ,title:直播标题
+    ,max_watch_number:累计观看人数
+    ,vote_number:{%TICKET}
+    ,live_in|live_status=$video['live_id']:直播状态
+    ,room_type|get_room_type=$video['room_type']:直播类型
+    ,create_time|to_date:创建时间
+    ,end_time|to_date:结束时间
+    ,len_time:直播时长"
+                actionlist="viewer_list:观众列表,prop_list:礼物日志,pay_list:付费列表" />
+    <table class="dataTable">
+        <tbody>
+            <td colspan="11">
+                <input type="button" class="button button-add" value="{%ADD}" onclick="add_child_room();" />
+                <!--<input type="button" class="button button-del" value="{%DEL}" onclick="del_child_room();" />-->
+            </td>
+        </tbody>
+    </table>
+    <div class="page">{$page}</div><!--(数值越大在app热门直播中越靠前)  ,vote_number:{%TICKET}-->
+</div>
+<include file="Public:footer" />

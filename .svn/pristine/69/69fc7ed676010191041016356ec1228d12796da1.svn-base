@@ -1,0 +1,23 @@
+</div>
+<div id="footerwrapper" class="full_display_none">
+	<div class="footer">
+		<div class="footer-bottom">
+			<div class="wrapper">
+				<p>{$NETWORK_FOR_RECORD}</p>
+				<p> {$SITE_LICENSE} </p>
+			</div>
+		</div>
+	</div>
+</div>
+<?php
+	$this->_var['foot_pagejs'][] = $this->_var['TMPL_REAL']."/dist/frames/layer/layer.js";
+	$this->_var['foot_pagejs'][] = $this->_var['TMPL_REAL']."/dist/statics/js/public/FanweUnity.js";
+   	$this->_var['foot_pagejs'][] = $this->_var['TMPL_REAL']."/dist/statics/js/pubilc.js";
+   	$this->_var['foot_pagejs'][] = $this->_var['TMPL_REAL']."/dist/statics/js/pages.js";
+   	$this->_var['foot_pagejs'][] = $this->_var['TMPL_REAL']."/dist/statics/js/user.js";
+?>
+<script type="text/javascript" src="{function name="parse_script" v="$foot_pagejs"}"></script>
+<script type="text/javascript" src="{function name="parse_script" v="$dpageJs"}"></script>
+<script src="http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>
+</body>
+</html>

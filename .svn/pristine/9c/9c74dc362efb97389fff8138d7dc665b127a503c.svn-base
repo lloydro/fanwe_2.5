@@ -1,0 +1,70 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+
+<script type="text/javascript" src="__TMPL__Common/js/calendar/calendar.php?lang=zh-cn" ></script>
+<load href='__TMPL__Common/js/calendar/calendar.css' />
+<load href='__TMPL__Common/js/calendar/calendar.js' />
+<div class="main">
+	<div class="main_title">礼物分销 <a href="{:u("Wx_distribution/index")}" class="back_list">{%BACK_LIST}</a></div>
+	<div class="blank5"></div>
+	<div class="blank5"></div>
+	<div class="search_row">
+		<form name="search" action="__APP__" method="get" class="clearfix">
+			<div>用户ID：<input type="text" class="textbox" name="user_id" value="{:trim($_REQUEST['user_id'])}" style="width:100px;" /></div>
+			<div>赠送时间:
+			<select name="year" style="margin-right:0">
+				<option value="0">默认</option>
+				<foreach name="years" item="time_year">
+					<option name="year" <if condition="$year eq $time_year">selected="selected"</if>>{$time_year}</option>
+				</foreach>
+			</select> - <select name="month">
+			<option value="0">默认</option>
+			<foreach name="months" item="time_month">
+				<option name="month" <if condition="$month eq $time_month">selected="selected"</if>>{$time_month}</option>
+			</foreach>
+		</select>
+		<label>
+			<input type="radio" name="is_group" value="0"<?php if (!$is_group): ?> checked<?php endif ?>>明细
+		</label>
+		<label>
+			<input type="radio" name="is_group" value="1"<?php if ($is_group): ?> checked<?php endif ?>>分组
+		</label>
+			<input type="hidden" value="Wx_distribution" name="m" />
+				<input type="hidden" value="lw_distribution" name="a" />
+				<input type="hidden" value="1" name="type" />
+				<input type="submit" class="button" value="{%SEARCH}" />
+			<input type="hidden" value="<?php echo $_REQUEST['id'] ?>" name="id"/></div>
+		</form>
+	</div>
+	<table class="dataTable">
+		<tr>
+			<td>一级分销人数</td>
+			<td>二级分销人数</td>
+			<td>总分销人数</td>
+			<td>总金额</td>
+			<td>总分销金额</td>
+		</tr>
+		<tr>
+			<td>{$sum_first}</td>
+			<td>{$sum_second}</td>
+			<td>{$sum_child}</td>
+			<td>{$sum_money}</td>
+			<td>{$sum_distribution}</td>
+		</tr>
+	</table>
+	<br>
+	<html:list
+			id="dataTable"
+			style="dataTable"
+			name="list"
+			datasource="list"
+			show="user_id:用户ID,nick_name:昵称,money:总金额,distreibution_money:分销人获益金额,first_distreibution_money:一级分销金额,second_distreibution_money:二级分销金额,create_time|to_date:创建时间"
+	/>
+
+	<div class="blank5"></div>
+	<div class="button_row">
+	</div>
+	<div class="page">{$page}</div>
+</div>
+<include file="Public:footer" />

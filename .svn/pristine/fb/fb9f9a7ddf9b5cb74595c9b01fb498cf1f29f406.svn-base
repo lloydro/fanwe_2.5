@@ -1,0 +1,136 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<load href='__TMPL__Common/style/weebox.css' />
+<load href='__TMPL__Common/css/bootstrap.min.css' />
+<load href='__TMPL__Common/css/fileinput.min.css' />
+<style>
+    .line {
+        min-height: 20px;
+        font-size: 13px;
+        border-bottom: 1px solid silver;
+        padding: 5px 0px;
+    }
+    .delete {
+        cursor: pointer;
+        padding: 0px 5px;
+        text-decoration: underline;
+        color: red;
+    }
+    .uploaderMsgBox {
+        width: 100%;
+        border-bottom: 1px solid #888;
+    }
+    [act=cancel-upload]{
+        text-decoration: none;
+        cursor:pointer;
+    }
+</style>
+
+<div class="main">
+    <div class="main_title">{%ADD} <a href="{:u("VideoPlayback/playback_index")}" class="back_list">{%BACK_LIST}</a>
+    </div>
+    <div class="blank5"></div>
+    <form id="video_form" name="add" action="__APP__" method="post" enctype="multipart/form-data">
+        <table class="form" cellpadding=0 cellspacing=0>
+            <tr>
+                <td colspan=2 class="topTd"></td>
+            </tr>
+            <tr>
+                <td class="item_title">视频模式:</td>
+                <td class="item_input">
+                    <select name="create_type">
+                        <option value="0" selected="selected">APP</option>
+                        <option value="1">PC</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="item_title">直播标题:</td>
+                <td class="item_input"><input type="text" class="require" name="title" /></td>
+            </tr>
+            <tr>
+                <td class="item_title">封面:</td>
+                <td class="item_input"><html:imgUpload  name="live_image" id='live_image' value="$vo.live_image"/>
+                    <span class='tip_span'>&nbsp;[封面规格为：300px*400px]&nbsp;</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="item_title">用户ID:</td>
+                <td class="item_input"><input type="text" class="require" name="user_id"/></td>
+            </tr>
+            <tr>
+                <td class="item_title">添加文件:</td>
+                <td class="item_input">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="errorBlock" class="help-block">
+                            </div>
+                            <input type="file" class="file" id="test-upload" accept="video/mp4"/>
+                        </div>
+                        <span class="tip_span" id="tip_span">请上传 mp4、flv 格式音频</span>
+                    </div>
+                </td>
+            </tr>
+            <tr id="file_url">
+                <td class="item_title">播放地址:</td>
+                <td>
+                    <input type="text" name="kefile_url" id="kefile_url" style="width: 600px;" />
+                    <span class="tip_span" id="tip_span">如果上传失败，请使用 OSS 工具上传后，手动填写播放地址</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="item_title"></td>
+                <td class="item_input">
+                    <input type="hidden" id="a"  name="a" value="upload_oss"/>
+                    <input type="hidden" id="m"  name="m" value="VideoPlayback"/>
+                    <input type="button" id="video_submit" class="button" value="{%ADD}" onclick="insert_video_oss();" />
+                    <input type="reset" class="button" value="{%RESET}" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan=2 class="bottomTd"></td>
+            </tr>
+        </table>
+    </form>
+    <script>
+        function insert_video_oss(){
+            var form_data = $("#video_form").serialize();
+            $.ajax({
+                url:ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=upload_oss",
+                data:form_data,
+                dataType:"json",
+                type:"post",
+                success:function(result){
+                    if (result.status == '1') {
+                        alert(result.error);
+                        location.href = ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=playback_index";
+                    }else{
+                        alert(result.error);
+                    }
+                }
+            });
+        }
+    </script>
+<script src="//qzonestyle.gtimg.cn/open/qcloud/js/vod/sdk/uploaderh5.js" charset="utf-8"></script>
+<load href='__TMPL__Common/js/user_live.js' />
+<load href='__TMPL__Common/js/jquery.weebox.js' />
+<load href='__TMPL__Common/js/fileinput.min.js' />
+<load href='__TMPL__Common/js/locales/zh.js' />
+<script type="text/javascript">
+        $("#test-upload").fileinput({
+            uploadUrl: "{:u('PublicFile/do_upload',array('dir'=>'media'))}",
+            language: 'zh',
+            showPreview: false,
+            maxFileSize: parseInt('{$max_size}'),
+            allowedFileTypes: ['video'],
+            elErrorContainer: '#errorBlock'
+        }).on('fileuploaded', function(event, data) {
+            if (data.response.fullname) {
+                $('#kefile_url').val(data.response.fullname);
+            } else {
+                $('#errorBlock').html(data.response.message).show();
+            }
+        });
+</script>
+<include file="Public:footer" />

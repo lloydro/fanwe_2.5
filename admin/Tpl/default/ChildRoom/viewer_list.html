@@ -1,0 +1,173 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<include file="Public:new" />
+<load href='__TMPL__Common/js/jquery.bgiframe.js' />
+<load href='__TMPL__Common/js/jquery.weebox.js' />
+<load href='__TMPL__Common/js/user.js' />
+<load href='__TMPL__Common/js/deal.js' />
+<load href='__TMPL__Common/style/weebox.css' />
+<script type="text/javascript" src="__TMPL__Common/js/calendar/calendar.php?lang=zh-cn" ></script>
+<load href='__TMPL__Common/js/calendar/calendar.css' />
+<load href='__TMPL__Common/js/calendar/calendar.js' />
+<div class="main">
+    <div class="main_title_list"><div class="list-line-ico"></div>观众列表</div>
+    <php>
+        function get_level($level){
+        $user_level = $GLOBALS['db']->getOne("select `name` from ".DB_PREFIX."user_level where level = '".intval($level)."'");
+        return $user_level;
+        }
+        function head_image($head_image){
+        if($head_image==''){
+        return "<a style='height:35px;width:35px;'/>头像未上传</a>";
+        }else{
+        return "<img src='".$head_image."' style='height:35px;width:35px;'/>";
+        }
+        }
+        function get_online($is_online){
+        if($is_online==1){
+        return '是';
+        }else{
+        return '否';
+        }
+        }
+
+    </php>
+    <script>
+        function forbid_msg($id){
+            var r=confirm("确定要修改状态？");
+            if (r==true){
+                $.ajax({
+                    url: ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=forbid_msg&user_id="+$id,
+                    data: "",
+                    dataType: "json",
+                    success: function(obj){
+                        alert(obj.info);
+                        func();
+                        function func(){
+                            if(obj.status==1){
+                                location.href=location.href;
+                            }
+                        }
+                    }
+                });
+            }else{
+
+            }
+        }
+
+        function goods(id){
+            location.href = ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=goods&user_id="+id;
+        }
+
+        function clear_view_count()
+        {
+            if(confirm("确定要清空累计观看？"))
+                $.ajax({
+                    url: ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=clear_view_count",
+                    data: "ajax=1",
+                    dataType: "json",
+                    success: function(obj){
+                        alert(obj.info);
+                        func();
+                        function func(){
+                            if(obj.status==1){
+                                location.href=location.href;
+                            }
+                        }
+                    }
+                });
+        }
+        function forbid_game($id){
+            var r=confirm("确定要修改状态？");
+            if (r==true){
+                $.ajax({
+                    url: ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=forbid_game&user_id="+$id,
+                    data: "",
+                    dataType: "json",
+                    success: function(obj){
+                        alert(obj.info);
+                        func();
+                        function func(){
+                            if(obj.status==1){
+                                location.href=location.href;
+                            }
+                        }
+                    }
+                });
+            }else{
+
+            }
+        }
+        function forbid_pay($id){
+            var r=confirm("确定要修改状态？");
+            if (r==true){
+                $.ajax({
+                    url: ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=forbid_pay&user_id="+$id,
+                    data: "",
+                    dataType: "json",
+                    success: function(obj){
+                        alert(obj.info);
+                        func();
+                        function func(){
+                            if(obj.status==1){
+                                location.href=location.href;
+                            }
+                        }
+                    }
+                });
+            }else{
+
+            }
+        }
+        function forbid_auction($id){
+            var r=confirm("确定要修改状态？");
+            if (r==true){
+                $.ajax({
+                    url: ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=forbid_auction&user_id="+$id,
+                    data: "",
+                    dataType: "json",
+                    success: function(obj){
+                        alert(obj.info);
+                        func();
+                        function func(){
+                            if(obj.status==1){
+                                location.href=location.href;
+                            }
+                        }
+                    }
+                });
+            }else{
+
+            }
+        }
+    </script>
+    <div class="search_row">
+        <form name="search" action="__APP__" method="get" class="clearfix">
+            <div>主播ID：<input type="text" class="textbox" name="id" value="{:trim($_REQUEST['id'])}" style="width:100px;" /></div>
+            <div>主播昵称：<input type="text" class="textbox" name="nick_name" value="{:trim($_REQUEST['nick_name'])}" style="width:100px;" /></div>
+            <input type="hidden" value="{$child_room_id}" name="child_room_id"><input type="hidden" value="ChildRoom" name="m" /><input type="hidden" value="viewer_list" name="a" /><input type="submit" class="button" value="{%SEARCH}" /></div>
+        </form>
+    </div>
+        <html:list
+                id="dataTable"
+                style="dataTable"
+                name="user"
+                action="true"
+                datasource="list"
+                show="id:主播ID
+        ,nick_name:{%NICK_NAME}
+        ,head_image|head_image:{%USER_HEADIMAGE}
+        ,user_level|get_level=$user['user_level']:{%LEVEL}
+        ,login_ip:登录IP"
+        actionlist="user_prop:{%USER_PROP_DETAIL}" />
+
+    <div class="page">{$page}</div>
+</div>
+<script>
+    function user_prop(user_id){
+        var child_room_id = $(".search_row input[name='child_room_id']").val();
+        location.href = ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=user_prop&user_id="+user_id+"&room_id="+child_room_id;
+    }
+</script>
+<include file="Public:footer" />

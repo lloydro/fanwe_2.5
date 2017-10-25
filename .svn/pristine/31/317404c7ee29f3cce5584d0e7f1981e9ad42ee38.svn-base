@@ -1,0 +1,58 @@
+<style type="text/css">
+	.errortip{
+		position: absolute;
+		top: 60px;
+		left: 0;
+		color:red;
+		font-size:12px;
+		line-height:13px;
+		white-space: nowrap;
+	}
+	input.errorinput{
+		border-color: red;
+	}
+	.m-login .block-login-content .left .send-code.disabled{
+		background-color: #ECECEC;
+		color: #999;
+	}
+</style>
+<?php
+	$m_config = load_auto_cache("m_config");
+ 	$this->_var['wx_web_secrit'] = $m_config['wx_web_secrit'];
+	$this->_var['sina_web_app_key'] = $m_config['sina_web_app_key'];
+	$this->_var['qq_web_app_key'] = $m_config['qq_web_app_key'];
+?>
+<div class="m-login">
+	<div class="block-login-content clearfix">
+		<div class="left" ms-controller="login" id="login">
+			<form role="form" action="" id="j-form-loginmobile">
+				<div class="form-group form-vertical">
+					<ul class="nav nav-tabs" role="tablist" style="margin-bottom: 40px;">
+					    <li role="presentation" :class="[@login_type==0 && 'active']"><a href="javascript:void(0)" role="tab" data-toggle="tab" ms-click="changeLoginType(0)">验证码登录</a></li>
+					    <!-- <li role="presentation" :class="[@login_type==1 && 'active']"><a href="javascript:void(0)" role="tab" data-toggle="tab" ms-click="changeLoginType(1)">密码登录</a></li> -->
+				  	</ul>
+					<span class="errortip"></span>
+					<div class="control-content control-content-auto" :visible="@login_type==0">
+						<input id="mobile" type="text" :class="[@is_errorinput && 'errorinput']"  class="form-control mb-20" name="mobile" placeholder="请输入您的手机号码" ms-duplex="@mobile" ms-blur="@check($event)" />
+						<div class="verify clearfix">
+							<input id="yzm" type="text" class="form-control input-verify f-l" name="verify_coder" placeholder="请输入验证码" ms-duplex="@verify_coder" />
+							<a :class="[@is_disabled && 'disabled']" class="send-code f-l" id="j-send-code" href="javascript:void(0)" ms-on-click="@send_code">发送验证码</a>
+						</div>
+					</div>
+					<div class="control-content control-content-auto" :visible="@login_type==1">
+						<input id="mobile" type="text" :class="[@is_errorinput && 'errorinput']"  class="form-control mb-20" name="mobile" placeholder="请输入您的手机号码" ms-duplex="@mobile" ms-blur="@check($event)" />
+						<input type="password" class="form-control" placeholder="请输入密码" ms-duplex="@password" />
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="submit-group t-c">
+					<a href="javascript:void(0)" class="btn btn-primary" ms-click="@login">登录账号</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<?php
+   	$this->_var['moduleJs'][] = $this->_var['TMPL_REAL']."/dist/statics/js/login-pop.js";
+?>
+<script type="text/javascript" src="{function name="parse_script" v="$moduleJs"}"></script>

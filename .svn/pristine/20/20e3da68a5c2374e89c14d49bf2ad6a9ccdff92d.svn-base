@@ -1,0 +1,19 @@
+<div class="layout-user-l f-l" ms-controller="uc_nav">
+	{if $moshi !=0}
+	<ul class="m-title-list">
+		<li class="{if $ctl eq 'society' && ($act eq 'user_manage' || $act eq 'earnings_manage' || $act eq 'illegal_index' || $act eq 'society_income_month' || $act eq 'user_income_month' || $act eq 'user_income' || $act eq 'user_live_length')}active{/if} act">
+			<a href="javascript:void(0);" class="anchor J-anchor">公会管理<i class="iconfont right">&#xe65b;</i><i class="iconfont bottom">&#xe65c;</i></a>
+			<div class="anchor-inner">
+				<a href='{url r="society#user_manage"}' {if $act eq 'user_manage'} class="actived"{/if}>主播管理</a>
+				<a href='{url r="society#earnings_manage"}' {if $act eq 'earnings_manage'} class="actived"{/if}>收益管理</a>
+				<a href='{url r="society#illegal_index"}' {if $act eq 'illegal_index'} class="actived"{/if}>违规管理</a>
+				<a href='{url r="society#society_income_month"}' {if $act eq 'society_income_month'} class="actived"{/if}>公会月收入查询</a>
+				<a href='{url r="society#user_income_month"}' {if $act eq 'user_income_month'} class="actived"{/if}>主播月收入查询</a>
+				<a href='{url r="society#user_income"}' {if $act eq 'user_income'} class="actived"{/if}>主播收入查询</a>
+				<a href='{url r="society#user_live_length"}' {if $act eq 'user_live_length'} class="actived"{/if}>主播直播时长查询</a>
+				<a href='{url r="society#society_details"}' {if $act eq 'society_details'} class="actived"{/if}>公会详情</a>
+			</div>
+		</li>
+	</ul>
+	{/if}
+</div>

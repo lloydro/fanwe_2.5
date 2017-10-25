@@ -1,0 +1,129 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<load href='__TMPL__Common/js/conf.js' />
+<script type="text/javascript" src="__ROOT__/public/region.js"></script>
+<load href='__TMPL__Common/js/user_edit.js' />
+<script type="text/javascript" src="__TMPL__Common/js/calendar/calendar.php?lang=zh-cn" ></script>
+<load href='__TMPL__Common/js/calendar/calendar.css' />
+<load href='__TMPL__Common/js/calendar/calendar.js' />
+<div class="main">
+<div class="main_title">{%EDIT} <a href="{:u("Society/index")}" class="back_list">{%BACK_LIST}</a></div>
+<php>
+	function getStatus($status){
+		switch($status){
+			case '0': return '申请加入';
+			case '1': return '审核通过';
+			case '3': return '申请退出';
+			case '5': return '公会长';
+		}
+	}
+    function head_image($head_image){
+        return "<img src='".$head_image."' style='height:35px;width:35px;'/>";
+    }
+   
+	function user_edit($id,$list)
+	{
+		if($list['status']==0){
+			return "<a href='javascript:join_operate(1,".$id.",".$list['society_id'].");'>允许</a> <a href='javascript:join_operate(2,".$id.",".$list['society_id'].");'>不允许</a> ";
+ 		}elseif($list['status']==3){
+ 			return "<a href='javascript:out_operate(1,".$id.",".$list['society_id'].");'>允许</a> <a href='javascript:out_operate(2,".$id.",".$list['society_id'].");'>不允许</a> ";
+ 		}elseif($list['status']==1){
+ 			return "<a href='javascript:getout_operate(".$id.",".$list['society_id'].");'>踢出</a>";
+ 		}else{
+			return "<a>无法操作</a>";
+		}
+	}
+</php>
+<script type="text/javascript">
+//入会审核
+function join_operate(status,id,society_id){
+	if(confirm('请确认')){
+	$.ajax({
+			url: ROOT+'?m=Society&a=join_operate&status='+status+'&id='+id+'&society_id='+society_id,
+			data: "ajax=1",
+			dataType: "json",
+			success: function(msg){
+				
+				if(msg.status==1){
+					location.reload();
+				}else{
+					alert(msg.info);
+				}
+			},
+			error: function(){
+				//$.weeboxs.open(ROOT+'?m=UserRefund&a=refund_allow&status=1&id='+id, {contentType:'ajax',showButton:false,title:"确认允许提现",width:600,height:140});
+			}
+		});
+	}
+}
+//退会审核
+function out_operate(status,id,society_id){
+	if(confirm('请确认')){
+	$.ajax({
+			url: ROOT+'?m=Society&a=out_operate&status='+status+'&id='+id+'&society_id='+society_id,
+			data: "ajax=1",
+			dataType: "json",
+			success: function(msg){
+				if(msg.status==1){
+					location.reload();
+				}else{
+					alert(msg.error);
+				}
+			},
+			error: function(){
+				//$.weeboxs.open(ROOT+'?m=UserRefund&a=refund_allow&status=1&id='+id, {contentType:'ajax',showButton:false,title:"确认允许提现",width:600,height:140});
+			}
+		});
+	}
+}
+//踢出成员
+function getout_operate(id,society_id){
+	if(confirm('请确认')){
+	$.ajax({
+			url: ROOT+'?m=Society&a=getout_operate&id='+id+'&society_id='+society_id,
+			data: "ajax=1",
+			dataType: "json",
+			success: function(msg){
+				if(msg.status==1){
+					location.reload();
+				}else{
+					alert(msg.error);
+				}
+			},
+			error: function(){
+				//$.weeboxs.open(ROOT+'?m=UserRefund&a=refund_allow&status=1&id='+id, {contentType:'ajax',showButton:false,title:"确认允许提现",width:600,height:140});
+			}
+		});
+	}
+}
+</script>
+<div class="blank5"></div>
+<div class="main_title_list"><div class="list-line-ico"></div>公会【{$society['name']}】成员列表</div>
+<div class="search_row">
+	<form name="search" action="__APP__" method="get">
+		成员ID：<input type="text" class="textbox" name="user_id" value="{:trim($_REQUEST['user_id'])}"/>
+		状态：<select name="status">
+			<option value="-1" >所有</option>
+			<option value="0"<if condition="$_REQUEST['status'] eq 0"> selected="selected"</if>>申请加入</option>
+			<option value="1"<if condition="$_REQUEST['status'] eq 1"> selected="selected"</if>>审核通过</option>
+			<option value="3"<if condition="$_REQUEST['status'] eq 3"> selected="selected"</if>>申请退出</option>
+		</select>
+		<input type="hidden" value="{$id}" name="id" />
+		<input type="hidden" value="Society" name="m" />
+		<input type="hidden" value="view" name="a" />
+		<input type="submit" class="button" value="{%SEARCH}" />
+	</form>
+</div>
+<div class="blank5"></div>
+<html:list
+	id="dataTable"
+	style="dataTable"
+	name="log"
+	checkbox="true"
+	action="true"
+	datasource="list"
+	show="id:{%ID}|90px,nick_name:用户名,head_image|head_image:头像,create_time:申请时间,is_authentication:认证状态,memo:备注,status|getStatus:状态"
+	actionlist="id|user_edit=$log,"/>
+<div class="page">{$page}</div>
+<include file="Public:footer" />

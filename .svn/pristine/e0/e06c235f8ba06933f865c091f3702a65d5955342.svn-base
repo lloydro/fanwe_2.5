@@ -1,0 +1,19 @@
+{include file="inc/header.html"}
+<div class="wrapper">
+	<div class="user-main bg-user-center mt-20 clearfix">
+		<!--左侧菜单区 -->
+		{include file="inc/inc-user-left.html"}
+		<!-- 右侧内容区 -->
+		<div class="layout-user-r">
+			<div class="user-r-main">
+				{include file="inc/inc-society-illegal_index.html"}
+			</div>
+		</div>
+	</div>
+</div>
+<?php
+	$this->_var['dpagejs'][] = $this->_var['TMPL_REAL']."/js/user-userinfo.js";
+	$this->_var['dcpagejs'][] = $this->_var['TMPL_REAL']."/js/user-userinfo.js";
+?>
+<script type="text/javascript" src="{function name="parse_script" v="$dpagejs" c="$dcpagejs"}"></script>
+{include file="inc/footer.html"}

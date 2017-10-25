@@ -1,0 +1,106 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<include file="Public:header" />
+<PHP>
+    function image($image){
+    if($image==''){
+    return "<a style='height:35px;width:35px;'/>图片未上传</a>";
+    }else{
+    return "<img src='".$image."' style='height:35px;width:35px;'/>";
+    }
+    }
+
+</PHP>
+<script>
+    function del_tree(id)
+    {
+        if(!id)
+        {
+            idBox = $(".key:checked");
+            if(idBox.length == 0)
+            {
+                alert(LANG['DELETE_EMPTY_WARNING']);
+                return;
+            }
+            idArray = new Array();
+            $.each( idBox, function(i, n){
+                idArray.push($(n).val());
+            });
+            id = idArray.join(",");
+        }
+        if(confirm(LANG['CONFIRM_DELETE']))
+            $.ajax({
+                url: ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=del_tree&id="+id,
+                data: "ajax=1",
+                dataType: "json",
+                success: function(obj){
+                    alert(obj.info);
+                    func();
+                    function func(){
+                        if(obj.status==1){
+                            location.href=location.href;
+                        }
+                    }
+                }
+            });
+    }
+
+    function refresh(){
+        $(document).ready(function(){
+            window.location.reload();
+        });
+    }
+    //添加树苗
+    function add_tree(){
+        location.href = ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=add_tree";
+    }
+    //编辑树苗
+    function edit_tree(id){
+        location.href = ROOT+"?"+VAR_MODULE+"="+MODULE_NAME+"&"+VAR_ACTION+"=edit_tree&tree_id="+id;
+    }
+</script>
+
+<load href='__TMPL__Common/js/jquery.bgiframe.js' />
+<load href='__TMPL__Common/js/jquery.weebox.js' />
+<load href='__TMPL__Common/js/deal.js' />
+<load href='__TMPL__Common/js/user.js' />
+<load href='__TMPL__Common/style/weebox.css' />
+<script type="text/javascript" src="__TMPL__Common/js/calendar/calendar.php?lang=zh-cn" ></script>
+<load href='__TMPL__Common/js/calendar/calendar.css' />
+<load href='__TMPL__Common/js/calendar/calendar.js' />
+<div class="main">
+    <div class="main_title_list"><div class="list-line-ico"></div>树苗列表<a href="/{$url_name}?m=QkTree&a=index&&">刷新</a></div>
+    <div class="search_row">
+        <form name="search" action="__APP__" method="get" class="clearfix">
+            <div>树苗名称：<input type="text" class="textbox" name="title" value="{:trim($_REQUEST['title'])}" style="width:100px;" /></div>
+            <div>钻石：<input type="text" class="textbox" name="diamonds" value="{:trim($_REQUEST['diamonds'])}" style="width:100px;" /></div>
+            <div>创建时间：<span><input type="text" class="textbox" name="create_time_1" id="create_time_1" value="{$_REQUEST['create_time_1']}" onfocus="this.blur(); return showCalendar('create_time_1', '%Y-%m-%d', false, false, 'btn_create_time_1');" /><input type="button" class="button" id="btn_create_time_1" value="{%SELECT_TIME}" onclick="return showCalendar('create_time_1', '%Y-%m-%d', false, false, 'btn_create_time_1');" /></span> - <span><input type="text" class="textbox" name="create_time_2" id="create_time_2" value="{$_REQUEST['create_time_2']}" onfocus="this.blur(); return showCalendar('create_time_2', '%Y-%m-%d', false, false, 'btn_create_time_2');" /><input type="button" class="button" id="btn_create_time_2" value="{%SELECT_TIME}" onclick="return showCalendar('create_time_2', '%Y-%m-%d', false, false, 'btn_create_time_2');" /></span><input type="hidden" value="QkTree" name="m" /><input type="hidden" value="index" name="a" /><input type="submit" class="button" value="{%SEARCH}" /></div>
+        </form>
+    </div>
+    <html:list
+            id="dataTable"
+            style="dataTable"
+            name="qk_tree"
+            checkbox="true"
+            action="true"
+            datasource="list"
+            show="id:编号
+    ,title:树苗名称
+    ,image|image:树苗图片
+    ,description:树苗介绍|200px
+    ,diamonds:{%DIAMONDS}
+    ,create_at|to_date:创建时间
+    ,is_effect|get_is_effect=$qk_tree['id']:{%IS_EFFECT}
+    ,sort|get_sort=$qk_tree['id']:{%SORT}"
+    actionlist="edit_tree:{%EDIT}" />
+
+    <table class="dataTable">
+        <tbody>
+        <td colspan="11">
+            <input type="button" class="button button-add" value="{%ADD}" onclick="add_tree();" />
+        </td>
+        </tbody>
+    </table>
+    <div class="page">{$page}</div><!--(数值越大在app热门直播中越靠前)  ,vote_number:{%TICKET}-->
+</div>
+<include file="Public:footer" />

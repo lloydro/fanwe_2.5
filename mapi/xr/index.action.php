@@ -1,0 +1,242 @@
+<?php
+// +----------------------------------------------------------------------
+// | FANWE 直播系统
+// +----------------------------------------------------------------------
+// | Copyright (c) 2011 http://www.fanwe.com All rights reserved.
+// +----------------------------------------------------------------------
+// | Author: 云淡风轻(88522820@qq.com)
+// +----------------------------------------------------------------------
+class indexCModule extends baseCModule
+{
+    //首页-美女列表
+    public function index()
+    {
+        $page = intval($_REQUEST['page'])?intval($_REQUEST['page']):1;
+        $m_config =  load_auto_cache("m_config");//初始化手机端配置
+        if($m_config['weibo_list_label']){
+            $weibo_list_label = explode(',',$m_config['weibo_list_label']);
+        }else{
+            $weibo_list_label = array();
+        }
+
+
+
+        $root = array(
+            'first_label'=>$m_config['weibo_first_label'],
+            'list_label'=>$weibo_list_label,
+            'has_next'=>1,
+            'page'=>$page,
+            'status'=>1,
+            'error'=>''
+        );
+
+        $root['invite_info'] = $this->get_invite_info($m_config['distribution_rate'],$m_config['weibo_distribution_img'],$m_config['program_title']);
+
+        $page_size =20;
+
+        if($page>1){
+            $list = load_auto_cache("select_user_index",array('page'=>$page,'page_size'=>$page_size));
+            $root['list'] = $list;
+            unset($root['first']);
+        }else{
+
+            $list =  load_auto_cache("select_user_index",array('page'=>1,'page_size'=>$page_size));
+            if(count($list)>6){
+                $root['first'] = array_slice($list,0,6,true);
+                $root['list'] =  array_slice($list,6);
+            }else{
+                $root['first'] = $list;
+                $root['list'] = array();
+            }
+            $root['banner'] = load_auto_cache("banner_list_xr",array('type'=>10));
+            if($root['banner']==false){
+                $root['banner'] = array();
+            }
+        }
+        if(count($list)==$page_size){
+            $root['has_next'] = 1;
+        }else{
+            $root['has_next'] = 0;
+        }
+
+        api_ajax_return($root);
+    }
+    public function get_invite_info($distribution_rate,$invite_image,$app_name = ''){
+        if($GLOBALS['user_info'])
+        {
+           // $invite_url = url('live#show', array('user_id' => $GLOBALS['user_info']['id'],'itype'=>'xr'));
+            $invite_url = SITE_DOMAIN.'/wap/xr/index.html#/activeIndex?user_id='.$GLOBALS['user_info']['id'];
+            //$invite_url = SITE_DOMAIN.'/wap/index.php?ctl=distribution&act=init_register&user_id='.$GLOBALS['user_info']['id'];
+
+            $invite_info = array(
+                'invite_url'=>$invite_url, //用户推荐链接
+                'invite_image'=>$invite_image, //推荐图片
+                'sharing_info' =>'他(她)的每一笔消费，您都分成'.intval($distribution_rate) .'%',
+            );
+        }else{
+            $invite_info = array(
+                'invite_url'=>'', //用户推荐链接
+                'invite_image'=>$invite_image, //推荐图片
+                'sharing_info' => intval($distribution_rate) .'%',
+            );
+        }
+        $invite_info['title'] = '【推荐】《'.$app_name.'》';
+        $invite_info['content'] = $GLOBALS['user_info']['nick_name'].' 请您加入 '.$app_name."APP,让您毫不费力地发照片挣红包，还有美女帅哥排队等您铃！";
+        $invite_info['imageUrl'] = $invite_image;
+        $invite_info['clickUrl'] = $invite_url;
+        return $invite_info;
+
+    }
+    //首页-写真列表
+    public  function select_photo(){
+        if(!$GLOBALS['user_info']){
+            $root['error'] = "用户未登陆,请先登陆.";
+            $root['status'] = 2;
+            api_ajax_return($root);
+        }
+        $page = intval($_REQUEST['page'])?intval($_REQUEST['page']):1;
+        $m_config =  load_auto_cache("m_config");//初始化手机端配置
+        if($m_config['weibo_list_label']){
+            $weibo_list_label = explode(',',$m_config['weibo_list_label']);
+        }else{
+            $weibo_list_label = array();
+        }
+        $root = array(
+            'first_label'=>$m_config['weibo_first_label'],
+            'list_label'=>$weibo_list_label,
+            'has_next'=>1,
+            'page'=>$page,
+            'status'=>1,
+            'error'=>''
+        );
+//        if(!$GLOBALS['user_info']){
+//            $root['user_login_status'] = 0;
+//        }else{
+//            $root['user_login_status'] = 1;
+//        }
+
+        $root['invite_info'] = $this->get_invite_info($m_config['distribution_rate'],$m_config['weibo_distribution_img']);
+
+        $page_size =20;
+        $list = load_auto_cache("select_weibo_index",array('page'=>$page,'page_size'=>$page_size,'type'=>'photo'));
+        if($page>1){
+            $root['list'] = $list;
+            unset($root['first']);
+        }else{
+            if(count($list)>6){
+                $root['first'] = array_slice($list,0,6,true);
+                $root['list'] =  array_slice($list,6);
+            }else{
+                $root['first'] = $list;
+                $root['list'] = array();
+            }
+            $root['banner'] = load_auto_cache("banner_list_xr",array('type'=>11));
+            if($root['banner']==false){
+                $root['banner'] = array();
+            }
+        }
+        if(count($list)==$page_size){
+            $root['has_next'] = 1;
+        }else{
+            $root['has_next'] = 0;
+        }
+        api_ajax_return($root);
+
+    }
+
+    //首页-视频列表
+    public function select_video(){
+        $page = intval($_REQUEST['page'])?intval($_REQUEST['page']):1;
+        $m_config =  load_auto_cache("m_config");//初始化手机端配置
+        if($m_config['weibo_list_label']){
+            $weibo_list_label = explode(',',$m_config['weibo_list_label']);
+        }else{
+            $weibo_list_label = array();
+        }
+        $root = array(
+            'first_label'=>$m_config['weibo_first_label'],
+            'list_label'=>$weibo_list_label,
+
+            'has_next'=>1,
+            'page'=>$page,
+            'status'=>1,
+            'error'=>''
+        );
+
+        $page_size =20;
+        $list = load_auto_cache("select_weibo_index",array('page'=>$page,'page_size'=>$page_size,'type'=>'video'));
+        $root['list'] = $list;
+        if(count($list)==$page_size){
+            $root['has_next'] = 1;
+        }else{
+            $root['has_next'] = 0;
+        }
+        api_ajax_return($root);
+    }
+
+    //获取美女列表
+    public function get_user_list(){
+        $root['list'] = load_auto_cache("select_user_index",array('page'=>1));
+         echo json_encode($root);
+    }
+    //获取写真列表
+    public function get_photo_list(){
+        $root['banner'] = load_auto_cache("banner_list_xr",array('type'=>11));
+        var_dump($root);
+    }
+    //获取视频列表
+    public function get_video_list(){
+        echo $this->time_tran('2017-03-15 20:17:00');
+    }
+    //热门搜索
+    public function hot_search(){
+    	$m_config =  load_auto_cache("m_config");//初始化手机端配置
+        if($m_config['weibo_list_label']){
+            $weibo_list_label = explode(',',$m_config['weibo_list_label']);
+        }else{
+            $weibo_list_label = array(
+                '鲜肉','客服妹妹','松果儿','赵雅依'
+            );
+        }
+        $root = array(
+            'first_label'=>$m_config['weibo_first_label'],
+            'list_label'=>$weibo_list_label,
+
+            'status'=>1,
+            'error'=>''
+        );
+        api_ajax_return($root);
+    }
+
+    public  function time_tran($the_time)
+    {
+        $now_time = to_date(NOW_TIME,"Y-m-d H:i:s");
+        $now_time = to_timespan($now_time);
+        $show_time = to_timespan($the_time);
+        $dur = $now_time - $show_time;
+        if ($dur < 0) {
+            return $the_time;
+        } else {
+            if ($dur < 60) {
+                return $dur . '秒前';
+            } else {
+                if ($dur < 3600) {
+                    return floor($dur / 60) . '分钟前';
+                } else {
+                    if ($dur < 86400) {
+                        return floor($dur / 3600) . '小时前';
+                    } else {
+                        if ($dur < 2592000) {//30天内
+                            return floor($dur / 86400) . '天前';
+                        } else {
+                            return to_date($show_time,"Y-m-d");;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+?>

@@ -1,0 +1,62 @@
+{// 引入标签库 }
+<tagLib name="html" />
+<script type="text/javascript">
+    $('#coin_edit').unbind().bind('click',function () {
+        var user_id = parseInt($("input[name='user_id']").val());
+        var first_rate = parseInt($("input[name='first_rate']").val());
+        var second_rate = parseInt($("input[name='second_rate']").val());
+        var is_top = $("input[name='is_top']").is(':checked') ? 1 : 0;
+        $.post(ROOT+'?'+VAR_MODULE+'=UserGeneral&'+VAR_ACTION+'=weixin_distribution', {user_id:user_id,first_rate:first_rate,second_rate:second_rate,is_top:is_top}, function (data) {
+            alert(data.error);
+            location.reload();
+        },'json');
+    })
+</script>
+<div class="main">
+<div class="main_title">{$user_info.nick_name} 微信分销参数:</div>
+<div class="blank5"></div>
+<form name="edit" action="__APP__" method="post" enctype="multipart/form-data">
+<table class="form" cellpadding=0 cellspacing=0>
+    <tr>
+        <td colspan=2 class="topTd"></td>
+    </tr>
+    <tr>
+        <td class="item_title">上级用户id:</td>
+        <td class="item_input">
+            {$user_info.pid}
+        </td>
+    </tr>
+    <tr>
+        <td class="item_title">一级分成比例:</td>
+        <td class="item_input"><input type="number" class="textbox require" name="first_rate" value="{$user_info.first_rate}" min="0" max="100" step="1" /><span class="tip_span">该用户作为上级分销者获取的分成比例，0使用全局设置。</span>
+        </td>
+    </tr>
+    <tr>
+        <td class="item_title">二级分成比例:</td>
+        <td class="item_input"><input type="number" class="textbox require" name="second_rate" value="{$user_info.second_rate}" min="0" max="100" step="1" /><span class="tip_span">该用户作为二级分销者获取的分成比例，0使用全局设置。</span>
+        </td>
+    </tr>
+    <?php if (!$user_info['topid']): ?>
+        <tr>
+            <td class="item_title">升级为顶级用户:</td>
+            <td class="item_input">
+                <label>升级<input type="checkbox" name="is_top"></label>
+            </td>
+        </tr>
+    <?php endif ?>
+    <tr>
+        <td class="item_title">&nbsp;</td>
+        <td class="item_input">
+            <!--隐藏元素-->
+            <input type="hidden" name="user_id" value="{$user_info.user_id}" />
+            <!--隐藏元素-->
+            <input type="button" id="coin_edit" class="button" value="{%OK}" />
+            <input type="reset" class="button" value="{%RESET}" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan=2 class="bottomTd"></td>
+    </tr>
+</table>
+</form>
+</div>

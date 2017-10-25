@@ -1,0 +1,289 @@
+<?php
+// +----------------------------------------------------------------------
+// | Fanwe 方维p2p借贷系统
+// +----------------------------------------------------------------------
+// | Copyright (c) 2011 http://www.fanwe.com All rights reserved.
+// +----------------------------------------------------------------------
+// | Author: 云淡风轻(88522820@qq.com)
+// +----------------------------------------------------------------------
+
+class societyCModule  extends baseModule
+{
+    //获取登录用户的ID
+    protected static function getUserId(){
+        $user_id = intval($GLOBALS['user_info']['id']);
+        if (!$user_id) {
+            //有这个参数： user_login_status = 0 时，表示服务端未登陆、要求登陆，操作
+            api_ajax_return(array(
+                'error' => '用户未登陆,请先登陆.',
+                'status' => 0,
+                'user_login_status' => 0,
+            ));
+        }
+        return $user_id;
+    }
+    
+    //主播违规记录
+    public function illegal_index(){
+        $root = array(
+            'status'=>0,
+            'error'=>'',
+        );
+
+        $id = intval($_REQUEST['user_id']);
+
+        fanwe_require(APP_ROOT_PATH . 'mapi/app/page.php');
+        $page = intval($_REQUEST['p']);
+        $page = $page  ? $page : 1;
+        $page_size    = 10;
+
+        $user_id = self::getUserId();
+        $society_info = $GLOBALS['db']->getRow("select society_id,society_chieftain from ".DB_PREFIX."user where id=".$user_id);
+        if ($society_info['society_id'] > 0 && $society_info['society_chieftain'] == 1){
+            $field = "t.id,u.nick_name,t.to_user_id as user_id,t.create_time,tt.name as tipoff_type,u.head_image";
+            $table = DB_PREFIX."tipoff t";
+            $left_join1 = DB_PREFIX."user u on t.to_user_id=u.id";
+            $left_join2 = DB_PREFIX."tipoff_type tt on t.tipoff_type_id=tt.id";
+            $where = "u.society_id=".$society_info['society_id'];
+            if ($id){
+                $where .= " and u.id=$id";
+            }
+            $start = ($page - 1)*$page_size;
+            $sql = "select $field from $table left join $left_join1 left join $left_join2 where $where order by t.create_time desc limit $start,$page_size";
+            $list = $GLOBALS['db']->getAll($sql);
+            if ($list){
+                $rs_count = $GLOBALS['db']->getOne("select count(t.id) from $table left join $left_join1 where $where");
+                foreach ($list as $k=>$v){
+                    $list[$k]['create_time'] = to_date($v['create_time']);
+                }
+                
+                $page = new Page($rs_count,$page_size);
+                $root['page'] = $page->show();
+                $root['rs_count'] = $rs_count;
+                $root['list']   = $list;
+                $root['status'] = 1;
+            }
+        }
+        
+        api_ajax_return($root);
+    }
+    
+    //会员管理
+    public function user_manage(){
+        $user_id = self::getUserId();
+        $id = intval($_REQUEST['user_id']);
+        $apply_status = intval($_REQUEST['status_id']);
+        
+        fanwe_require(APP_ROOT_PATH . 'mapi/app/page.php');
+        $page = intval($_REQUEST['p']);
+        $page = $page  ? $page : 1;
+        $page_size    = 10;
+        
+        $society_info = $GLOBALS['db']->getRow("select society_id,society_chieftain from " . DB_PREFIX . "user where id=" . $user_id);
+        if ($society_info['society_chieftain'] != 1) {
+            api_ajax_return(array('status' => 0, 'error' => '您不是公会长'));
+        }
+        
+        $where = "sa.society_id=".$society_info['society_id'];
+        if($id>0){//id查询
+            $where .= " and sa.user_id=".$id;
+        }
+        if($apply_status == 0){
+            $where .= " and 1=1";
+        }else{
+            switch ($apply_status){
+                case 1;
+                    $where .= " and sa.status=0";
+                break;
+                case 2;
+                    $where .= " and sa.status=1";
+                break;
+                case 3;
+                    $where .= " and sa.status=3";
+                break;
+            }
+        }
+        
+        $apply_count = $GLOBALS['db']->getOne("select count(id) from(select count(sa.id) as id from ".DB_PREFIX."society_apply sa join ".DB_PREFIX."user u on u.id=sa.user_id where ".$where." group by sa.user_id) a");
+        
+        //$apply_count = $GLOBALS['db']->getOne("select count(id) from " . DB_PREFIX . "society_apply sa where $where");
+
+        $field = "u.id as user_id,u.nick_name,u.sex,u.v_type,u.v_icon,u.head_image,u.signature,u.user_level,u.society_chieftain,
+                        u.society_settlement_type,sa.status,sa.deal_time";
+        $start = ($page - 1) * $page_size;
+        $end = $page_size;
+        $rs_count = $apply_count ? $apply_count : 0;
+        $table = DB_PREFIX . "user u";
+        $left_join = DB_PREFIX . "society_apply sa on u.id=sa.user_id";
+        $sql = "select $field from $table left join $left_join where $where limit $start,$end";
+        $list = $GLOBALS['db']->getAll($sql);
+        foreach ($list as $k => $v) {
+            $list[$k]['head_image'] = get_spec_image($v['head_image']);
+            $list[$k]['deal_time'] = to_date($v['deal_time'], 'Y-m-d H:i:s');
+            //审核状态；0申请加入待审核、1加入申请通过、2 加入申请被拒绝，3申请退出公会待审核 4退出公会申请通过 5.退出公会申请被拒
+            switch($v['status']){
+                case 0;
+                    $list[$k]['status'] ='加入申请待审核';
+                    break;
+                case 1;
+                    $list[$k]['status'] ='加入申请通过';
+                    break;
+                case 2;
+                    $list[$k]['status'] ='加入申请被拒绝';
+                    break;
+                case 3;
+                    $list[$k]['status'] ='申请退出待审核';
+                    break;
+                case 4;
+                    $list[$k]['status'] ='退出申请通过';
+                    break;
+                case 5;
+                    $list[$k]['status'] ='退出申请被拒';
+                    break;
+                default:
+                    echo "未知";
+            }
+            $list[$k]['society_id'] = $society_info['society_id'];
+
+        }
+        $root['url'] = SITE_DOMAIN.'/index.php?ctl=society&act=mobile_login&society_id='.$society_info['society_id'];
+
+        $page = new Page($rs_count, $page_size);
+        $root['page'] = $page->show();
+        $root['rs_count'] = $rs_count;
+        $root['list'] = $list;
+        api_ajax_return($root);
+    }
+    
+    //搜索
+    public function com_search(){
+        $map = array ();
+   
+        $map['start_time'] = trim($_REQUEST['start_time']);
+        $map['end_time'] = trim($_REQUEST['end_time']);
+
+        
+        if ($map['start_time'] == ''&&$map['end_time'] != ''){
+            $this->error('开始时间 不能为空');
+            exit;
+        }
+    
+        if ($map['start_time'] != ''&&$map['end_time'] == ''){
+            $this->error('结束时间 不能为空');
+            exit;
+        }
+        
+        if ($map['start_time'] != ''&&$map['end_time'] != '') {
+
+
+
+            $d = explode('-',$map['start_time']);
+            if (checkdate($d[1], $d[2], $d[0]) == false){
+                $this->error("开始时间不是有效的时间格式:{$map['start_time']}(yyyy-mm-dd)");
+                exit;
+            }
+            
+            $d = explode('-',$map['end_time']);
+            if (checkdate($d[1], $d[2], $d[0]) == false){
+                $this->error("结束时间不是有效的时间格式:{$map['end_time']}(yyyy-mm-dd)");
+                exit;
+            }
+            
+            if (to_timespan($map['start_time']) > to_timespan($map['end_time'])){
+                $this->error('开始时间不能大于结束时间:'.$map['start_time'].'至'.$map['end_time']);
+                exit;
+            }
+            
+            $q_date_diff = 31;
+            $this->assign("q_date_diff",$q_date_diff);
+            if ($q_date_diff > 0 && (abs(to_timespan($map['end_time']) - to_timespan($map['start_time'])) / 86400  + 1 > $q_date_diff)){
+                $this->error("查询时间间隔不能大于  {$q_date_diff} 天");
+                exit;
+            }
+            
+            $map['start_time']=to_timespan($map['start_time']);
+            $map['end_time']=to_timespan($map['end_time']);
+
+
+            /*admin_ajax_return($map['start_time']);*/
+        }else{
+            $map = array ();
+        }   
+        
+        return $map;
+    }
+
+    //收益管理
+    public function earnings_manage(){
+
+        $map = $this->com_search(); //获取时间搜索状态
+
+        //分页参数处理
+        fanwe_require(APP_ROOT_PATH . 'mapi/app/page.php');
+        $page = intval($_REQUEST['p']);
+        $page = $page  ? $page : 1;
+        $page_size    = 10;
+        $start = ($page - 1) * $page_size;
+        $end = $page_size;
+
+        $chief_id['user_id'] = self::getUserId();//获取公会长ID
+        
+        /*admin_ajax_return($chief_id);*/
+
+        $parameter = '';
+        $sql_w = '';
+        //查看是否有进行时间搜索
+        if($map['start_time'] != '' && $map['end_time'] != ''){
+            $parameter.=" log_time between '". $map['start_time'] . "' and '". $map['end_time'] ."'&";
+            $sql_w .=" log_time between '". $map['start_time']. "' and '". $map['end_time'] ."' and ";     
+        }  
+        //查看是否有进行贡献会员的ID或昵称搜索
+        if(strim($_REQUEST['mid'])!=''){
+            $sql_w = " u2.id like '%".strim($_REQUEST['mid'])."%' and ";   
+        } 
+        if(strim($_REQUEST['nick_name'])!=''){
+            $sql_w = " nick_name like '%".strim($_REQUEST['nick_name'])."%' and ";   
+        } 
+
+        $sql_str = "SELECT u2.id as mid,nick_name,u1.ticket,u1.log_time as time "."FROM ".DB_PREFIX."user_log u1,".DB_PREFIX."user u2 where u1.contribution_id = u2.id and u1.type = 4 and u1.user_id = ".$chief_id['user_id'];
+        
+        $sql_str .= " and ".$sql_w." 1=1 ";
+        $sql_str .= " order by u1.log_time desc limit $start,$end ";
+        /*if(strim($_REQUEST['name'])!=''){
+            admin_ajax_return($sql_str);
+        } */
+
+        $voList = $GLOBALS['db']->getAll($sql_str);
+
+        for($i=0;$i<count($voList);$i++)
+        {
+            $voList[$i]['time'] = to_date($voList[$i]['time']);
+        }
+
+        $list['list'] = $voList;
+
+        //获取总量与总金额
+        $sql_count = "SELECT sum(u1.ticket) as count "."FROM ".DB_PREFIX."user_log u1,".DB_PREFIX."user u2 where u1.contribution_id = u2.id and u1.type = 4 and u1.user_id = ".$chief_id['user_id'];
+        $sql_count .= " and ".$sql_w." 1=1 ";
+        /*admin_ajax_return($sql_count);*/
+
+        $count = $GLOBALS['db']->getRow($sql_count);
+        
+        //$rs_count = $count ? $count : 0;
+
+        $root = array_merge($chief_id,$list,$count);
+        $rs_count = $GLOBALS['db']->getOne("SELECT count(u2.id)  FROM ".DB_PREFIX."user_log u1,".DB_PREFIX."user u2 where u1.contribution_id = u2.id and u1.type = 4 and u1.user_id = ".$chief_id['user_id']);
+        $page = new Page($rs_count, $page_size);
+        $root['page'] = $page->show();
+        $root['rs_count'] = $rs_count;
+        
+        api_ajax_return($root);
+    }
+    
+    
+    
+    
+    
+}
+
+?>

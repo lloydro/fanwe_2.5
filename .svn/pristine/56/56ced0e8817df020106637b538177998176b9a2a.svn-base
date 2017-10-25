@@ -1,0 +1,217 @@
+<?php
+/**
+ *
+ */
+class missionModel extends NewModel
+{
+    /**
+     * redis实体
+     * @var boolean
+     */
+    protected static $user_redis = false;
+    /**
+     * 任务类型字典
+     * @var array
+     */
+    protected static $title = [
+        0 => '在线任务',
+        1 => '玩游戏任务',
+        2 => '打赏主播任务',
+        3 => '分享主播任务',
+        4 => '关注主播任务',
+    ];
+    public function __construct($table_name)
+    {
+        parent::__construct($table_name);
+        fanwe_require(APP_ROOT_PATH . 'mapi/lib/redis/UserRedisService.php');
+        self::$user_redis = new UserRedisService();
+    }
+    /**
+     * 根据日期、用户id、任务类型获取redis键值
+     * @param  integer $user_id 用户id
+     * @param  integer $type    任务类型
+     * @return string           redis键值
+     */
+    protected static function getRedisKey($user_id, $type)
+    {
+        return "mission{$type}:{$user_id}:" . date('Y-m-d');
+    }
+    /**
+     * 获取任务redis信息
+     * @param  integer $user_id 用户id
+     * @param  integer $type    任务类型
+     * @return array
+     */
+    protected static function getMission($user_id, $type = 0)
+    {
+        return self::$user_redis->getRow_db(self::getRedisKey($user_id, $type), ['time', 'times', 'progress']);
+    }
+    /**
+     * 更新任务redis信息
+     * @param  [type]  $user_id [description]
+     * @param  [type]  $data    [description]
+     * @param  integer $type    [description]
+     * @return [type]           [description]
+     */
+    protected static function updateMission($user_id, $data, $type = 0)
+    {
+        return self::$user_redis->update_db(self::getRedisKey($user_id, $type), $data);
+    }
+    /**
+     * 获取剩余次数
+     * @param  [type]  $times [description]
+     * @param  integer $type  [description]
+     * @return [type]         [description]
+     */
+    public function getLeftTimes($times, $type = 0)
+    {
+        return intval($this->count(['is_effect' => 1, 'sort' => ['>', $times], 'type' => $type]));
+    }
+    /**
+     * 获取下一次任务信息
+     * @param  [type]  $times [description]
+     * @param  array   $field [description]
+     * @param  integer $type  [description]
+     * @return [type]         [description]
+     */
+    public function getNextMission($times, $field = [], $type = 0)
+    {
+        return $this->field($field)->order('sort')->selectOne(['is_effect' => 1, 'sort' => ['>', $times], 'type' => $type]);
+    }
+    /**
+     * 任务完成次数递增（如完成一局游戏）
+     * @param  [type]  $user_id [description]
+     * @param  integer $type    [description]
+     * @return [type]           [description]
+     */
+    public function incProgress($user_id, $type = 0)
+    {
+        return self::$user_redis->inc_field(self::getRedisKey($user_id, $type), 'progress', 1);
+    }
+    /**
+     * 获取任务信息
+     * @param  [type]  $user_id [description]
+     * @param  integer $type    [description]
+     * @return [type]           [description]
+     */
+    public function getMissionInfo($user_id, $type = 0)
+    {
+        $mission      = self::getMission($user_id, $type);
+        $next_mission = $this->getNextMission($mission['times'], 'name,time,target,money', $type);
+        if (!$next_mission) {
+            $next_mission = $this->getNextMission($mission['times'] - 1, 'name,time,target,money', $type);
+        }
+        $max_times  = $this->getLeftTimes(0, $type);
+        $left_times = $this->getLeftTimes($mission['times'], $type);
+
+        $time = intval(NOW_TIME - $mission['time']);
+        if ($time < 0) {
+            $time = 0;
+        }
+        $progress = 0;
+        $target   = 0;
+        $current  = 0;
+        switch ($type) {
+            case 0:
+                $current = intval($time / 60);
+                $target  = intval($next_mission['time'] / 60);
+                if ($time > 0 && !$target) {
+                    $target = 1;
+                }
+                break;
+            default:
+                $current = $mission['progress'];
+                $target  = $next_mission['target'];
+                break;
+        }
+        if ($current > $target) {
+            $current = $target;
+        }
+        $progress = $target ? $current / $target : 1;
+        $image    = '';
+        switch ($type) {
+            case 0:
+                $image = '/public/images/watch_live.png';
+                break;
+            case 1:
+                $image = '/public/images/play_chess_game.png';
+                break;
+            case 2:
+                $image = '/public/images/play_the_anchor.png';
+                break;
+            case 3:
+                $image = '/public/images/share.png';
+                break;
+            case 4:
+                $image = '/public/images/new_concern.png';
+                break;
+        }
+        $open_game = defined('OPEN_GAME_MODULE') && (OPEN_GAME_MODULE == 1);
+        $diamond = defined('OPEN_DIAMOND_GAME_MODULE') && (OPEN_DIAMOND_GAME_MODULE == 1);
+        $coin_field = ($open_game && !$diamond) ? '💰' : '💎';
+        return [
+            'image'      => get_domain() . $image,
+            'title'      => $next_mission['name'],
+            'desc'       => '奖励 ' . $next_mission['money'] . ' ' . $coin_field,
+            'money'      => intval($next_mission['money']),
+            'time'       => intval($time),
+            'max_times'  => intval($max_times),
+            'left_times' => intval($left_times),
+            'current'    => intval($current),
+            'target'     => intval($target),
+            'progress'   => intval($progress * 100),
+            'type'       => intval($type),
+        ];
+    }
+    public function commitMission($user_id, $type = 0)
+    {
+        $mission = self::getMission($user_id, $type);
+        if (!$mission['time']) {
+            $mission['time'] = NOW_TIME;
+        }
+        $left_times = $this->getLeftTimes($mission['times'], $type);
+        if (!$left_times) {
+            return '今日领取次数已用完';
+        }
+        $current_mission  = $this->getNextMission($mission['times'], 'money,target', $type);
+        $mission['times'] = $mission['times'] + 1;
+        if ($type) {
+            // 计数任务，判断进程
+            if ($mission['progress'] < $current_mission['target']) {
+                return '任务未完成';
+            }
+        } else {
+            // 计时任务，判断时间，增加时间
+            if (NOW_TIME < $mission['time'] + $current_mission['time']) {
+                return '领取时间未到';
+            }
+            $mission['time'] = NOW_TIME;
+        }
+        $mission['progress'] = intval($mission['progress']);
+        self::updateMission($user_id, $mission, $type);
+        /**
+         * 奖励钻石或游戏币
+         */
+        $money      = intval($current_mission['money']);
+        $user_model = self::build('user');
+        $user_model->coin($user_id, $money);
+        $account_diamonds = $user_model->coin($user_id);
+        self::build('coin_log')->addLog($user_id, -1, $money, $account_diamonds, '每日' . self::$title[$type] . '领取(第' . $mission['times'] . '次)');
+        $diamonds   = self::$user_redis->getOne_db($user_id, 'diamonds');
+        $coin       = self::$user_redis->getOne_db($user_id, 'coin');
+        $mission    = $this->getMissionInfo($user_id, $type);
+        $is_mission = intval($mission['left_times'] > 0);
+
+        $open_daily_task = 1;
+        return compact('mission', 'diamonds', 'coin', 'is_mission', 'open_daily_task');
+    }
+    public function getMissionList($user_id)
+    {
+        $types = $this->field('type')->group('type')->order('type')->select(['is_effect' => 1]);
+        $list  = [];
+        foreach ($types as $type) {
+            $list[] = $this->getMissionInfo($user_id, $type['type']);
+        }
+        return $list;
+    }
+}

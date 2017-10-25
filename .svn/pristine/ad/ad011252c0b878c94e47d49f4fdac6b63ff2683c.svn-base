@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="renderer" content="webkit" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <?php
+        $this->_var['framesCss'][] = $this->_var['TMPL_REAL']."/dist/frames/bootstrap/css/bootstrap.min.css";
+        $this->_var['publicCss'][] = $this->_var['TMPL_REAL']."/dist/statics/css/public.min.css";
+        $this->_var['mainCss'][] = $this->_var['TMPL_REAL']."/dist/statics/css/main.min.css";
+        $this->_var['framesJs'][] = $this->_var['TMPL_REAL']."/dist/frames/jquery.min.js";
+        $this->_var['framesJs'][] = $this->_var['TMPL_REAL']."/dist/frames/fanweUI.js";
+        $this->_var['framesJs'][] = $this->_var['TMPL_REAL']."/dist/frames/plupload/plupload.full.min.js";
+        $m_config= load_auto_cache("m_config");
+        $this->_var['pc_logo'] = empty($m_config['bm_pc_logo'])?$this->_var['TMPL'] . '/dist/statics/images/logo.png' : $m_config['bm_pc_logo'];
+        $this->_var['NETWORK_FOR_RECORD']=app_conf('NETWORK_FOR_RECORD');
+        $this->_var['SITE_LICENSE']=app_conf('SITE_LICENSE');
+    ?>
+    <title>{if $data.page_title neq ''}{$data.page_title}-{/if}{$site_name} {$seo_title}</title>
+    <link rel="stylesheet" type="text/css" href="{function name="parse_css" v="$framesCss"}" />
+    <link rel="stylesheet" type="text/css" href="{function name="parse_css" v="$publicCss"}" />
+    <link rel="stylesheet" type="text/css" href="{function name="parse_css" v="$mainCss"}" />
+    <link rel="stylesheet" type="text/css" href="{$TMPL}/dist/frames/layer/skin/default/layer.css" />
+    <script type="text/javascript" src="{function name="parse_script" v="$framesJs"}"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/avalon.js/2.2.7/avalon.min.js"></script>
+    <script type="text/javascript">
+        var APP_ROOT = '{$APP_ROOT}';
+        var TMPL_REAL = '{$APP_ROOT}/frontEnd/society';
+    </script>
+</head>
+<body>
+    <div id="headerwrapper" class="full_display_none">
+        <div class="header">
+            <div class="wrapper" id="mainheader">
+                <div class="block-logo">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td style="height:51px;"><a href=''><img src="{$pc_logo}" /></a></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="block-search" ms-controller="login_tip" id="login_tip">
+                    {if $user_info.id}
+                	<div class="block-search-user clearfix">
+                		<a href='' class="search-user-name f-l">
+                			<img src="{$user_info.head_image}" class="avatar-normal mr-5"/>
+                		</a>
+                		<div class="search-user">
+                			<div class="null"></div>
+                			<div class="search-user-info clearfix">
+                				<div class="user-info-txt">
+	                				<div class="logname clearfix">
+	                					<a href="javascript:void(0);" class="user-name f-l">{$user_info.nick_name}</a>
+                                        <a href="javascript:void(0);"title="{if $user_info.is_authentication eq 0}尚未认证{elseif $user_info.is_authentication eq 1}认证中{elseif $user_info.is_authentication eq 2}已认证{else}认证失败{/if}"  class="uname-aut icon-btn">
+                                            <i class="icon iconfont {if $user_info.is_authentication eq 2}uname{/if}">&#xe614;</i>
+                                        </a>
+                                        <a href="javascript:void(0);" title="{if $user_info.mobile}已绑定手机{else}未绑定手机{/if}" class="mobile-aut icon-btn">
+                                            <i class="icon iconfont {if $user_info.mobile}uname{/if}">&#xe613;</i>
+                                        </a>
+                                        <div class="clear"></div>
+	                				</div>
+                				</div>
+                                <div class="clear"></div>
+                			</div>
+                            <div class="search-user-out">
+                                <a href="javascript:void(0);" class="btn-out" id="J_loginOut">退出登录</a>
+                            </div>
+                		</div>
+                	</div>
+                    {else}
+                    <a href="javascript:void(0)" class="btn btn-primary btn-circle J-login">登录</a>
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="bodywrapper" class="page-{$ctl}-{$act}">
